@@ -13,7 +13,7 @@ public class ZigzagConversion {
         boolean goDown = false;
         for (int i = 0; i < s.length(); i++) {
             Character c = s.charAt(i);
-            System.out.println("currentRow=" + currentRow + ", c=" + c);
+            // System.out.println("currentRow=" + currentRow + ", c=" + c);
             rows[currentRow].append(c);
             if (currentRow == 0 || currentRow == (numRows - 1)) {
                 goDown = !goDown;
@@ -31,6 +31,34 @@ public class ZigzagConversion {
             sb.append(rows[i]);
         }
 
+        return sb.toString();
+    }
+
+    public String convertV3(String s, int numRows) {
+        if (null == s || numRows == 1)
+            return s;
+        StringBuilder[] rows = new StringBuilder[numRows];
+        for (int i = 0; i < numRows; i++) {
+            rows[i] = new StringBuilder();
+        }
+
+        int currentRow = 0;
+        int bottomRow = numRows - 1;
+        boolean goDown = false;
+
+        for (int i = 0; i < s.length(); i++) {
+            Character c = s.charAt(i);
+            rows[currentRow].append(c);
+            if (currentRow == 0 || currentRow == bottomRow) {
+                goDown = !goDown;
+            }
+            currentRow += goDown ? 1 : -1;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            sb.append(rows[i]);
+        }
         return sb.toString();
     }
 
@@ -107,6 +135,9 @@ public class ZigzagConversion {
         result = util.convertV2(s, numRows);
         System.out.println("expected: PAHNAPLSIIGYIR");
         System.out.println("actual  : " + result);
+        result = util.convertV3(s, numRows);
+        System.out.println("expected: PAHNAPLSIIGYIR");
+        System.out.println("actual  : " + result);
 
         s = "PAYPALISHIRING";
         numRows = 4;
@@ -116,12 +147,19 @@ public class ZigzagConversion {
         result = util.convertV2(s, numRows);
         System.out.println("expected: PINALSIGYAHRPI");
         System.out.println("actual  : " + result);
+        result = util.convertV3(s, numRows);
+        System.out.println("expected: PINALSIGYAHRPI");
+        System.out.println("actual  : " + result);
 
         s = "A";
         numRows = 1;
         result = util.convert(s, numRows);
-        // System.out.println("expected: A, actual: " + result);
-
+        System.out.println("expected: A");
+        System.out.println("actual  : " + result);
+        result = util.convertV2(s, numRows);
+        System.out.println("expected: A");
+        System.out.println("actual  : " + result);
+        result = util.convertV3(s, numRows);
         System.out.println("expected: A");
         System.out.println("actual  : " + result);
     }
