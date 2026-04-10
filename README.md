@@ -26,5 +26,7 @@ leetcode
 (6)Zigzag Conversion
 (7)Reverse Integer
 (8)String to Integer (atoi)
+(9)Palindrome Number
+(10)Regular Expression Matching
 
 
