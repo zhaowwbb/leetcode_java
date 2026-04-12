@@ -1,5 +1,11 @@
+Others:
+(1)quickSort
+    Sorting.java
+(2)Depth-First Search (DFS)
+    Graph.java
+
+############################################################
 leetcode 
-(0)Sorting
 (1)TwoSum
 (2)AddTwoNumber
 (3)LongestUniqueSubstring
