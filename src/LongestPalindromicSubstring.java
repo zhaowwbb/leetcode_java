@@ -64,80 +64,6 @@ public class LongestPalindromicSubstring {
         return palindromeStr;
     }
 
-    // public String longestPalindromeV2(String s) {
-    // if (null == s)
-    // return null;
-    // if (s.length() == 1) {
-    // return s;
-    // }
-    // int startPos = 0, endPos = 0;
-    // Character preChar = s.charAt(0);
-    // int palinStart = 0, palinEnd = 0, pos = 1, prePos = 0;
-    // int len = 0;
-    // boolean isForward = true;
-
-    // while (pos < s.length()) {
-    // Character c = s.charAt(pos);
-    // preChar = s.charAt(prePos);
-    // if (isForward) {
-    // if (c.equals(preChar)) {
-    // // found middle, check backward
-    // isForward = false;
-    // pos++;
-    // if (prePos == 0) {
-    // len = 2;
-    // palinStart = 0;
-    // palinEnd = 1;
-    // } else {
-    // prePos--;
-    // }
-    // } else {
-
-    // }
-    // } else {
-    // // not palindome in the beginning
-    // if (prePos < 0) {
-    // isForward = true;
-    // pos++;
-
-    // prePos = pos;
-    // pos++;
-    // }
-
-    // // backward from middle
-    // if (c.equals(s.charAt(prePos))) {
-    // if (palinStart == prePos) {
-    // // found palindome
-    // if (pos - prePos > len) {
-    // // find longer
-    // palinStart = prePos;
-    // palinEnd = pos;
-    // len = palinEnd - palinStart;
-    // } else {
-    // // find shorter
-    // // skip
-    // }
-    // prePos = pos++;
-    // if (prePos < s.length()) {
-    // preChar = s.charAt(prePos);
-    // pos++;
-    // } else {
-    // // to the end
-    // break;
-    // }
-    // } else {
-    // // check next one
-    // prePos--;
-    // pos++;
-    // }
-
-    // }
-    // }
-    // }
-
-    // return "";
-    // }
-
     public String longestPalindrome(String s) {
         if (s == null || s.length() < 1)
             return "";
@@ -167,35 +93,85 @@ public class LongestPalindromicSubstring {
         return right - left - 1;
     }
 
+    public int expandFromCenterV4(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+
+    public String longestPalindromeV4(String s) {
+        int start = 0, end = 0;
+        // int len = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandFromCenterV4(s, i, i);
+            int len2 = expandFromCenterV4(s, i, i + 1);
+            int len = Math.max(len1, len2);
+            if (len > end - start) {
+                start = i - (len - 1) / 2;
+                end = i + len / 2;
+            }
+        }
+        return s.substring(start, end + 1);
+    }
+
+    public int expandFromCenterV5(String s, int left, int right) {
+        while(left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)){
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+
+    public String longestPalindromeV5(String s) {
+        int start = 0, end = 0;
+        for(int i = 0; i < s.length(); i++){
+            int len1 = expandFromCenterV5(s, i, i);
+            int len2 = expandFromCenterV5(s, i, i+ 1);
+            int len = Math.max(len1,   len2);
+
+            if(len > end - start){
+                start = i - (len - 1) /2 ;
+                end = i + len /2;
+            }
+        }
+        return s.substring(start, end + 1);
+    }
+
+    public void test(String s, String expected) {
+        System.out.println("s=" + s);
+        String result = "";
+
+        result = longestPalindrome(s);
+        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = longestPalindromeV2(s);
+        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = longestPalindromeV3(s);
+        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = longestPalindromeV4(s);
+        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = longestPalindromeV5(s);
+        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+    }
+
     public static void main(String[] args) {
         String ss = "ABCD";
-        System.out.println("ss=" + ss.substring(0, 4));
+        // System.out.println("ss=" + ss.substring(0, 4));
 
         LongestPalindromicSubstring util = new LongestPalindromicSubstring();
         String s = "";
-        String result = "";
         s = "babad";
-        result = util.longestPalindrome(s);
-        System.out.println("expected: bab, actual: " + result);
-        result = util.longestPalindromeV2(s);
-        System.out.println("expected: bab, actual: " + result);
-        result = util.longestPalindromeV3(s);
-        System.out.println("expected: bab, actual: " + result);
-
+        util.test(s, "bab");
         s = "cbbd";
-        result = util.longestPalindrome(s);
-        System.out.println("expected: bb, actual: " + result);
-        result = util.longestPalindromeV2(s);
-        System.out.println("expected: bb, actual: " + result);
-        result = util.longestPalindromeV3(s);
-        System.out.println("expected: bb, actual: " + result);
-
+        util.test(s, "bb");
+        s = "babad";
+        util.test(s, "bab");
         s = "abcdefghij**racecarace**klmnopqrst";
-        result = util.longestPalindrome(s);
-        System.out.println("expected: racecarace, actual: " + result);
-        result = util.longestPalindromeV2(s);
-        System.out.println("expected: racecarace, actual: " + result);
-        result = util.longestPalindromeV3(s);
-        System.out.println("expected: racecarace, actual: " + result);
+        util.test(s, "racecarace");
     }
 }
