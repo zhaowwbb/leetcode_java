@@ -9,7 +9,7 @@ leetcode
 (1)TwoSum
 (2)AddTwoNumber
 (3)LongestUniqueSubstring
-(4)Median of Two Sorted Arrays
+(4)Median of Two Sorted Arrays[X]
 (5)Longest Palindromic Substring
 (6)Zigzag Conversion
 (7)Reverse Integer
