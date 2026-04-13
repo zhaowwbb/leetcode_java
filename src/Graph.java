@@ -77,6 +77,24 @@ class Graph {
         }
     }
 
+    public void DFSV4(int startNode) {
+        boolean[] visited = new boolean[vertices];
+
+        recursiviveDFS4(startNode, visited);
+        System.out.println("");
+        System.out.println("#################");
+    }
+
+    public void recursiviveDFS4(int startNode, boolean[] visited) {
+        visited[startNode] = true;
+        System.out.print("[" + startNode + "]");
+        for (int n : adjList.get(startNode)) {
+            if (!visited[n]) {
+                recursiviveDFS4(n, visited);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Graph g = new Graph(6);
 
@@ -88,7 +106,8 @@ class Graph {
         g.addEdge(4, 5);
 
         g.DFS(0);
-        g.DFSV2(0);
-        g.DFSV3(0);
+        // g.DFSV2(0);
+        // g.DFSV3(0);
+        g.DFSV4(0);
     }
 }
