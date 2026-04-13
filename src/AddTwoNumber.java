@@ -1,5 +1,7 @@
 // import java.lang.classfile.components.ClassPrinter.ListNode;
 
+import java.util.Arrays;
+
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -51,27 +53,9 @@ public class AddTwoNumber {
             temp = temp.next;
         }
         System.out.println("null");
-    }   
+    }
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        // StringBuilder num1 = new StringBuilder();
-        // ListNode temp1 = l1;
-        // while (temp1 != null) {
-        //     num1.append(temp1.val);
-        //     temp1 = temp1.next;
-        // }
-
-        // String s1 = num1.reverse().toString();
-        // StringBuilder num2 = new StringBuilder();
-        // ListNode temp2 = l2;
-        // while (temp2 != null) {
-        //     num2.append(temp2.val);
-        //     temp2 = temp2.next;
-        // }
-        // String s2 = num2.reverse().toString();
-        // System.out.println("    s1: " + s1   );
-        // System.out.println("    s2: " + s2   );
-
         StringBuilder result = new StringBuilder();
         ListNode n1 = new ListNode();
         ListNode n2 = new ListNode();
@@ -82,14 +66,14 @@ public class AddTwoNumber {
         n2 = l2;
         while (true) {
             if (n1 != null) {
-                
+
                 v1 = n1.val;
                 n1 = n1.next;
             } else {
                 v1 = 0;
             }
             if (n2 != null) {
-                
+
                 v2 = n2.val;
                 n2 = n2.next;
             } else {
@@ -104,24 +88,24 @@ public class AddTwoNumber {
             }
             result.append(val);
             if (n1 == null && n2 == null) {
-                if(carry == 1){
+                if (carry == 1) {
                     result.append(1);
-                }   
+                }
                 break;
             }
         }
         String s = result.toString();
-        System.out.println("    result: " + s   );
-        ListNode preNode = null;   
+        System.out.println("Result: " + s);
+        ListNode preNode = null;
         ListNode resultNode = null;
         for (int i = 0; i < s.length(); i++) {
             ListNode node = new ListNode(Character.getNumericValue(s.charAt(i)));
-            if(preNode == null){
+            if (preNode == null) {
                 preNode = node;
-                resultNode = preNode;   
+                resultNode = preNode;
             } else {
                 preNode.next = node;
-                preNode = node;   
+                preNode = node;
             }
         }
 
@@ -132,46 +116,135 @@ public class AddTwoNumber {
         ListNode dummyHead = new ListNode(0);
         ListNode current = dummyHead;
         int carry = 0;
-        while(l1 != null || l2 != null || carry != 0){
-            int val1 = (l1 != null)? l1.val : 0;
-            int val2 = (l2 != null)? l2.val : 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int val1 = (l1 != null) ? l1.val : 0;
+            int val2 = (l2 != null) ? l2.val : 0;
             int sum = val1 + val2 + carry;
             carry = sum / 10;
             current.next = new ListNode(sum % 10);
             current = current.next;
             // current.val = sum % 10;
 
-            if(l1 != null) l1 = l1.next;
-            if(l2 != null) l2 = l2.next;
+            if (l1 != null)
+                l1 = l1.next;
+            if (l2 != null)
+                l2 = l2.next;
         }
 
         return dummyHead.next;
     }
 
+    public ListNode addTwoNumbersV3(ListNode l1, ListNode l2) {
+        ListNode dummyNode = new ListNode(0);
+        int increase = 0;
+        ListNode preNode = dummyNode;
+        while (l1 != null && l2 != null) {
+            int sum = l1.val + l2.val + increase;
+            if (sum > 9) {
+                increase = 1;
+                sum %= 10;
+            } else {
+                increase = 0;
+            }
+            ListNode node = new ListNode(sum);
+            preNode.next = node;
+            preNode = node;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        while (l1 != null) {
+            int sum = l1.val + increase;
+            if (sum > 9) {
+                increase = 1;
+                sum %= 10;
+            } else {
+                increase = 0;
+            }
+            ListNode node = new ListNode(sum);
+            preNode.next = node;
+            preNode = node;
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            int sum = l2.val + increase;
+            if (sum > 9) {
+                increase = 1;
+                sum %= 10;
+            } else {
+                increase = 0;
+            }
+            ListNode node = new ListNode(sum);
+            preNode.next = node;
+            preNode = node;
+            l1 = l1.next;
+        }
+
+        if (increase > 0) {
+            ListNode node = new ListNode(1);
+            preNode.next = node;
+        }
+
+        return dummyNode.next;
+    }
+
+    public ListNode addTwoNumbersV4(ListNode l1, ListNode l2) {
+        ListNode dummyNode = new ListNode(0);
+        ListNode preNode = dummyNode;
+        int carry = 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int x = (l1 != null) ? l1.val : 0;
+            int y = (l2 != null) ? l2.val : 0;
+            int sum = x + y + carry;
+            carry = sum / 10;
+
+            ListNode node = new ListNode(sum % 10);
+            preNode.next = node;
+            preNode = node;
+            if (l1 != null)
+                l1 = l1.next;
+            if (l2 != null)
+                l2 = l2.next;
+        }
+        return dummyNode.next;
+    }
+
+    public void test(int[] nums1, int[] nums2, String expected) {
+        System.out.println("ListNode 1=" + Arrays.toString(nums1));
+        System.out.println("ListNode 2=" + Arrays.toString(nums2));
+        System.out.println("Expected=" + expected);
+
+        ListNode l1 = createListNode(nums1);
+        ListNode l2 = createListNode(nums2);
+
+        ListNode result = addTwoNumbers(l1, l2);
+        printListNode(result);
+
+        addTwoNumbersV2(l1, l2);
+        printListNode(result);
+
+        addTwoNumbersV3(l1, l2);
+        printListNode(result);
+
+        addTwoNumbersV4(l1, l2);
+        printListNode(result);
+        System.out.println("################################");
+    }
 
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
 
         AddTwoNumber utils = new AddTwoNumber();
-        ListNode l1 = utils.new ListNode(2);
-        l1.next = utils.new ListNode(4);
-        l1.next.next = utils.new ListNode(3);
+        int[] nums1 = {};
+        int[] nums2 = {};
+        nums1 = new int[] { 2, 4, 3 };
+        nums2 = new int[] { 5, 6, 4 };
+        utils.test(nums1, nums2, "[7,0,8]");
 
-        ListNode l2 = utils.new ListNode(5);
-        l2.next = utils.new ListNode(6);
-        l2.next.next = utils.new ListNode(4);
+        nums1 = new int[] { 0 };
+        nums2 = new int[] { 0 };
+        utils.test(nums1, nums2, "[0]");
 
-        ListNode result = utils.addTwoNumbers(l1, l2);     
-        utils.printListNode(result);  
-        result = utils.addTwoNumbersV2(l1, l2);     
-        utils.printListNode(result);   
- 
-
-        l1 = utils.createListNode(new int[]{9,9,9,9,9,9,9});
-        l2 = utils.createListNode(new int[]{9,9,9,9});
-        result = utils.addTwoNumbers(l1, l2);
-        utils.printListNode(result);   
-        result = utils.addTwoNumbersV2(l1, l2);
-        utils.printListNode(result); 
+        nums1 = new int[] { 9, 9, 9, 9, 9, 9, 9 };
+        nums2 = new int[] { 9, 9, 9, 9 };
+        utils.test(nums1, nums2, "[8,9,9,9,0,0,0,1]");
     }
 }
