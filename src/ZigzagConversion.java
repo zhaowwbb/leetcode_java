@@ -122,29 +122,53 @@ public class ZigzagConversion {
     }
 
     public String convertV4(String s, int numRows) {
-        if(numRows == 1 || s.length() <= numRows)return s;
+        if (numRows == 1 || s.length() <= numRows)
+            return s;
         StringBuilder[] rows = new StringBuilder[numRows];
-        for(int i = 0; i < numRows; i++){
+        for (int i = 0; i < numRows; i++) {
             rows[i] = new StringBuilder();
         }
         boolean isDown = false;
         int n = 0;
 
-        for(int i = 0; i < s.length(); i++){
+        for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             rows[n].append(c);
-            if(n == 0 || n == numRows - 1){
-                isDown =  !isDown;
+            if (n == 0 || n == numRows - 1) {
+                isDown = !isDown;
             }
-            if(isDown){
+            if (isDown) {
                 n++;
-            }else{
+            } else {
                 n--;
             }
         }
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < numRows; i++){
+        for (int i = 0; i < numRows; i++) {
             sb.append(rows[i]);
+        }
+        return sb.toString();
+    }
+
+    public String convertV5(String s, int numRows) {
+        if (numRows == 1 || s.length() <= numRows)
+            return s;
+        StringBuilder[] rows = new StringBuilder[numRows];
+        for (int i = 0; i < numRows; i++) {
+            rows[i] = new StringBuilder();
+        }
+        boolean goingDown = false;
+        int row = 0;
+        for (Character c : s.toCharArray()) {
+            rows[row].append(c);
+            if (row == 0 || row == numRows - 1) {
+                goingDown = !goingDown;
+            }
+            row += goingDown ? 1 : -1;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (StringBuilder r : rows) {
+            sb.append(r);
         }
         return sb.toString();
     }
@@ -162,6 +186,9 @@ public class ZigzagConversion {
         System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
 
         result = convertV4(s, numRows);
+        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = convertV5(s, numRows);
         System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
     }
 
