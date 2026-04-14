@@ -5,7 +5,8 @@ Others:
     Graph.java
 (3)top 3 stocks based on their maximum prices
     TopStockSums.java
-
+(4)The Winner's Growth, To simulate this "cell eating" behavior
+    CellSimulation.java
 ############################################################
 leetcode 
 (1)TwoSum
