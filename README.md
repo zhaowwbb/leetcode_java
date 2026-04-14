@@ -3,6 +3,8 @@ Others:
     Sorting.java
 (2)Depth-First Search (DFS)
     Graph.java
+(3)top 3 stocks based on their maximum prices
+    TopStockSums.java
 
 ############################################################
 leetcode 
