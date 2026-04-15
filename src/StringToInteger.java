@@ -27,21 +27,21 @@ public class StringToInteger {
         // }
 
         int result = 0;
-        while (i < n) {
-            if (Character.isDigit(s.charAt(i))) {
-                int digit = s.charAt(i) - '0';
-                System.out.print("[" + digit + "]");
-                if (result > Integer.MAX_VALUE / 10
-                        || (result == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10)) {
-                    return (sign == 1) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
-                }
-                result = result * 10 + digit;
-                i++;
-            } else {
-                break;
+        while (i < n && Character.isDigit(s.charAt(i))) {
+            // if (Character.isDigit(s.charAt(i))) {
+            int digit = s.charAt(i) - '0';
+            // System.out.print("[" + digit + "]");
+            if (result > Integer.MAX_VALUE / 10
+                    || (result == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10)) {
+                return (sign == 1) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
             }
+            result = result * 10 + digit;
+            i++;
+            // } else {
+            // break;
+            // }
         }
-        System.out.println("");
+        // System.out.println("");
         return result * sign;
     }
 
@@ -94,7 +94,7 @@ public class StringToInteger {
         }
 
         int maxLen = String.valueOf(Integer.MAX_VALUE).length();
-        System.out.println("number=" + sb.toString() + ",maxLen=" + maxLen);
+        // System.out.println("number=" + sb.toString() + ",maxLen=" + maxLen);
         if (sb.length() < maxLen) {
             if (sb.length() == 0)
                 return 0;
@@ -154,10 +154,76 @@ public class StringToInteger {
         // return 0;
     }
 
+    public int myAtoiV3(String s) {
+        int i = 0;
+        int n = s.length();
+        int number = 0;
+        // skip space
+        while (i < n && s.charAt(i) == ' ')
+            i++;
+        if (i == n - 1)
+            return 0;
+        // check '+','-'
+
+        int signed = 1;
+        if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+            if (s.charAt(i) == '-')
+                signed = -1;
+            i++;
+        }
+        while (i < n) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                int digit = c - '0';
+                number = number * 10 + digit;
+            } else {
+                break;
+            }
+            i++;
+        }
+        if (signed < 0) {
+            return number * -1;
+        } else {
+            return number;
+        }
+    }
+
+    public int myAtoiV4(String s) {
+        int n = s.length();
+        int i = 0;
+        while (i < n && s.charAt(i) == ' ') {
+            i++;
+        }
+
+        if (i == n - 1)
+            return 0;
+        int sign = 1;
+        int number = 0;
+        if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+            if (s.charAt(i) == '-')
+                sign = -1;
+            i++;
+        }
+        while (i < n && Character.isDigit(s.charAt(i))) {
+            int digit = s.charAt(i) - '0';
+            if (number > Integer.MAX_VALUE / 10 || (number == Integer.MAX_VALUE / 10 && digit > number % 10)) {
+                return sign > 0 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+            number = number * 10 + digit;
+            i++;
+        }
+        return number * sign;
+    }
+
     public void test(String s, int expectedResult) {
+        System.out.println("####################################");
         int result = myAtoi(s);
         System.out.printf("s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
         result = myAtoiV2(s);
+        System.out.printf("s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
+        result = myAtoiV3(s);
+        System.out.printf("s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
+        result = myAtoiV4(s);
         System.out.printf("s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
 
     }
