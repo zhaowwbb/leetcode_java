@@ -35,7 +35,7 @@ public class ReverseInteger {
                 tmp = tmp / 10;
             }
         }
-        System.out.println("result =" + sb.toString());
+        // System.out.println("result =" + sb.toString());
         // String s = String.valueOf(x);
 
         try {
@@ -51,35 +51,89 @@ public class ReverseInteger {
 
     }
 
+    public int reverseV3(int x) {
+        int reverse = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (reverse > Integer.MAX_VALUE / 10 || (reverse == Integer.MAX_VALUE / 10 && pop > 7)) {
+                return 0;
+            }
+            if (reverse < Integer.MIN_VALUE / 10 || (reverse == Integer.MIN_VALUE / 10 && pop < -8)) {
+                return 0;
+            }
+
+            reverse = reverse * 10 + pop;
+
+        }
+        return reverse;
+    }
+
+    public int reverseV4(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+
+            // Check for overflow before multiplying by 10
+            // Max value ends in 7, Min value ends in 8
+            if (rev > Integer.MAX_VALUE / 10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)) {
+                return 0;
+            }
+            if (rev < Integer.MIN_VALUE / 10 || (rev == Integer.MIN_VALUE / 10 && pop < -8)) {
+                return 0;
+            }
+
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+
+    public int reverseV5(int x) {
+        int rev = 0;
+        while(x != 0){
+            int pop = x % 10;
+            x /= 10;
+            if(rev > Integer.MAX_VALUE / 10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)){
+                return 0;
+            }
+            if(rev < Integer.MIN_VALUE / 10 || (rev == Integer.MIN_VALUE / 10 && pop < -8)){
+                return 0;
+            }
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+
+    public void test(int x, int expected) {
+        System.out.println("###########################");
+        int result = 0;
+        result = reverse(x);
+        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+        result = reverseV2(x);
+        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+        result = reverseV3(x);
+        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+        result = reverseV4(x);
+        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+        result = reverseV5(x);
+        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+
+    }
+
     public static void main(String[] args) {
         System.out.println("Integer.MAX_VALUE=" + Integer.MAX_VALUE);
         System.out.println("Integer.MIN_VALUE=" + Integer.MIN_VALUE);
         ReverseInteger util = new ReverseInteger();
+
         int x = 0;
-        int result = 0;
-
         x = 123;
-        result = util.reverse(x);
-        System.out.printf("expected:[321], actual:[%d]%n", result);
-        result = util.reverseV2(x);
-        System.out.printf("expected:[321], actual:[%d]%n", result);
-
+        util.test(x, 321);
         x = -123;
-        result = util.reverse(x);
-        System.out.printf("expected:[-321], actual:[%d]%n", result);
-        result = util.reverseV2(x);
-        System.out.printf("expected:[-321], actual:[%d]%n", result);
-
+        util.test(x, -321);
         x = 120;
-        result = util.reverse(x);
-        System.out.printf("expected:[21], actual:[%d]%n", result);
-        result = util.reverseV2(x);
-        System.out.printf("expected:[21], actual:[%d]%n", result);
-
+        util.test(x, 21);
         x = 1534236469;
-        result = util.reverse(x);
-        System.out.printf("expected:[0], actual:[%d]%n", result);
-        result = util.reverseV2(x);
-        System.out.printf("expected:[0], actual:[%d]%n", result);
+        util.test(x, 0);
     }
 }
