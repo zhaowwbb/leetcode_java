@@ -119,6 +119,7 @@ public class CandyCrushEngine {
     }
 
     public static void runCandyCrushEngineV1() {
+        System.out.println("#### runCandyCrushEngineV1 ####");
         int step = 1;
         boolean matchesFound;
 
@@ -260,8 +261,123 @@ public class CandyCrushEngine {
         printGridV2(grid);
     }
 
+    public static void printGridV3(int[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                System.out.print(grid[r][c] + " ");
+            }
+            System.out.println(" ");
+        }
+    }
+
+    public static boolean findMatchedPatternV3(int[][] grid, boolean[][] toBeRemoved) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        boolean foundMatched = false;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                // horizontal check
+                if (c < cols - 2 && grid[r][c] != 0 && grid[r][c] == grid[r][c + 1] && grid[r][c] == grid[r][c + 2]) {
+                    foundMatched = true;
+                    toBeRemoved[r][c] = toBeRemoved[r][c + 1] = toBeRemoved[r][c + 2] = true;
+                }
+                // vertical check
+                if (r < rows - 2 && grid[r][c] != 0 && grid[r][c] == grid[r + 1][c] && grid[r][c] == grid[r + 2][c]) {
+                    foundMatched = true;
+                    toBeRemoved[r][c] = toBeRemoved[r + 1][c] = toBeRemoved[r + 2][c] = true;
+                }
+            }
+        }
+
+        // Top-left
+        if (findCornerMatchedV3(grid, 0, 0, 0, 1, 1, 0)) {
+            foundMatched = true;
+            toBeRemoved[0][0] = toBeRemoved[0][1] = toBeRemoved[1][0] = true;
+        }
+        // Top-right
+        if (findCornerMatchedV3(grid, 0, cols - 1, 0, cols - 2, 1, cols - 1)) {
+            foundMatched = true;
+            toBeRemoved[0][cols - 1] = toBeRemoved[0][cols - 2] = toBeRemoved[1][cols - 1] = true;
+        }
+
+        // Bottom-left
+        if (findCornerMatchedV3(grid, rows - 1, 0, rows - 1, 1, rows - 2, 0)) {
+            foundMatched = true;
+            toBeRemoved[rows - 1][0] = toBeRemoved[rows - 1][1] = toBeRemoved[rows - 2][0] = true;
+        }
+
+        // Bottom-right
+        if (findCornerMatchedV3(grid, rows - 1, cols - 1, rows - 1, cols - 2, rows - 2, cols - 1)) {
+            foundMatched = true;
+            toBeRemoved[rows - 1][cols - 1] = toBeRemoved[rows - 1][cols - 2] = toBeRemoved[rows - 2][cols - 1] = true;
+        }
+
+        return foundMatched;
+    }
+
+    public static boolean findCornerMatchedV3(int[][] grid, int r1, int c1, int r2, int c2, int r3, int c3) {
+        return grid[r1][c1] != 0 && grid[r1][c1] == grid[r2][c2] && grid[r1][c1] == grid[r3][c3];
+    }
+
+    public static void clearGridV3(int[][] grid, boolean[][] toBeRemoved) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (toBeRemoved[r][c]) {
+                    grid[r][c] = 0;
+                }
+            }
+        }
+    }
+
+    public static void gravityFall(int[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        for (int c = 0; c < cols; c++) {
+            for (int r = rows - 1; r > 0; r--) {
+                if (grid[r][c] == 0) {
+                    for (int k = r - 1; k >= 0; k--) {
+                        if (grid[k][c] != 0) {
+                            grid[r][c] = grid[k][c];
+                            grid[k][c] = 0;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void runCandyCrushEngineV3(int[][] grid) {
+        System.out.println("#### runCandyCrushEngineV3 ####");
+        System.out.println("--- Initial Grid ---");
+        printGridV3(grid);
+        int rows = grid.length;
+        int cols = grid[0].length;
+        int step = 1;
+        boolean foundMatched = false;
+        boolean[][] toBeRemoved = new boolean[rows][cols];
+        do {
+            foundMatched = findMatchedPatternV3(grid, toBeRemoved);
+            if (foundMatched) {
+                clearGridV3(grid, toBeRemoved);
+            }
+            System.out.println("Step " + step);
+            step++;
+            printGridV3(grid);
+            gravityFall(grid);
+        } while (foundMatched);
+
+        System.out.println("--- Final Stable Grid ---");
+        printGridV3(grid);
+    }
+
     public static void main(String[] args) {
         runCandyCrushEngineV1();
         runCandyCrushEngineV2(createTestGrid());
+        runCandyCrushEngineV3(createTestGrid());
     }
 }
