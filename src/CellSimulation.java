@@ -20,6 +20,7 @@ public class CellSimulation {
     }
 
     public static List<Cell> simulateEating(String[] names, String[] families, int[] sizes) {
+        System.out.println("##########  simulateEatingV1 ##########");
         LinkedList<Cell> list = new LinkedList<>();
         for (int i = 0; i < names.length; i++) {
             list.add(new Cell(names[i], families[i], sizes[i]));
@@ -68,6 +69,7 @@ public class CellSimulation {
     }
 
     public static List<Cell> simulateEatingV2(String[] names, String[] families, int[] sizes) {
+        System.out.println("##########  simulateEatingV2 ##########");
         LinkedList<Cell> list = new LinkedList<>();
         for (int i = 0; i < names.length; i++) {
             list.add(new Cell(names[i], families[i], sizes[i]));
@@ -129,6 +131,7 @@ public class CellSimulation {
     }
 
     public static List<Cell> simulateEatingV3(String[] names, String[] families, int[] sizes) {
+        System.out.println("##########  simulateEatingV3 ##########");
         LinkedList<Cell> list = new LinkedList<>();
         for (int i = 0; i < names.length; i++) {
             list.add(new Cell(names[i], families[i], sizes[i]));
@@ -167,6 +170,101 @@ public class CellSimulation {
         return list;
     }
 
+    public static List<Cell> simulateEatingV4(String[] names, String[] families, int[] sizes) {
+        System.out.println("##########  simulateEatingV4 ##########");
+        List<Cell> list = new LinkedList<>();
+        for (int i = 0; i < names.length; i++) {
+            list.add(new Cell(names[i], families[i], sizes[i]));
+        }
+        boolean isStop = false;
+        boolean hasEat = false;
+        while (!isStop) {
+            for (int i = 0; i < list.size(); i++) {
+                Cell current = list.get(i);
+                Cell left = (i > 0) ? list.get(i - 1) : null;
+                Cell right = (i < list.size() - 1) ? list.get(i + 1) : null;
+                if (left != null && !left.familyCode.equals(current.familyCode)) {
+                    if (left.size < current.size) {
+                        // current eat left
+                        hasEat = true;
+                        current.size += left.size;
+                        list.remove(i - 1);
+                        break;
+                    } else {
+                        if (right != null && !right.familyCode.equals(current.familyCode)) {
+                            if (left.size >= right.size) {
+                                // left eat current
+                                hasEat = true;
+                                left.size += current.size;
+                                list.remove(i);
+                                break;
+                            } else {
+                                // right eat current
+                                hasEat = true;
+                                right.size += current.size;
+                                list.remove(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (hasEat) {
+                isStop = false;
+                hasEat = false;
+            } else {
+                isStop = true;
+            }
+        }
+
+        return list;
+    }
+
+    public static List<Cell> simulateEatingV5(String[] names, String[] families, int[] sizes) {
+        System.out.println("##########  simulateEatingV5 ##########");
+        List<Cell> list = new LinkedList<>();
+        // create Cell list
+        for (int i = 0; i < names.length; i++) {
+            list.add(new Cell(names[i], families[i], sizes[i]));
+        }
+
+        boolean changed = true;
+        do {
+            changed = false;
+            for (int i = 0; i < list.size(); i++) {
+                Cell current = list.get(i);
+                Cell left = (i > 0) ? list.get(i - 1) : null;
+                Cell right = (i < list.size() - 1) ? list.get(i + 1) : null;
+                if (left != null && !left.familyCode.equals(current.familyCode)) {
+                    // current eat left
+                    if (left.size < current.size) {
+                        changed = true;
+                        current.size += left.size;
+                        list.remove(i - 1);
+                        break;
+                    } else if (left.size > current.size) {
+                        // check right or left to eat current
+                        if (right != null && !current.familyCode.equals(right.familyCode) && right.size > left.size) {
+                            // right eat current
+                            changed = true;
+                            right.size += current.size;
+                            list.remove(i);
+                            break;
+                        } else {
+                            // left eat current
+                            changed = true;
+                            left.size += current.size;
+                            list.remove(i);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        } while (changed);
+        return list;
+    }
+
     public static void main(String[] args) {
         // Test Data: 8 cells, 5 different families
         // Setup: Beta is between Alpha and Gamma (same family).
@@ -177,12 +275,17 @@ public class CellSimulation {
 
         List<Cell> survivors = simulateEating(names, families, sizes);
         printSurvivors(survivors);
-        System.out.println("#####################");
+
         survivors = simulateEatingV2(names, families, sizes);
         printSurvivors(survivors);
 
-        System.out.println("#####################");
         survivors = simulateEatingV3(names, families, sizes);
+        printSurvivors(survivors);
+
+        survivors = simulateEatingV4(names, families, sizes);
+        printSurvivors(survivors);
+
+        survivors = simulateEatingV5(names, families, sizes);
         printSurvivors(survivors);
     }
 
