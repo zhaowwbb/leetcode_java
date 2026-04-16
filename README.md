@@ -7,6 +7,11 @@ Others:
     TopStockSums.java
 (4)The Winner's Growth, To simulate this "cell eating" behavior
     CellSimulation.java
+(5)A common way to handle 2D array traversal (grids) in Java is using Direction Arrays.
+This is a classic "Match-3" cascade logic.
+"Corner-L" rule, 
+    NeighborLogic.java  
+    CandyCrushEngine.java  
 ############################################################
 leetcode 
 (1)TwoSum
