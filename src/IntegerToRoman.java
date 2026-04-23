@@ -1,12 +1,12 @@
 public class IntegerToRoman {
 
     public String intToRomanV2(int num) {
-        int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
-        String[] symbols = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        int[] values = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+        String[] symbols = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
 
         StringBuilder roman = new StringBuilder();
-        for(int i = 0; i < values.length; i++){
-            while(num >= values[i]){
+        for (int i = 0; i < values.length; i++) {
+            while (num >= values[i]) {
                 num -= values[i];
                 roman.append(symbols[i]);
             }
@@ -102,11 +102,51 @@ public class IntegerToRoman {
         return sb.toString();
     }
 
+    String[] SYMBOL_ARRAY_V3 = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+    int[] VALUE_ARRAY_V3 = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+
+    public String intToRomanV3(int num) {
+        StringBuilder sb = new StringBuilder();
+        int n = SYMBOL_ARRAY_V3.length;
+        int i = 0;
+        while (num != 0 && i < n) {
+            if (num < VALUE_ARRAY_V3[i]) {
+                i++;
+            } else {
+                num = num - VALUE_ARRAY_V3[i];
+                sb.append(SYMBOL_ARRAY_V3[i]);
+            }
+        }
+
+        return sb.toString();
+    }
+
+    String[] SYMBOL_ARRAY_V4 = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+    int[] VALUE_ARRAY_V4 = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+
+    public String intToRomanV4(int num) {
+        StringBuilder sb = new StringBuilder();
+        int n = SYMBOL_ARRAY_V4.length;
+        for(int i = 0; i < n; i++){
+            while(num >= VALUE_ARRAY_V4[i]){
+                num-= VALUE_ARRAY_V4[i];
+                sb.append(SYMBOL_ARRAY_V4[i]);
+            }
+        }
+        return sb.toString();
+    }
+
     public void test(int num, String expectedResult) {
         String result = intToRoman(num);
         System.out.printf("num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
 
         result = intToRomanV2(num);
+        System.out.printf("num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
+
+        result = intToRomanV3(num);
+        System.out.printf("num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
+
+        result = intToRomanV4(num);
         System.out.printf("num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
     }
 
