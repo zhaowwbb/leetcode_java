@@ -186,52 +186,107 @@ public class FourSum {
         return list;
     }
 
+    public void printResult(List<List<Integer>> result, String version) {
+        System.out.println("[" + version + "] result.size()=" + result.size());
+        for (int i = 0; i < result.size(); i++) {
+            List<Integer> row = result.get(i);
+            System.out.print("    [");
+            for (int j = 0; j < row.size(); j++) {
+                System.out.print(row.get(j));
+                if (j != row.size() - 1) {
+                    System.out.print(",");
+                }
+            }
+            System.out.print("]");
+            System.out.println("");
+        }
+    }
+
+    public List<List<Integer>> fourSumV4(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (null == nums || nums.length < 4)
+            return result;
+        int n = nums.length;
+        Arrays.sort(nums);
+        int sum = nums[0] + nums[1] + nums[2] + nums[3];
+        if (sum > target)
+            return result;
+        for (int i = 0; i < n - 3; i++) {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            for (int j = i + 1; j < n - 2; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                int left = j + 1;
+                int right = n - 1;
+                while (left < right) {
+                    sum = nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum == target) {
+                        result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        break;
+                    } else if (sum < target) {
+                        left++;
+                    } else {
+                        right--;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public List<List<Integer>> fourSumV5(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(null == nums || nums.length < 4)return result;
+        int n = nums.length;
+        Arrays.sort(nums);
+        for(int i = 0; i < n - 3; i++){
+            //skip duplicated for the first element
+            if(i > 0 && nums[i] == nums[i - 1])continue;
+            for(int j = i + 1; j < n - 2; j++){
+                //skip duplicated for the second element
+                if(j > i + 1 && nums[j] == nums[j - 1])continue;
+                int left = j + 1;
+                int right = n - 1;
+                while(left < right){
+                    long sum = (long)(nums[i] + nums[j] + nums[left] + nums[right]);
+                    if(sum == target){
+                        result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        //skip duplicated for the left 
+                        while(left < right && nums[left] == nums[left + 1])left++;
+                        //skip duplicated for the right
+                        while(left < right && nums[right] == nums[right - 1])right--;
+                        left++;
+                        right--;
+                    }else if(sum < target){
+                        left++;
+                    }else{
+                        right--;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
     public void test(int[] nums, int target) {
         System.out.println("nums" + Arrays.toString(nums) + ", target= " + target);
         List<List<Integer>> result = fourSum(nums, target);
-        System.out.println("[V1]result.size()=" + result.size());
-        for (int i = 0; i < result.size(); i++) {
-            List<Integer> row = result.get(i);
-            System.out.print("[");
-            for (int j = 0; j < row.size(); j++) {
-                System.out.print(row.get(j));
-                if (j != row.size() - 1) {
-                    System.out.print(",");
-                }
-            }
-            System.out.print("]");
-            System.out.println("");
-        }
+        printResult(result, "V1");
 
         result = fourSumV2(nums, target);
-        System.out.println("[V2]result.size()=" + result.size());
-        for (int i = 0; i < result.size(); i++) {
-            List<Integer> row = result.get(i);
-            System.out.print("[");
-            for (int j = 0; j < row.size(); j++) {
-                System.out.print(row.get(j));
-                if (j != row.size() - 1) {
-                    System.out.print(",");
-                }
-            }
-            System.out.print("]");
-            System.out.println("");
-        }
+        printResult(result, "V2");
 
         result = fourSumV3(nums, target);
-        System.out.println("[V3]result.size()=" + result.size());
-        for (int i = 0; i < result.size(); i++) {
-            List<Integer> row = result.get(i);
-            System.out.print("[");
-            for (int j = 0; j < row.size(); j++) {
-                System.out.print(row.get(j));
-                if (j != row.size() - 1) {
-                    System.out.print(",");
-                }
-            }
-            System.out.print("]");
-            System.out.println("");
-        }
+        printResult(result, "V3");
+
+        result = fourSumV4(nums, target);
+        printResult(result, "V4");
+
+        result = fourSumV5(nums, target);
+        printResult(result, "V5");        
     }
 
     public static void main(String[] args) {
