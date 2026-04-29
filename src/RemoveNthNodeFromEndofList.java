@@ -48,11 +48,11 @@ public class RemoveNthNodeFromEndofList {
         ListNode fast = dummyHead;
         ListNode slow = dummyHead;
 
-        for(int i = 0; i <= n ;i++){
+        for (int i = 0; i <= n; i++) {
             fast = fast.next;
         }
 
-        while(fast != null){
+        while (fast != null) {
             fast = fast.next;
             slow = slow.next;
         }
@@ -68,14 +68,16 @@ public class RemoveNthNodeFromEndofList {
         boolean isStop = false;
         ListNode fastNode = dummyHead;
         ListNode slowNode = dummyHead;
-        while(fastNode != null && slowNode != null){
-            //move fast
-            for(int i = 0; i <= n; i++){
-                fastNode =  fastNode.next;
-                if(null == fastNode){return dummyHead.next;}
+        while (fastNode != null && slowNode != null) {
+            // move fast
+            for (int i = 0; i <= n; i++) {
+                fastNode = fastNode.next;
+                if (null == fastNode) {
+                    return dummyHead.next;
+                }
             }
-            if(fastNode == null){
-                slowNode.next =  slowNode.next.next;
+            if (fastNode == null) {
+                slowNode.next = slowNode.next.next;
             }
             slowNode = slowNode.next;
         }
@@ -83,21 +85,24 @@ public class RemoveNthNodeFromEndofList {
     }
 
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        if(null == head)return null;
+        if (null == head)
+            return null;
         ListNode result = head;
         int size = 0;
         ListNode node = head;
-        while(node != null){
+        while (node != null) {
             size++;
             node = node.next;
         }
-        if(size < n)return head;
-        if(size == n)return head.next;
+        if (size < n)
+            return head;
+        if (size == n)
+            return head.next;
         int count = size - n - 1;
         System.out.println("count=" + count);
         ListNode preNode = head;
-        while(preNode != null && count > 0){
-            preNode = preNode.next; 
+        while (preNode != null && count > 0) {
+            preNode = preNode.next;
             count--;
         }
         preNode.next = preNode.next.next;
@@ -114,13 +119,69 @@ public class RemoveNthNodeFromEndofList {
         System.out.println("");
     }
 
+    public ListNode removeNthFromEndV4(ListNode head, int n) {
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        ListNode pre = head;
+
+        ListNode fastNode = null;
+        // calculate fast node
+        for (int i = 0; i <= n; i++) {
+            if (pre.next != null) {
+                fastNode = pre.next;
+                pre = pre.next;
+            } else {
+                return dummyHead.next;
+            }
+        }
+        pre = head;
+        while (pre != null) {
+            if (fastNode.next == null) {
+                ListNode temp = pre.next;
+                pre.next = temp.next;
+                break;
+            }
+            fastNode = fastNode.next;
+            pre = pre.next;
+        }
+
+        return dummyHead.next;
+    }
+
+    public ListNode removeNthFromEndV5(ListNode head, int n) {
+        ListNode dummyNode = new ListNode(0);
+        dummyNode.next = head;
+        ListNode fast = dummyNode;
+        ListNode slow = dummyNode;
+        //move fast node
+        for(int i = 1; i <= n + 1; i++){
+            fast = fast.next;
+        }
+        while(fast != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        //remove
+        slow.next = slow.next.next;
+        
+        return dummyNode.next;
+    }
+
     public void test(ListNode head, int n) {
         printNode(head);
-        System.out.println("Remove n=" + n);
-        // ListNode result = removeNthFromEnd(head, n);
-        // ListNode result = removeNthFromEndV2(head, n);
-        ListNode result = removeNthFromEndV3(head, n);
+        ListNode result = null;
+        // ListNode result = removeNthFromEndV3(head, n);
+        // System.out.println("[V3] Remove n=" + n);
+        // printNode(result);
+
+        // result = removeNthFromEndV4(head, n);
+        // System.out.println("[V4] Remove n=" + n);
+
+        result = removeNthFromEndV5(head, n);
+        System.out.println("[V5] Remove n=" + n);
         printNode(result);
+
+        System.out.println("############################");
     }
 
     public static void main(String[] args) {
@@ -129,11 +190,10 @@ public class RemoveNthNodeFromEndofList {
         ListNode head = util.createListNodeFromArray(nums);
 
         util.test(head, 2);
-        System.out.println("############################");
         nums = new int[] { 1 };
         head = util.createListNodeFromArray(nums);
         util.test(head, 1);
-        System.out.println("############################");
+
         nums = new int[] { 1, 2 };
         head = util.createListNodeFromArray(nums);
         util.test(head, 1);
