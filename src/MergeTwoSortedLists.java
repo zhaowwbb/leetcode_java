@@ -46,19 +46,19 @@ public class MergeTwoSortedLists {
     public ListNode mergeTwoListsV2(ListNode list1, ListNode list2) {
         ListNode dummyNode = new ListNode(0);
         ListNode current = dummyNode;
-        while(list1 != null && list2 != null){
-            if(list1.val <= list2.val){
+        while (list1 != null && list2 != null) {
+            if (list1.val <= list2.val) {
                 current.next = list1;
-                list1 = list1.next; 
-            }else{
-                 current.next = list2;
-                list2 = list2.next;               
+                list1 = list1.next;
+            } else {
+                current.next = list2;
+                list2 = list2.next;
             }
             current = current.next;
         }
-        if(list1 != null){
+        if (list1 != null) {
             current.next = list1;
-        }else{
+        } else {
             current.next = list2;
         }
         return dummyNode.next;
@@ -98,7 +98,7 @@ public class MergeTwoSortedLists {
             node = new ListNode(list1.val);
             if (tailNode != null) {
                 tailNode.next = node;
-            } else{
+            } else {
                 // tailNode = node;
                 dummyNode.next = node;
             }
@@ -110,12 +110,59 @@ public class MergeTwoSortedLists {
             node = new ListNode(list2.val);
             if (tailNode != null) {
                 tailNode.next = node;
-            }else{
+            } else {
                 dummyNode.next = node;
-            } 
+            }
             tailNode = node;
             list2 = list2.next;
         }
+        return dummyNode.next;
+    }
+
+    public ListNode mergeTwoListsV3(ListNode list1, ListNode list2) {
+        ListNode dummyList = new ListNode(0);
+        ListNode pre = dummyList;
+        while (list1 != null && list2 != null) {
+            int v1 = (list1 == null) ? Integer.MIN_VALUE : list1.val;
+            int v2 = (list2 == null) ? Integer.MIN_VALUE : list2.val;
+            if (v1 <= v2) {
+                if (list1 != null) {
+                    pre.next = list1;
+                    pre = pre.next;
+                    list1 = list1.next;
+                }
+            } else {
+                if (list2 != null) {
+                    pre.next = list2;
+                    pre = pre.next;
+                    list2 = list2.next;
+                }
+            }
+        }
+        if (list1 != null) {
+            pre.next = list1;
+        }
+        if (list2 != null) {
+            pre.next = list2;
+        }
+
+        return dummyList.next;
+    }
+
+    public ListNode mergeTwoListsV4(ListNode list1, ListNode list2) {
+        ListNode dummyNode = new ListNode(0);
+        ListNode current = dummyNode;
+        while (list1 != null && list2 != null) {
+            if (list1.val <= list2.val) {
+                current.next = list1;
+                list1 = list1.next;
+            } else {
+                current.next = list2;
+                list2 = list2.next;
+            }
+            current = current.next;
+        }
+        current.next = (list1 != null) ? list1 : list2;
         return dummyNode.next;
     }
 
@@ -126,9 +173,12 @@ public class MergeTwoSortedLists {
         printNode(list2);
 
         // ListNode result = mergeTwoLists(list1, list2);
-        ListNode result = mergeTwoListsV2(list1, list2);
+        // ListNode result = mergeTwoListsV2(list1, list2);
+        // ListNode result = mergeTwoListsV3(list1, list2);
+        ListNode result = mergeTwoListsV4(list1, list2);
         System.out.println("Merged list:");
         printNode(result);
+        System.out.println("#############################");
     }
 
     public static void main(String[] args) {
@@ -139,13 +189,13 @@ public class MergeTwoSortedLists {
         ListNode list2 = util.createListNodeFromArray(nums2);
 
         util.test(list1, list2);
-        System.out.println("#############################");
+        // System.out.println("#############################");
         nums1 = new int[] {};
         nums2 = new int[] {};
         list1 = util.createListNodeFromArray(nums1);
         list2 = util.createListNodeFromArray(nums2);
         util.test(list1, list2);
-        System.out.println("#############################");
+
         nums1 = new int[] {};
         nums2 = new int[] { 0 };
         list1 = util.createListNodeFromArray(nums1);
