@@ -49,6 +49,46 @@ public class GenerateParentheses {
         }
     }
 
+    public List<String> generateParenthesisV3(int n) {
+        List<String> result = new ArrayList<>();
+        backtraceV3(result, "", 0, 0, n);
+        return result;
+    }
+
+    public void backtraceV3(List<String> result, String str, int leftNum, int rightNum, int n) {
+        if (str.length() == n * 2) {
+            result.add(str);
+            return;
+        }
+        if (leftNum < n) {
+            // sb.append("(");
+            backtraceV3(result, str + "(", leftNum + 1, rightNum, n);
+        }
+        if (leftNum > rightNum) {
+            // sb.append(")");
+            backtraceV3(result, str + ")", leftNum, rightNum + 1, n);
+        }
+    }
+
+    public List<String> generateParenthesisV4(int n) {
+        List<String> result = new ArrayList<>();
+        backtraceV4(result, "", 0, 0, n);
+        return result;
+    }
+
+    public void backtraceV4(List<String> result, String str, int open, int close, int max) {
+        if (str.length() == max * 2) {
+            result.add(str);
+            return;
+        }
+        if (open < max) {
+            backtraceV4(result, str + "(", open + 1, close, max);
+        }
+        if (close < open) {
+            backtraceV4(result, str + ")", open, close + 1, max);
+        }
+    }
+
     public void test(int n) {
         System.out.println("n=" + n);
         List<String> list = null;
@@ -56,6 +96,10 @@ public class GenerateParentheses {
         System.out.println("[V1]list=" + list);
         list = generateParenthesisV2(n);
         System.out.println("[V2]list=" + list);
+        list = generateParenthesisV3(n);
+        System.out.println("[V3]list=" + list);
+        list = generateParenthesisV4(n);
+        System.out.println("[V4]list=" + list);
     }
 
     public static void main(String[] args) {
