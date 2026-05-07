@@ -47,6 +47,8 @@ leetcode
 (27)Remove Element
 (28)Find the Index of the First Occurrence in a String
 (29)Divide Two Integers
+(30)Substring with Concatenation of All Words
+
 
 
 
