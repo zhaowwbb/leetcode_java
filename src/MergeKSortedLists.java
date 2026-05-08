@@ -79,7 +79,7 @@ public class MergeKSortedLists {
         ListNode dummy = new ListNode(0);
         ListNode curr = dummy;
         ListNode max = new ListNode(Integer.MAX_VALUE);
-        
+
         while (curr != null) {
             ListNode min = max;
             int index = -1;
@@ -103,6 +103,45 @@ public class MergeKSortedLists {
         return dummy.next;
     }
 
+    public ListNode mergeKListsV5(ListNode[] lists) {
+        ListNode dummy = new ListNode(0);
+        PriorityQueue<ListNode> miniHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        for (int i = 0; i < lists.length; i++) {
+            if (lists[i] != null)
+                miniHeap.add(lists[i]);
+        }
+        ListNode current = dummy;
+        while (!miniHeap.isEmpty()) {
+            ListNode small = miniHeap.poll();
+            current.next = small;
+            current = current.next;
+            if (small.next != null) {
+                miniHeap.add(small.next);
+            }
+        }
+
+        return dummy.next;
+    }
+
+    public ListNode mergeKListsV6(ListNode[] lists) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        for (ListNode n : lists) {
+            minHeap.add(n);
+        }
+        while (!minHeap.isEmpty()) {
+            ListNode small = minHeap.poll();
+            tail.next = small;
+            tail = tail.next;
+            if (small.next != null) {
+                minHeap.add(small.next);
+            }
+        }
+
+        return dummy.next;
+    }
+
     public void test() {
         ListNode[] lists = createTestData();
         System.out.println("Input:");
@@ -113,19 +152,31 @@ public class MergeKSortedLists {
         System.out.println("[V1] Merged result:");
         Util.printNode(result);
 
-        lists = createTestData();
-        result = mergeKListsV2(lists);
-        System.out.println("[V2] Merged result:");
-        Util.printNode(result);
+        // lists = createTestData();
+        // result = mergeKListsV2(lists);
+        // System.out.println("[V2] Merged result:");
+        // Util.printNode(result);
 
-        lists = createTestData();
-        result = mergeKListsV3(lists);
-        System.out.println("[V3] Merged result:");
+        // lists = createTestData();
+        // result = mergeKListsV3(lists);
+        // System.out.println("[V3] Merged result:");
+        // Util.printNode(result);
 
         lists = createTestData();
         result = mergeKListsV4(lists);
         System.out.println("[V4] Merged result:");
         Util.printNode(result);
+
+        lists = createTestData();
+        result = mergeKListsV5(lists);
+        System.out.println("[V5] Merged result:");
+        Util.printNode(result);
+
+        lists = createTestData();
+        result = mergeKListsV6(lists);
+        System.out.println("[V6] Merged result:");
+        Util.printNode(result);
+        System.out.println("===============================");
     }
 
     public static ListNode[] createTestData() {
