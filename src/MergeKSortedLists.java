@@ -75,6 +75,34 @@ public class MergeKSortedLists {
         return dummy.next;
     }
 
+    public ListNode mergeKListsV4(ListNode[] lists) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        ListNode max = new ListNode(Integer.MAX_VALUE);
+        
+        while (curr != null) {
+            ListNode min = max;
+            int index = -1;
+            for (int i = 0; i < lists.length; i++) {
+                ListNode n = lists[i];
+                if (n != null && n.val <= min.val) {
+                    min = n;
+                    index = i;
+                }
+            }
+            if (index >= 0) {
+                curr.next = min;
+                curr = curr.next;
+                min = curr;
+                lists[index] = lists[index].next;
+            } else {
+                // done
+                break;
+            }
+        }
+        return dummy.next;
+    }
+
     public void test() {
         ListNode[] lists = createTestData();
         System.out.println("Input:");
@@ -93,6 +121,10 @@ public class MergeKSortedLists {
         lists = createTestData();
         result = mergeKListsV3(lists);
         System.out.println("[V3] Merged result:");
+
+        lists = createTestData();
+        result = mergeKListsV4(lists);
+        System.out.println("[V4] Merged result:");
         Util.printNode(result);
     }
 
