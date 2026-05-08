@@ -210,6 +210,38 @@ public class RegularExpressionMatching {
         return dp[m][n];
     }
 
+    public boolean isMatchV7(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+        boolean[][] dp = new boolean[m+1][n+1];
+        dp[0][0] = true;
+
+        for(int j = 2; j <= n; j++){
+            if(p.charAt(j - 1) == '*'){
+                dp[0][j] = dp[0][j - 2];
+            }
+        }
+
+        for(int i = 1; i <= m; i++){
+            for(int j = 1; j <= n; j++){
+                char curC = s.charAt(i - 1);
+                char curP = p.charAt(j - 1);
+                if(curP == '.' || curC == curP){
+                    dp[i][j] = dp[i-1][j-1];
+                }else if(curP == '*'){
+                    dp[i][j] = dp[i][j-2];
+
+                    char preChar = p.charAt(j - 2);
+                    if(preChar == '.' || preChar == curC){
+                        dp[i][j] = dp[i][j] || dp[i-1][j];
+                    }
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+
     public void test(String s, String p, boolean expectedResult) {
         boolean result = false;
         result = isMatchV3(s, p);
@@ -220,6 +252,8 @@ public class RegularExpressionMatching {
         System.out.printf("V5 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
         result = isMatchV6(s, p);
         System.out.printf("V6 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
+        result = isMatchV7(s, p);
+        System.out.printf("V7 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
     }
 
     public static void main(String[] args) {
