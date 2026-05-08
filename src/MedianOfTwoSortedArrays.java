@@ -130,35 +130,72 @@ public class MedianOfTwoSortedArrays {
     }
 
     public double findMedianSortedArraysV5(int[] nums1, int[] nums2) {
-        if(nums1.length > nums2.length){
+        if (nums1.length > nums2.length) {
             return findMedianSortedArraysV5(nums2, nums1);
         }
         int m = nums1.length;
         int n = nums2.length;
         int low = 0, high = m;
         // int maxLeftX = 0, maxLeftY = 0, minRightX = 0, minRightY = 0;
-        while(low <= high){
+        while (low <= high) {
             int partitionX = (low + high) / 2;
-            int partitionY = (m + n + 1 ) / 2 - partitionX;
-            int maxLeftX =  (partitionX == 0) ? Integer.MIN_VALUE : nums1[partitionX - 1];
+            int partitionY = (m + n + 1) / 2 - partitionX;
+            int maxLeftX = (partitionX == 0) ? Integer.MIN_VALUE : nums1[partitionX - 1];
             int minRightX = (partitionX == m) ? Integer.MAX_VALUE : nums1[partitionX];
 
             int maxLeftY = (partitionY == 0) ? Integer.MIN_VALUE : nums2[partitionY - 1];
             int minRightY = (partitionY == n) ? Integer.MAX_VALUE : nums2[partitionY];
-            if(maxLeftX <= minRightY && maxLeftY <= minRightX){
-                if((m + n) % 2 == 0){
-                    return (double)(Math.max(maxLeftY, maxLeftX) + Math.min(minRightX , minRightY))/2.0;
-                }else{
-                    return (double)Math.max(maxLeftY, maxLeftX);
+            if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
+                if ((m + n) % 2 == 0) {
+                    return (double) (Math.max(maxLeftY, maxLeftX) + Math.min(minRightX, minRightY)) / 2.0;
+                } else {
+                    return (double) Math.max(maxLeftY, maxLeftX);
                 }
-            }else if(maxLeftX > minRightY){
+            } else if (maxLeftX > minRightY) {
                 high = partitionX - 1;
-            }else{
+            } else {
                 low = partitionX + 1;
             }
         }
 
         return 0;
+    }
+
+    public double findMedianSortedArraysV6(int[] nums1, int[] nums2) {
+        if (null == nums1 || null == nums2)
+            return 0;
+        int m = nums1.length;
+        int n = nums2.length;
+        int mid = (m + n) / 2;
+        int[] merged = new int[mid + 1];
+        int i = 0;
+        int j = 0;
+        boolean isOdd = (m + n) % 2 != 0;
+        int count = 0;
+
+        while (count < mid + 1 && i < m && j < n) {
+            if (nums1[i] < nums2[j]) {
+                merged[count++] = nums1[i++];
+            } else {
+                merged[count++] = nums2[j++];
+            }
+        }
+        // one array go to end
+        if (count < mid + 1) {
+            // handle nums1 left
+            while (count < mid + 1 && i < m) {
+                merged[count++] = nums1[i++];
+            }
+            // handle nums1 left
+            while (count < mid + 1 && j < n) {
+                merged[count++] = nums2[j++];
+            }
+        }
+        int firstMedian = isOdd ? merged[mid] : merged[mid - 1];
+        int secondMedian = isOdd ? merged[mid] : merged[mid];
+        System.out.printf("firstMedian=%d, secondMedian=%d, mid=%d %n",firstMedian, secondMedian, mid);
+        double result = (double)(firstMedian + secondMedian) / 2;
+        return result;
     }
 
     public void test(int[] nums1, int[] nums2, double expect) {
@@ -178,6 +215,9 @@ public class MedianOfTwoSortedArrays {
         System.out.println("expected: " + expect + ", actual: " + result);
 
         result = findMedianSortedArraysV5(nums1, nums2);
+        System.out.println("expected: " + expect + ", actual: " + result);
+
+        result = findMedianSortedArraysV6(nums1, nums2);
         System.out.println("expected: " + expect + ", actual: " + result);
     }
 
