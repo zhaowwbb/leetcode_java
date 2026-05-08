@@ -1,4 +1,7 @@
 import java.util.*;
+import java.util.stream.Collectors;
+
+import javax.print.attribute.standard.PrinterURI;
 
 public class TopStockSums {
 
@@ -171,6 +174,78 @@ public class TopStockSums {
         }
     }
 
+    public static void findTop3BySumV5(String[] names, float[][] prices) {
+        int len = names.length;
+        PriorityQueue<Float>[] stocks = new PriorityQueue[len];
+        for (int i = 0; i < len; i++) {
+            stocks[i] = new PriorityQueue<>(Collections.reverseOrder());
+        }
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < prices[i].length; j++) {
+                stocks[i].add(prices[i][j]);
+            }
+        }
+        Map<String, Float> stockMap = new HashMap<>();
+        for (int i = 0; i < len; i++) {
+            float sum = 0;
+            int count = 3;
+            while (!stocks[i].isEmpty() && count > 0) {
+                sum += stocks[i].poll();
+                count--;
+            }
+            // System.out.println("Stock [" + names[i] + "], sum=" + sum);
+            stockMap.put(names[i], sum);
+        }
+        List<Map.Entry<String, Float>> top3 = stockMap.entrySet().stream()
+                .sorted(Map.Entry.<String, Float>comparingByValue().reversed()).limit(3).collect(Collectors.toList());
+        int index = 1;
+        for (Map.Entry<String, Float> entry : top3) {
+            System.out.println("" + index + ".  " + entry.getKey() + " - Total Sum:" + entry.getValue());
+        }
+    }
+
+    public record StockV6(String name, Float sum) {
+    }
+
+    public static void findTop3BySumV6(String[] names, float[][] prices) {
+        int len = names.length;
+        PriorityQueue<Float>[] pQueues = new PriorityQueue[len];
+        List<StockV6> list = new ArrayList<>();
+        for(int i = 0; i < len; i++){
+            pQueues[i] = new PriorityQueue<>(Collections.reverseOrder());
+        }
+
+        //initialize priotity queue value
+        for(int i = 0; i < len; i++){
+            float[] priceList = prices[i];
+            PriorityQueue<Float> pq = pQueues[i];
+            for(int j = 0; j < priceList.length; j++){
+                pq.add(priceList[j]);
+            }
+
+            float sum = 0;
+            int count = 3;
+            while(!pq.isEmpty() && count > 0){
+                sum+= pq.poll();
+                count--;
+            }
+            list.add(new StockV6(names[i], sum));
+        }
+
+        List<StockV6> top3 = list.stream().sorted(Comparator.comparing(StockV6::sum).reversed()).limit(3).collect(Collectors.toList());
+
+        int i = 0;
+        for(StockV6 stock : top3){
+            System.out.printf("%d. %s - Total Sum: %f, %n", i+1, stock.name, stock.sum);
+        }
+        // list.sort(Comparator.comparing(StockV6::sum).reversed());
+        // for(int i = 0; i <3; i++){
+        //     StockV6 stock = list.get(i);
+        //     System.out.printf("%d. %s - Total Sum: %f, %n", i+1, stock.name, stock.sum);
+        // }
+
+    }
+
     public static void main(String[] args) {
         String[] stocks = { "AAPL", "GOOGL", "MSFT", "AMZN", "TSLA" };
 
@@ -182,13 +257,17 @@ public class TopStockSums {
                 { 3400.0f, 3300.0f, 3500.0f, 3450.0f }, // AMZN: top 3 are 3500, 3450, 3400 (Sum: 10350)
                 { 700.0f, 800.0f, 750.0f, 720.0f } // TSLA: top 3 are 800, 750, 720 (Sum: 2270)
         };
-        System.out.println("[1]#####################");
-        findTop3BySum(stocks, prices);
-        System.out.println("[2]#####################");
-        findTop3BySumV2(stocks, prices);
-        System.out.println("[3]#####################");
-        findTop3BySumV3(stocks, prices);
+        // System.out.println("[1]#####################");
+        // findTop3BySum(stocks, prices);
+        // System.out.println("[2]#####################");
+        // findTop3BySumV2(stocks, prices);
+        // System.out.println("[3]#####################");
+        // findTop3BySumV3(stocks, prices);
         System.out.println("[4]#####################");
         findTop3BySumV4(stocks, prices);
+        System.out.println("[5]#####################");
+        findTop3BySumV5(stocks, prices);
+        System.out.println("[6]#####################");
+        findTop3BySumV6(stocks, prices);
     }
 }
