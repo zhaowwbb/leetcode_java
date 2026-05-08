@@ -265,6 +265,52 @@ public class CellSimulation {
         return list;
     }
 
+    public static List<Cell> simulateEatingV6(String[] names, String[] families, int[] sizes) {
+         System.out.println("##########  simulateEatingV6 ##########");
+        List<Cell> result = new ArrayList<>();
+        int len = names.length;
+        if (len == 0)
+            return result;
+        Stack<Cell> stack = new Stack<>();
+        for (int i = 0; i < len; i++) {
+            Cell current = new Cell(names[i], families[i], sizes[i]);
+            if (stack.isEmpty()) {
+                stack.push(current);
+            } else {
+                Cell left = stack.peek();
+                if (left.familyCode != current.familyCode) {
+                    // right eat
+                    if (i < len - 1 && families[i + 1] != current.familyCode && sizes[i + 1] > current.size
+                            && sizes[i + 1] > left.size) {
+                        stack.push(current);
+                    } else {
+                        // left eat
+                        if (left.size > current.size) {
+                            left = stack.pop();
+                            left.size += current.size;
+                            stack.push(left);
+                        } else if (left.size < current.size) {
+                            // current eat
+                            left = stack.pop();
+                            current.size += left.size;
+                            stack.push(current);
+                        } else {
+                            // equals
+                            stack.push(current);
+                        }
+                    }
+                } else {
+                    stack.push(current);
+                }
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            result.add(stack.pop());
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         // Test Data: 8 cells, 5 different families
         // Setup: Beta is between Alpha and Gamma (same family).
@@ -276,16 +322,19 @@ public class CellSimulation {
         List<Cell> survivors = simulateEating(names, families, sizes);
         printSurvivors(survivors);
 
-        survivors = simulateEatingV2(names, families, sizes);
-        printSurvivors(survivors);
+        // survivors = simulateEatingV2(names, families, sizes);
+        // printSurvivors(survivors);
 
-        survivors = simulateEatingV3(names, families, sizes);
-        printSurvivors(survivors);
+        // survivors = simulateEatingV3(names, families, sizes);
+        // printSurvivors(survivors);
 
         survivors = simulateEatingV4(names, families, sizes);
         printSurvivors(survivors);
 
         survivors = simulateEatingV5(names, families, sizes);
+        printSurvivors(survivors);
+
+        survivors = simulateEatingV6(names, families, sizes);
         printSurvivors(survivors);
     }
 
