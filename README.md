@@ -16,6 +16,10 @@ This is a classic "Match-3" cascade logic.
     GloriaQuest.java   
 (7)Java Bank Simulator
     BankSystem.java 
+(8)FizzBuzz
+    FizzBuzz.java  
+(9)Request Rate Limiter
+      
 ############################################################
 leetcode 
 (1)TwoSum
