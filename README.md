@@ -19,7 +19,9 @@ This is a classic "Match-3" cascade logic.
 (8)FizzBuzz
     FizzBuzz.java  
 (9)Request Rate Limiter
-    RateLimiterDemo.java      
+    RateLimiterDemo.java   
+(10)Reconstruct a Circular Symbol Sequence
+       
 ############################################################
 leetcode 
 (1)TwoSum
