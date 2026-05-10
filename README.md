@@ -21,7 +21,9 @@ This is a classic "Match-3" cascade logic.
 (9)Request Rate Limiter
     RateLimiterDemo.java   
 (10)Reconstruct a Circular Symbol Sequence
-       
+    ReconstructCircularSymbolSequenceDemo.java
+(11)Stock-Car Qualifying Laps Elimination
+    StockCarRaceSimulation.java
 ############################################################
 leetcode 
 (1)TwoSum
