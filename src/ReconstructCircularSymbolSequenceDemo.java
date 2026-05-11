@@ -117,10 +117,10 @@ public class ReconstructCircularSymbolSequenceDemo {
 
     public List<Integer> reconstructCircleV3(int[][] symbolPairs) {
         List<Integer> result = new ArrayList<>();
-        //create adj list
+        // create adj list
         int len = symbolPairs.length;
         Map<Integer, List<Integer>> adj = new HashMap<>();
-        for(int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             int key = symbolPairs[i][0];
             int value = symbolPairs[i][1];
             adj.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
@@ -129,18 +129,18 @@ public class ReconstructCircularSymbolSequenceDemo {
         // int adjSize = adj.size();
         int current = symbolPairs[0][0];
         int pre = -1;
-        for(int i = 0; i < adj.size(); i++){
+        for (int i = 0; i < adj.size(); i++) {
             List<Integer> neighbors = adj.get(current);
             result.add(current);
             int next = 0;
-            if(neighbors.get(0) == pre){
+            if (neighbors.get(0) == pre) {
                 next = neighbors.get(1);
-            }else{
+            } else {
                 // pre = neighbors.get(1);
                 next = neighbors.get(0);
             }
             pre = current;
-            current =  next;
+            current = next;
         }
         return result;
     }
@@ -149,7 +149,7 @@ public class ReconstructCircularSymbolSequenceDemo {
         List<Integer> result = new ArrayList<>();
         Map<Integer, List<Integer>> adj = new HashMap<>();
         int len = symbolPairs.length;
-        for(int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             int key = symbolPairs[i][0];
             int value = symbolPairs[i][1];
             adj.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
@@ -158,14 +158,39 @@ public class ReconstructCircularSymbolSequenceDemo {
         int size = adj.size();
         int current = symbolPairs[0][0];
         int pre = -1;
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             result.add(current);
             List<Integer> neighbors = adj.get(current);
 
-            int next = (neighbors.get(0) == pre)? neighbors.get(1) : neighbors.get(0);
+            int next = (neighbors.get(0) == pre) ? neighbors.get(1) : neighbors.get(0);
             pre = current;
             current = next;
         }
+        return result;
+    }
+
+    public List<Integer> reconstructCircleV5(int[][] symbolPairs) {
+        List<Integer> result = new ArrayList<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+     
+        for(int[] pair : symbolPairs){
+            int key = pair[0];
+            int value = pair[1];
+            map.computeIfAbsent(key, k->new ArrayList<>()).add(value);
+            map.computeIfAbsent(value, k-> new ArrayList<>()).add(key);
+        }
+        int current = symbolPairs[0][0];
+        int pre = -1;
+        int size = map.size();
+        for(int i = 0; i < size; i++){
+            result.add(current);
+            List<Integer> neighbors = map.get(current);
+            int next = (pre == neighbors.get(0))? neighbors.get(1): neighbors.get(0);
+
+            pre = current;
+            current = next;
+        }
+
         return result;
     }
 
@@ -189,7 +214,10 @@ public class ReconstructCircularSymbolSequenceDemo {
         System.out.println("[V3] Actual: " + resultList);
 
         resultList = reconstructCircleV4(input);
-        System.out.println("[V4] Actual: " + resultList);        
+        System.out.println("[V4] Actual: " + resultList);
+
+        resultList = reconstructCircleV5(input);
+        System.out.println("[V5] Actual: " + resultList);
         System.out.println("===================================");
     }
 
