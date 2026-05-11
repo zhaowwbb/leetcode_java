@@ -24,6 +24,8 @@ This is a classic "Match-3" cascade logic.
     ReconstructCircularSymbolSequenceDemo.java
 (11)Stock-Car Qualifying Laps Elimination
     StockCarRaceSimulation.java
+(12)Knapsack Problem
+    
 ############################################################
 leetcode 
 (1)TwoSum
