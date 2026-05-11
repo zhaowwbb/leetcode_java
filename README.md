@@ -26,6 +26,8 @@ This is a classic "Match-3" cascade logic.
     StockCarRaceSimulation.java
 (12)Knapsack Problem
     Knapsack.java
+(13)Sorting Employees
+    MultiSortExample.java    
 ############################################################
 leetcode 
 (1)TwoSum
