@@ -25,7 +25,7 @@ This is a classic "Match-3" cascade logic.
 (11)Stock-Car Qualifying Laps Elimination
     StockCarRaceSimulation.java
 (12)Knapsack Problem
-    
+    Knapsack.java
 ############################################################
 leetcode 
 (1)TwoSum

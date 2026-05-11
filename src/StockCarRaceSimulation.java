@@ -142,7 +142,7 @@ public class StockCarRaceSimulation {
                         tmpList.add(cr.name);
                         eliminateSet.add(cr.name);
                     }
-                    //sort name
+                    // sort name
                     Collections.sort(tmpList);
                     result.addAll(tmpList);
                 } else {
@@ -152,6 +152,43 @@ public class StockCarRaceSimulation {
             }
         }
 
+        return result;
+    }
+
+    public List<String> solutionV4(String[][] laps) {
+        List<String> result = new ArrayList<>();
+        Set<String> eliminatedSet = new HashSet<>();
+        PriorityQueue<CarRacer> queue = new PriorityQueue<>((a,b)-> b.score -a.score);
+        for(String[] lap : laps){            
+            if(!queue.isEmpty())queue.clear();
+            for(String s : lap){
+                String[] pair = s.split(" ");
+                String name = pair[0];
+                if(!eliminatedSet.contains(name)){
+                    queue.add(new CarRacer(name, Integer.parseInt(pair[1])));
+                }
+            }
+            //eliminate Process
+            if(!queue.isEmpty()){
+                CarRacer cr = queue.poll();
+                if(!queue.isEmpty() && queue.peek().score == cr.score){
+                    //more people be eliminated
+                    List<String> tmpList = new ArrayList<>();
+                    tmpList.add(cr.name);
+                    eliminatedSet.add(cr.name);
+                    while(!queue.isEmpty() && queue.peek().score == cr.score){
+                        cr = queue.poll();
+                        tmpList.add(cr.name);
+                        eliminatedSet.add(cr.name);
+                    }
+                    Collections.sort(tmpList);
+                    result.addAll(tmpList);
+                }else{
+                    result.add(cr.name);
+                    eliminatedSet.add(cr.name);
+                }
+            }
+        }
         return result;
     }
 
@@ -169,6 +206,9 @@ public class StockCarRaceSimulation {
 
         result = solutionV3(laps);
         System.out.println("[V3] actual Result=" + result);
+
+        result = solutionV4(laps);
+        System.out.println("[V4] actual Result=" + result);
         System.out.println("=====================");
     }
 
