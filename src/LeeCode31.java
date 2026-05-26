@@ -1,6 +1,5 @@
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.stream.IntStream;
+import java.util.*;
 
 public class LeeCode31 {
     public void nextPermutation(int[] nums) {
@@ -107,14 +106,14 @@ public class LeeCode31 {
     public void nextPermutationV3(int[] nums) {
         int len = nums.length;
         int i = len - 2;
-        
-        while(i >= 0 && nums[i] >= nums[i+1]){
+
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
             i--;
         }
 
-        if(i >= 0){
+        if (i >= 0) {
             int j = len - 1;
-            while(nums[j] <= nums[i]){
+            while (nums[j] <= nums[i]) {
                 j--;
             }
             System.out.println("  i=" + i + ",j=" + j);
@@ -126,21 +125,77 @@ public class LeeCode31 {
     public void nextPermutationV4(int[] nums) {
         int len = nums.length;
         int i = len - 2;
-        while(i >=0 && nums[i] >= nums[i+1]){
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
             i--;
         }
         int j = len - 1;
-        if(i >= 0){
-            while(j >= 0 && nums[j] <= nums[i]){
+        if (i >= 0) {
+            while (j >= 0 && nums[j] <= nums[i]) {
                 j--;
             }
             swap(nums, i, j);
+        }
+        // reverse
+        int left = i + 1;
+        int right = len - 1;
+        while (left < right) {
+            swap(nums, left, right);
+            left++;
+            right--;
+        }
+    }
+
+    public void nextPermutationV5(int[] nums) {
+        if (null == nums || nums.length <= 1)
+            return;
+        int len = nums.length;
+        int i = len - 2;
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
+            i--;
+        }
+        if (i >= 0) {
+            int j = len - 1;
+            while (j >= 0 && nums[j] <= nums[i]) {
+                j--;
+            }
+            int tmp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = tmp;
+        }
+        int left = i + 1;
+        int right = len - 1;
+        while (left < right) {
+            int tmp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = tmp;
+            left++;
+            right--;
+        }
+    }
+
+    public void nextPermutationV6(int[] nums) {
+        if(null == nums || nums.length <= 1)return;
+        int len = nums.length;
+        int i = len - 2;
+        while(i >=0 && nums[i] >= nums[i+1]){
+            i--;
+        }
+        if(i >= 0){
+            int j = len - 1;
+            while(j >= 0 && nums[i] >= nums[j]){
+                j--;
+            }
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
         }
         //reverse
         int left = i + 1;
         int right = len - 1;
         while(left < right){
-            swap(nums, left, right);
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
             left++;
             right--;
         }
@@ -151,21 +206,33 @@ public class LeeCode31 {
         System.out.println("Input:" + Arrays.toString(copy));
 
         nextPermutation(copy);
-        System.out.println("[V1]expected:" + expected + ",Result:" + Arrays.toString(copy));
+        // System.out.println("[V1]expected:" + expected + ",Result:" +
+        // Arrays.toString(copy));
         // System.out.println("[V1]expected:" + expected);
         // System.out.println("[V1]Result :" + Arrays.toString(copy));
 
-        copy = nums.clone();
-        nextPermutationV2(copy);
-        System.out.println("[V2]expected:" + expected + ",Result:" + Arrays.toString(copy));
+        // copy = nums.clone();
+        // nextPermutationV2(copy);
+        // System.out.println("[V2]expected:" + expected + ",Result:" +
+        // Arrays.toString(copy));
 
-        copy = nums.clone();
-        nextPermutationV3(copy);
-        System.out.println("[V3]expected:" + expected + ",Result:" + Arrays.toString(copy));
+        // copy = nums.clone();
+        // nextPermutationV3(copy);
+        // System.out.println("[V3]expected:" + expected + ",Result:" +
+        // Arrays.toString(copy));
 
         copy = nums.clone();
         nextPermutationV4(copy);
-        System.out.println("[V4]expected:" + expected + ",Result:" + Arrays.toString(copy));        
+        System.out.println("[V4]expected:" + expected + ",Result:" + Arrays.toString(copy));
+
+        copy = nums.clone();
+        nextPermutationV5(copy);
+        System.out.println("[V5]expected:" + expected + ",Result:" + Arrays.toString(copy));
+
+        copy = nums.clone();
+        nextPermutationV6(copy);
+        System.out.println("[V6]expected:" + expected + ",Result:" + Arrays.toString(copy));
+
         System.out.println("====================");
     }
 
@@ -186,5 +253,11 @@ public class LeeCode31 {
 
         nums = new int[] { 2, 3, 1 };
         lc.test(nums, "[3,1,2]");
+
+        nums = new int[] { 5, 4, 7, 5, 3, 2 };
+        lc.test(nums, "[5,5,2,3,4,7]");
+
+        nums = new int[] { 4, 2, 0, 2, 3, 2, 0 };
+        lc.test(nums, "[4,2,0,3,0,2,2]");
     }
 }
