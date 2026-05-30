@@ -12,7 +12,7 @@ import java.util.Arrays;
  * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
-public class AddTwoNumber {
+public class LeetCode2 {
     public class ListNode {
         int val;
         ListNode next;
@@ -208,6 +208,28 @@ public class AddTwoNumber {
         return dummyNode.next;
     }
 
+    public ListNode addTwoNumbersV5(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        int high = 0;
+        ListNode cur = dummy;
+        while (l1 != null && l2 != null && high != 0) {
+            int leftVal = l1 != null ? l1.val : 0;
+            int rightVal = l2 != null ? l2.val : 0;
+            int nextVal = leftVal + rightVal + high;
+            high = nextVal / 10;
+            nextVal = nextVal % 10;
+            cur.next = new ListNode(nextVal);
+            cur = cur.next;
+
+            if (l1 != null)
+                l1 = l1.next;
+            if (l2 != null)
+                l2 = l2.next;
+            // l1
+        }
+        return dummy.next;
+    }
+
     public void test(int[] nums1, int[] nums2, String expected) {
         System.out.println("ListNode 1=" + Arrays.toString(nums1));
         System.out.println("ListNode 2=" + Arrays.toString(nums2));
@@ -217,22 +239,30 @@ public class AddTwoNumber {
         ListNode l2 = createListNode(nums2);
 
         ListNode result = addTwoNumbers(l1, l2);
+        System.out.print("[V1] ");
         printListNode(result);
 
         addTwoNumbersV2(l1, l2);
+        System.out.print("[V2] ");
         printListNode(result);
 
         addTwoNumbersV3(l1, l2);
+        System.out.print("[V3] ");
         printListNode(result);
 
         addTwoNumbersV4(l1, l2);
+        System.out.print("[V4] ");
+        printListNode(result);
+
+        addTwoNumbersV5(l1, l2);
+        System.out.print("[V5] ");
         printListNode(result);
         System.out.println("################################");
     }
 
     public static void main(String[] args) {
 
-        AddTwoNumber utils = new AddTwoNumber();
+        LeetCode2 utils = new LeetCode2();
         int[] nums1 = {};
         int[] nums2 = {};
         nums1 = new int[] { 2, 4, 3 };
