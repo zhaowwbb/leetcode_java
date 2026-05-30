@@ -2,8 +2,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.*;
 
-public class TwoSum {
+public class LeetCode1 {
 
     /**
      * Determines the array index (0, 1, or 2) that holds the maximum value.
@@ -120,26 +121,44 @@ public class TwoSum {
         return result;
     }
 
+    public int[] twoSumV5(int[] nums, int target) {
+        int[] result = new int[] { -1, -1 };
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            int remains = target - nums[i];
+            if (map.containsKey(remains)) {
+                return new int[] { map.get(remains), i };
+            } else {
+                map.put(nums[i], i);
+            }
+        }
+        return result;
+    }
+
     public void test(int[] nums, int target, int expectFirst, int expectSecond) {
         System.out.println("nums= " + Arrays.toString(nums) + ", target=" + target);
         int[] result = {};
         result = twoSum(nums, target);
-        System.out.printf("Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
+        System.out.printf("[V1] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
 
         result = twoSumOptimized(nums, target);
-        System.out.printf("Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
+        System.out.printf("[V2] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
 
         result = twoSum2(nums, target);
-        System.out.printf("Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
+        System.out.printf("[V3] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
 
         result = twoSum3(nums, target);
-        System.out.printf("Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
+        System.out.printf("[V4] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
+
+        result = twoSumV5(nums, target);
+        System.out.printf("[V5] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
     }
 
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
-        TwoSum utils = new TwoSum();
+        LeetCode1 utils = new LeetCode1();
 
         // Example: p2 is the largest (10), so it should return 1
         int result = utils.findMaxPosition(5, 10, 3);
