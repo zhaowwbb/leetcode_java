@@ -4,7 +4,7 @@ import java.util.Arrays;
 // import java.util.Map;
 // import java.util.HashMap;
 
-public class LetterCombinationsOfPhoneNumber {
+public class LeetCode17 {
 
     char[][] letterMap = {
             {},
@@ -139,24 +139,51 @@ public class LetterCombinationsOfPhoneNumber {
         }
     }
 
+    public List<String> letterCombinationsV5(String digits) {
+        List<String> result = new ArrayList<>();
+        if (null == digits || digits.length() == 0) {
+            return result;
+        }
+        backtraceV5(result, new StringBuilder(), 0, digits);
+        return result;
+    }
+
+    public void backtraceV5(List<String> result, StringBuilder sb, int pos, String digits) {
+        int len = digits.length();
+        if (pos == len) {
+            result.add(sb.toString());
+            return;
+        }
+        int index = digits.charAt(pos) - '0';
+        char[] chars = letterMap[index];
+        for (char c : chars) {
+            sb.append(c);
+            backtraceV5(result, sb, pos + 1, digits);
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+
     public void test(String digits) {
         System.out.println("digits=" + digits);
         List<String> result = letterCombinations(digits);
         printResult(result, "V1");
 
-        result = letterCombinationsV2(digits);
-        printResult(result, "V2");
+        // result = letterCombinationsV2(digits);
+        // printResult(result, "V2");
 
-        result = letterCombinationsV3(digits);
-        printResult(result, "V3");
+        // result = letterCombinationsV3(digits);
+        // printResult(result, "V3");
 
         result = letterCombinationsV4(digits);
         printResult(result, "V4");
+
+        result = letterCombinationsV5(digits);
+        printResult(result, "V5");
         System.out.println("#########################");
     }
 
     public static void main(String[] args) {
-        LetterCombinationsOfPhoneNumber util = new LetterCombinationsOfPhoneNumber();
+        LeetCode17 util = new LeetCode17();
         String digits = "23";
         util.test(digits);
         digits = "2";
