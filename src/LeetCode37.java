@@ -53,7 +53,8 @@ public class LeetCode37 {
         }
         // backtrack(board);
         // backtrackV2(board);
-        backtrackV3(board);
+        // backtrackV3(board);
+        backtrackV4(board);
     }
 
     public boolean isValid2(char[][] board, int r, int c, int cc) {
@@ -141,6 +142,41 @@ public class LeetCode37 {
             }
         }
 
+        return true;
+    }
+
+    public boolean backtrackV4(char[][] board){
+        for(int row = 0; row < 9; row++){
+            for (int col = 0; col < 9; col++){
+                if(board[row][col] == '.'){
+                    for(char number = '1'; number <= '9'; number++){
+                        if(isValidV4(board,row, col, number)){
+                            board[row][col] = number;
+                            if(backtrackV4(board)){
+                                return true;
+                            }
+                            board[row][col] = '.';
+                        }                        
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean isValidV4(char[][] board, int row, int col, char number){
+        for(int i = 0; i < 9; i++){
+            if(board[row][i] == number)return false;
+            if(board[i][col] == number)return false;
+        }
+        int boxRow = (row / 3) * 3;
+        int boxCol = (col / 3) * 3;
+        for(int r = boxRow; r < boxRow + 3; r++){
+            for(int c = boxCol; c < boxCol + 3; c++){
+                if(board[r][c] == number)return false;
+            }
+        }
         return true;
     }
 
