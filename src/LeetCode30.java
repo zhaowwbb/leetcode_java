@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class LeeCode30 {
+public class LeetCode30 {
 
     public void backtrace(List<String> list, StringBuilder sb, String[] words, boolean[] used) {
         if (sb.length() == words.length * (words[0].length())) {
@@ -225,6 +225,196 @@ public class LeeCode30 {
         return result;
     }
 
+    public List<Integer> findSubstringV5(String s, String[] words) {
+        List<Integer> result = new ArrayList<>();
+        if (null == s || words == null || words.length == 0)
+            return result;
+        int wordLen = words[0].length();
+        int subStrLen = wordLen * (words.length);
+        if (s.length() < subStrLen)
+            return result;
+        Map<String, Integer> keyMap = new HashMap<>();
+        Map<String, Integer> subStrMap = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            keyMap.put(words[i], keyMap.getOrDefault(words[i], 0) + 1);
+        }
+        // System.out.println("keyMap=" + keyMap);
+        for (int i = 0; i <= s.length() - subStrLen; i++) {
+            // String word = s.substring(i, i + wordLen);
+            subStrMap.clear();
+            boolean isValid = true;
+            // if(!wordsSet.contains(word))continue;
+            for (int j = i; j < i + subStrLen; j += wordLen) {
+                String word = s.substring(j, j + wordLen);
+                if (!keyMap.containsKey(word)) {
+                    isValid = false;
+                    break;
+                }
+                subStrMap.put(word, subStrMap.getOrDefault(word, 0) + 1);
+                if (subStrMap.get(word) > keyMap.get(word)) {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) {
+                result.add(i);
+            }
+        }
+
+        return result;
+    }
+
+    public List<Integer> findSubstringV6(String s, String[] words) {
+        List<Integer> result = new ArrayList<>();
+        if (null == s || null == words || words.length == 0)
+            return result;
+        int wordLen = words[0].length();
+        int wordCount = words.length;
+
+        Map<String, Integer> wordFrequency = new HashMap<>();
+
+        for (String word : words) {
+            wordFrequency.put(word, wordFrequency.getOrDefault(word, 0) + 1);
+        }
+        for (int i = 0; i < wordLen; i++) {
+            int left = i;
+            int right = i;
+            int count = 0;
+            Map<String, Integer> currentFrequency = new HashMap<>();
+            while (right + wordLen <= s.length()) {
+                String word = s.substring(right, right + wordLen);
+                right = right + wordLen;
+                if (wordFrequency.containsKey(word)) {
+                    currentFrequency.put(word, currentFrequency.getOrDefault(word, 0) + 1);
+                    count++;
+                    while (currentFrequency.get(word) > wordFrequency.get(word)) {
+                        String leftWord = s.substring(left, left + wordLen);
+
+                        currentFrequency.put(leftWord, currentFrequency.get(leftWord) - 1);
+                        count--;
+                        left = left + wordLen;
+                    }
+                    if (count == wordCount) {
+                        result.add(left);
+                    }
+                } else {
+                    currentFrequency.clear();
+                    count = 0;
+                    left = right;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public List<Integer> findSubstringV7(String s, String[] words) {
+        List<Integer> result = new ArrayList<>();
+        if (s == null || s.length() == 0 || words == null || words.length == 0) {
+            return result;
+        }
+
+        int wordLen = words[0].length();
+        int wordCount = words.length;
+        int totalLen = wordLen * wordCount;
+
+        // If the string is shorter than the total length of all words combined
+        if (s.length() < totalLen) {
+            return result;
+        }
+
+        // Build the frequency map for the words array
+        Map<String, Integer> wordFreq = new HashMap<>();
+        for (String word : words) {
+            wordFreq.put(word, wordFreq.getOrDefault(word, 0) + 1);
+        }
+
+        // Run the sliding window wordLen times for different offsets
+        for (int i = 0; i < wordLen; i++) {
+            int left = i;
+            int right = i;
+            Map<String, Integer> currentFreq = new HashMap<>();
+            int count = 0; // Number of valid words currently in the window
+
+            // Slide the window across the string
+            while (right + wordLen <= s.length()) {
+                // Extract the next word candidate
+                String word = s.substring(right, right + wordLen);
+                right += wordLen;
+
+                if (wordFreq.containsKey(word)) {
+                    currentFreq.put(word, currentFreq.getOrDefault(word, 0) + 1);
+                    count++;
+
+                    // If we have more occurrences of 'word' than needed, shrink from the left
+                    while (currentFreq.get(word) > wordFreq.get(word)) {
+                        String leftWord = s.substring(left, left + wordLen);
+                        currentFreq.put(leftWord, currentFreq.get(leftWord) - 1);
+                        count--;
+                        left += wordLen;
+                    }
+
+                    // If the window size matches the total number of words, we found a match
+                    if (count == wordCount) {
+                        result.add(left);
+                    }
+                } else {
+                    // The word is not part of the dictionary; reset the window
+                    currentFreq.clear();
+                    count = 0;
+                    left = right;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public List<Integer> findSubstringV8(String s, String[] words) {
+        List<Integer> result = new ArrayList<>();
+        if(null == s || s.length() == 0 || null == words || words.length == 0){
+            return result;
+        }
+        int wordLen = words[0].length();
+        int wordCount = words.length;
+        int subStrLen = wordLen * wordCount;
+        if(s.length() < subStrLen){
+            return result;
+        }
+        Map<String, Integer> wordFreq = new HashMap<>();
+        for(String word : words){
+            wordFreq.put(word, wordFreq.getOrDefault(word, 0) + 1);
+        }
+        for(int i = 0; i < wordLen; i++){
+            int left = i;
+            int right = i;
+            Map<String, Integer> currentFreq = new HashMap<>();
+            int count = 0;
+            while(right + wordLen <= s.length()){
+                String word = s.substring(right, right + wordLen);
+                right += wordLen;
+                if(wordFreq.containsKey(word)){
+                    currentFreq.put(word, currentFreq.getOrDefault(word, 0) + 1);
+                    count++;
+                    while(currentFreq.get(word) > wordFreq.get(word)){
+                        String leftWord = s.substring(left, left + wordLen);
+                        currentFreq.put(leftWord, currentFreq.get(leftWord)  - 1);
+                        count--;
+                        left += wordLen;
+                    }
+                    if(count == wordCount){
+                        result.add(left);
+                    }
+                }else{
+                    currentFreq.clear();
+                    count = 0;
+                    left = right;
+                }
+            }
+        }
+        return result;
+    }
+
     public void test(String s, String[] words, String expected) {
         System.out.printf("Input s:[%s]   %n", s);
         System.out.println("words:" + Arrays.toString(words));
@@ -239,11 +429,23 @@ public class LeeCode30 {
 
         result = findSubstringV4(s, words);
         System.out.println("[V4]expected :" + expected + ", Result :" + result);
+
+        result = findSubstringV5(s, words);
+        System.out.println("[V5]expected :" + expected + ", Result :" + result);
+
+        result = findSubstringV6(s, words);
+        System.out.println("[V6]expected :" + expected + ", Result :" + result);
+
+        result = findSubstringV7(s, words);
+        System.out.println("[V7]expected :" + expected + ", Result :" + result);
+
+        result = findSubstringV8(s, words);
+        System.out.println("[V8]expected :" + expected + ", Result :" + result);
         System.out.println("=======================================");
     }
 
     public static void main(String[] args) {
-        LeeCode30 lc = new LeeCode30();
+        LeetCode30 lc = new LeetCode30();
 
         String s = "barfoothefoobarman";
         String[] words = new String[] { "foo", "bar" };
@@ -260,5 +462,9 @@ public class LeeCode30 {
         s = "aaa";
         words = new String[] { "a", "a" };
         lc.test(s, words, "[0,1]");
+
+        s = "aaaaaaaaaaaaaa";
+        words = new String[] { "aa", "aa" };
+        lc.test(s, words, "[0,1,2,3,4,5,6,7,8,9,10]");
     }
 }
