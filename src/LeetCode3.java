@@ -1,7 +1,6 @@
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
-public class LongestUniqueSubstring {
+public class LeetCode3 {
 
     public int lengthOfLongestSubstring(String s) {
         if (null == s || s.length() == 0) {
@@ -76,25 +75,70 @@ public class LongestUniqueSubstring {
         return maxLength;
     }
 
+    public int lengthOfLongestSubstringV5(String s) {
+        if (null == s)
+            return 0;
+        Set<Character> set = new HashSet<>();
+        int maxLen = 0;
+        for (int i = 0; i < s.length(); i++) {
+            
+            for (int j = i; j < s.length(); j++) {
+                char c = s.charAt(j);
+                if (!set.add(c)) {
+                    maxLen = Math.max(maxLen, set.size());
+                    set.clear();
+                    // System.out.print("")
+                    break;
+                }
+            }
+        }
+        maxLen = Math.max(maxLen, set.size());
+
+        return maxLen;
+    }
+
+    public int lengthOfLongestSubstringV6(String s) {
+        if(null == s)return 0;
+        Map<Character, Integer> charToIndex = new HashMap<>();
+        int maxLen = 0;
+        int left = 0;
+        for(int right = 0; right < s.length(); right++){
+            char c = s.charAt(right);
+            if(charToIndex.containsKey(c)){
+                left = Math.max(left, charToIndex.get(c) + 1);
+            }
+            charToIndex.put(c, right);
+            maxLen = Math.max(maxLen, right - left + 1);
+        }
+
+        return maxLen;
+    }
+
     public void test(String s, int expect) {
         System.out.println("Input: " + s);
 
         int result = lengthOfLongestSubstring(s);
-        System.out.printf("Expected: [%d], actual: [%d]%n", expect, result);
+        System.out.printf("[V1] Expected: [%d], actual: [%d]%n", expect, result);
 
-        result = lengthOfLongestSubstringV2(s);
-        System.out.printf("Expected: [%d], actual: [%d]%n", expect, result);
+        // result = lengthOfLongestSubstringV2(s);
+        // System.out.printf("[V2] Expected: [%d], actual: [%d]%n", expect, result);
 
-        result = lengthOfLongestSubstringV3(s);
-        System.out.printf("Expected: [%d], actual: [%d]%n", expect, result);
+        // result = lengthOfLongestSubstringV3(s);
+        // System.out.printf("[V3] Expected: [%d], actual: [%d]%n", expect, result);
 
         result = lengthOfLongestSubstringV4(s);
-        System.out.printf("Expected: [%d], actual: [%d]%n", expect, result);
+        System.out.printf("[V4] Expected: [%d], actual: [%d]%n", expect, result);
+
+        result = lengthOfLongestSubstringV5(s);
+        System.out.printf("[V5] Expected: [%d], actual: [%d]%n", expect, result);
+
+        result = lengthOfLongestSubstringV6(s);
+        System.out.printf("[V6] Expected: [%d], actual: [%d]%n", expect, result);        
     }
 
     public static void main(String[] args) {
-        LongestUniqueSubstring utils = new LongestUniqueSubstring();
-
+        LeetCode3 utils = new LeetCode3();
+        utils.test("au", 2);
         utils.test("abcabcbb", 3);
         utils.test("bbbbb", 1);
         utils.test("pwwkew", 3);
