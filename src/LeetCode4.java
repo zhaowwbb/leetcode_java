@@ -210,7 +210,7 @@ public class LeetCode4 {
         }
         left++;
         right++;
-        System.out.println("left=" + left + ", right=" + right);
+        // System.out.println("left=" + left + ", right=" + right);
 
         int count = 0;
         int i = 0;
@@ -251,7 +251,7 @@ public class LeetCode4 {
                 break;
             }
         }
-        System.out.println("leftValue=" + leftValue + ", rightValue=" + rightValue);
+        // System.out.println("leftValue=" + leftValue + ", rightValue=" + rightValue);
 
         double median = (double) (leftValue + rightValue) / 2;
 
