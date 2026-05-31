@@ -1,4 +1,4 @@
-public class MedianOfTwoSortedArrays {
+public class LeetCode4 {
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         if (null == nums1 || nums1.length == 0) {
@@ -193,9 +193,136 @@ public class MedianOfTwoSortedArrays {
         }
         int firstMedian = isOdd ? merged[mid] : merged[mid - 1];
         int secondMedian = isOdd ? merged[mid] : merged[mid];
-        System.out.printf("firstMedian=%d, secondMedian=%d, mid=%d %n",firstMedian, secondMedian, mid);
-        double result = (double)(firstMedian + secondMedian) / 2;
+        // System.out.printf("firstMedian=%d, secondMedian=%d, mid=%d %n",firstMedian,
+        // secondMedian, mid);
+        double result = (double) (firstMedian + secondMedian) / 2;
         return result;
+    }
+
+    public double findMedianSortedArraysV7(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        int mid = (m + n) / 2;
+        int left = mid;
+        int right = mid;
+        if ((m + n) % 2 == 0) {
+            left = mid - 1;
+        }
+        left++;
+        right++;
+        System.out.println("left=" + left + ", right=" + right);
+
+        int count = 0;
+        int i = 0;
+        int j = 0;
+
+        int leftValue = 0;
+        int rightValue = 0;
+        int val = 0;
+        while (i < nums1.length || j < nums2.length) {
+
+            if (i < nums1.length && j < nums2.length) {
+                if (nums1[i] < nums2[j]) {
+                    val = nums1[i];
+                    i++;
+
+                } else {
+                    val = nums2[j];
+                    j++;
+                }
+            } else if (i < nums1.length) {
+                val = nums1[i];
+                i++;
+            } else {
+                val = nums2[j];
+                j++;
+            }
+            if (mid == 0) {
+                leftValue = val;
+                rightValue = val;
+                break;
+            }
+            count++;
+            if (count == left) {
+                leftValue = val;
+            }
+            if (count == right) {
+                rightValue = val;
+                break;
+            }
+        }
+        System.out.println("leftValue=" + leftValue + ", rightValue=" + rightValue);
+
+        double median = (double) (leftValue + rightValue) / 2;
+
+        return median;
+    }
+
+    public double findMedianSortedArraysV8(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArraysV8(nums2, nums1);
+        }
+
+        int m = nums1.length;
+        int n = nums2.length;
+        int halfSize = (m + n + 1) / 2;
+        int left = 0;
+        int right = m;
+        while (left <= right) {
+            int partition1 = (left + right) / 2;
+            int partition2 = halfSize - partition1;
+            int maxLeft1 = (partition1 == 0) ? Integer.MIN_VALUE : nums1[partition1 - 1];
+            int minRight1 = (partition1 == m) ? Integer.MAX_VALUE : nums1[partition1];
+            int maxLeft2 = (partition2 == 0) ? Integer.MIN_VALUE : nums2[partition2 - 1];
+            int minRight2 = (partition2 == n) ? Integer.MAX_VALUE : nums2[partition2];
+
+            if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1) {
+                // found
+                if ((m + n) % 2 == 1) {
+                    return (double) Math.max(maxLeft1, maxLeft2);
+                } else {
+                    return (Math.max(maxLeft1, maxLeft2) + Math.min(minRight1, minRight2)) / 2.0;
+                }
+            } else if (maxLeft1 > minRight2) {
+                right = partition1 - 1;
+            } else {
+                left = partition1 + 1;
+            }
+        }
+        return 0;
+    }
+
+    public double findMedianSortedArraysV9(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+        int m = nums1.length;
+        int n = nums2.length;
+        int halfSize = (m + n + 1) / 2;
+        int left = 0;
+        int right = m;
+        while (left <= right) {
+            int p1 = (left + right) / 2;
+            int p2 = halfSize - p1;
+
+            int leftMax1 = p1 == 0 ? Integer.MIN_VALUE : nums1[p1 - 1];
+            int rightMin1 = p1 == m ? Integer.MAX_VALUE : nums1[p1];
+            int leftMax2 = p2 == 0 ? Integer.MIN_VALUE : nums2[p2 - 1];
+            int rightMin2 = p2 == n ? Integer.MAX_VALUE : nums2[p2];
+
+            if (leftMax1 <= rightMin2 && leftMax2 <= rightMin1) {
+                if ((m + n) % 2 == 1) {
+                    return (double) Math.max(leftMax1, leftMax2);
+                } else {
+                    return (Math.max(leftMax1, leftMax2) + Math.min(rightMin1, rightMin2)) / 2.0;
+                }
+            } else if (leftMax1 > rightMin2) {
+                right = p1 - 1;
+            } else {
+                left = p1 + 1;
+            }
+        }
+        return 0;
     }
 
     public void test(int[] nums1, int[] nums2, double expect) {
@@ -203,26 +330,36 @@ public class MedianOfTwoSortedArrays {
                 "Input: nums1 = " + java.util.Arrays.toString(nums1) + ", nums2 = " + java.util.Arrays.toString(nums2));
 
         double result = findMedianSortedArrays(nums1, nums2);
-        System.out.println("expected: " + expect + ", actual: " + result);
+        System.out.println("[V1] expected: " + expect + ", actual: " + result);
 
         result = findMedianSortedArraysV2(nums1, nums2);
-        System.out.println("expected: " + expect + ", actual: " + result);
+        System.out.println("[V2] expected: " + expect + ", actual: " + result);
 
-        result = findMedianSortedArraysV3(nums1, nums2);
-        System.out.println("expected: " + expect + ", actual: " + result);
+        // result = findMedianSortedArraysV3(nums1, nums2);
+        // System.out.println("[V3] expected: " + expect + ", actual: " + result);
 
-        result = findMedianSortedArraysV4(nums1, nums2);
-        System.out.println("expected: " + expect + ", actual: " + result);
+        // result = findMedianSortedArraysV4(nums1, nums2);
+        // System.out.println("[V4] expected: " + expect + ", actual: " + result);
 
-        result = findMedianSortedArraysV5(nums1, nums2);
-        System.out.println("expected: " + expect + ", actual: " + result);
+        // result = findMedianSortedArraysV5(nums1, nums2);
+        // System.out.println("[V5] expected: " + expect + ", actual: " + result);
 
         result = findMedianSortedArraysV6(nums1, nums2);
-        System.out.println("expected: " + expect + ", actual: " + result);
+        System.out.println("[V6] expected: " + expect + ", actual: " + result);
+
+        result = findMedianSortedArraysV7(nums1, nums2);
+        System.out.println("[V7] expected: " + expect + ", actual: " + result);
+
+        result = findMedianSortedArraysV8(nums1, nums2);
+        System.out.println("[V8] expected: " + expect + ", actual: " + result);
+
+        result = findMedianSortedArraysV9(nums1, nums2);
+        System.out.println("[V9] expected: " + expect + ", actual: " + result);
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
-        MedianOfTwoSortedArrays utils = new MedianOfTwoSortedArrays();
+        LeetCode4 utils = new LeetCode4();
 
         int[] nums1 = { 1, 3 };
         int[] nums2 = { 2 };
@@ -231,6 +368,10 @@ public class MedianOfTwoSortedArrays {
         nums1 = new int[] { 1, 2 };
         nums2 = new int[] { 3, 4 };
         utils.test(nums1, nums2, 2.50000);
+
+        nums1 = new int[] {};
+        nums2 = new int[] { 1 };
+        utils.test(nums1, nums2, 1.00000);
     }
 
 }

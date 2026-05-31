@@ -81,7 +81,7 @@ public class LeetCode3 {
         Set<Character> set = new HashSet<>();
         int maxLen = 0;
         for (int i = 0; i < s.length(); i++) {
-            
+
             for (int j = i; j < s.length(); j++) {
                 char c = s.charAt(j);
                 if (!set.add(c)) {
@@ -98,13 +98,14 @@ public class LeetCode3 {
     }
 
     public int lengthOfLongestSubstringV6(String s) {
-        if(null == s)return 0;
+        if (null == s)
+            return 0;
         Map<Character, Integer> charToIndex = new HashMap<>();
         int maxLen = 0;
         int left = 0;
-        for(int right = 0; right < s.length(); right++){
+        for (int right = 0; right < s.length(); right++) {
             char c = s.charAt(right);
-            if(charToIndex.containsKey(c)){
+            if (charToIndex.containsKey(c)) {
                 left = Math.max(left, charToIndex.get(c) + 1);
             }
             charToIndex.put(c, right);
@@ -133,7 +134,8 @@ public class LeetCode3 {
         System.out.printf("[V5] Expected: [%d], actual: [%d]%n", expect, result);
 
         result = lengthOfLongestSubstringV6(s);
-        System.out.printf("[V6] Expected: [%d], actual: [%d]%n", expect, result);        
+        System.out.printf("[V6] Expected: [%d], actual: [%d]%n", expect, result);
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
