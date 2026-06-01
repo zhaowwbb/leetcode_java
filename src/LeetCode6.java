@@ -1,4 +1,4 @@
-public class ZigzagConversion {
+public class LeetCode6 {
 
     public String convertV2(String s, int numRows) {
         if (null == s)
@@ -70,8 +70,9 @@ public class ZigzagConversion {
 
         int cycle = 2 * numRows - 2;
         int numColumn = (s.length() / cycle) * (numRows - 1) + 1;
-        System.out.println("numColumn=" + numColumn);
-        System.out.printf("cycle=%d, numRows=%d, numColumn=%d %n", cycle, numRows, numColumn);
+        // System.out.println("numColumn=" + numColumn);
+        // System.out.printf("cycle=%d, numRows=%d, numColumn=%d %n", cycle, numRows,
+        // numColumn);
         String[][] array = new String[numRows][numColumn];
         // int columnPos = 0;
         int x = 0, y = 0;
@@ -173,27 +174,93 @@ public class ZigzagConversion {
         return sb.toString();
     }
 
+    public String convertV6(String s, int numRows) {
+        if (s.length() <= numRows)
+            return s;
+        if(numRows == 1)return s;
+        StringBuilder[] rows = new StringBuilder[numRows];
+        for (int i = 0; i < numRows; i++) {
+            rows[i] = new StringBuilder();
+        }
+        boolean goDown = false;
+        int rowNo = 0;
+        for (char c : s.toCharArray()) {
+            if (rowNo == 0 || rowNo == numRows - 1) {
+                goDown = !goDown;
+            }
+            rows[rowNo].append(c);
+            if (goDown) {
+
+                rowNo++;
+            } else {
+                rowNo--;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (StringBuilder ss : rows) {
+            sb.append(ss.toString());
+        }
+        return sb.toString();
+    }
+
+
+    public String convertV7(String s, int numRows) {
+        if(numRows > s.length() || numRows == 1)return s;
+        StringBuilder[] rows = new StringBuilder[numRows];
+        for(int i = 0; i < numRows; i++){
+            rows[i] = new StringBuilder();
+        }
+        int currentRow = 0;
+        boolean goDown = false;
+        for(char c : s.toCharArray()){
+            rows[currentRow].append(c);
+            if(currentRow == 0 || currentRow == numRows - 1){
+                goDown = !goDown;
+            }
+            if(goDown){
+                currentRow++;
+            }else{
+                currentRow--;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+         for(int i = 0; i < numRows; i++){
+            sb.append(rows[i].toString());
+        }       
+        return sb.toString();
+    }
+
     public void test(String s, int numRows, String expected) {
         System.out.println("s=" + s + ",numRows" + numRows);
         String result = "";
-        result = convert(s, numRows);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        // result = convert(s, numRows);
+        // System.out.printf("[V1] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = convertV2(s, numRows);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V2] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = convertV3(s, numRows);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V3] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = convertV4(s, numRows);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V4] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = convertV5(s, numRows);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V5] Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = convertV6(s, numRows);
+        System.out.printf("[V6] Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = convertV7(s, numRows);
+        System.out.printf("[V7] Expected:[%s], actual:[%s]%n", expected, result);
+
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
-        ZigzagConversion util = new ZigzagConversion();
+        LeetCode6 util = new LeetCode6();
         String s = "";
 
         s = "PAYPALISHIRING";
@@ -202,5 +269,7 @@ public class ZigzagConversion {
         util.test(s, 4, "PINALSIGYAHRPI");
         s = "A";
         util.test(s, 1, "A");
+                s = "AB";
+        util.test(s, 1, "AB");
     }
 }
