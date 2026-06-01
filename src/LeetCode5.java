@@ -1,4 +1,4 @@
-public class LongestPalindromicSubstring {
+public class LeetCode5 {
 
     public String longestPalindromeV3(String s) {
         if (null == s || s.length() == 0)
@@ -117,7 +117,7 @@ public class LongestPalindromicSubstring {
     }
 
     public int expandFromCenterV5(String s, int left, int right) {
-        while(left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)){
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
             left--;
             right++;
         }
@@ -126,17 +126,66 @@ public class LongestPalindromicSubstring {
 
     public String longestPalindromeV5(String s) {
         int start = 0, end = 0;
-        for(int i = 0; i < s.length(); i++){
+        for (int i = 0; i < s.length(); i++) {
             int len1 = expandFromCenterV5(s, i, i);
-            int len2 = expandFromCenterV5(s, i, i+ 1);
-            int len = Math.max(len1,   len2);
+            int len2 = expandFromCenterV5(s, i, i + 1);
+            int len = Math.max(len1, len2);
 
-            if(len > end - start){
-                start = i - (len - 1) /2 ;
-                end = i + len /2;
+            if (len > end - start) {
+                start = i - (len - 1) / 2;
+                end = i + len / 2;
             }
         }
         return s.substring(start, end + 1);
+    }
+
+    public int expandFromCenterV6(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+
+    public String longestPalindromeV6(String s) {
+        int left = 0;
+        int right = 0;
+        int maxLen = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandFromCenterV6(s, i, i);
+            int len2 = expandFromCenterV6(s, i, i + 1);
+            maxLen = Math.max(len1, len2);
+            if (maxLen > right - left + 1) {
+                left = i - (maxLen - 1) / 2;
+                right = i + maxLen / 2;
+            }
+        }
+        return s.substring(left, right + 1);
+    }
+
+    public int expandFromCenterV7(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+
+    public String longestPalindromeV7(String s) {
+        int left = 0;
+        int right = 0;
+        int len = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandFromCenterV7(s, i, i);
+            int len2 = expandFromCenterV7(s, i, i + 1);
+            len = Math.max(len1, len2);
+            if (len > right - left + 1) {
+                left = i - (len - 1) / 2;
+                right = i + len / 2;
+            }
+
+        }
+        return s.substring(left, right + 1);
     }
 
     public void test(String s, String expected) {
@@ -144,26 +193,34 @@ public class LongestPalindromicSubstring {
         String result = "";
 
         result = longestPalindrome(s);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V1] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = longestPalindromeV2(s);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V2] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = longestPalindromeV3(s);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V3] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = longestPalindromeV4(s);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V4] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = longestPalindromeV5(s);
-        System.out.printf("Expected:[%s], actual:[%s]%n", expected, result);
+        System.out.printf("[V5] Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = longestPalindromeV6(s);
+        System.out.printf("[V6] Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = longestPalindromeV7(s);
+        System.out.printf("[V7] Expected:[%s], actual:[%s]%n", expected, result);
+
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
         String ss = "ABCD";
         // System.out.println("ss=" + ss.substring(0, 4));
 
-        LongestPalindromicSubstring util = new LongestPalindromicSubstring();
+        LeetCode5 util = new LeetCode5();
         String s = "";
         s = "babad";
         util.test(s, "bab");
