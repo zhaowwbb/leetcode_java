@@ -1,4 +1,4 @@
-public class ReverseInteger {
+public class LeetCode7 {
 
     public int reverseV2(int x) {
         int rev = 0;
@@ -91,13 +91,13 @@ public class ReverseInteger {
 
     public int reverseV5(int x) {
         int rev = 0;
-        while(x != 0){
+        while (x != 0) {
             int pop = x % 10;
             x /= 10;
-            if(rev > Integer.MAX_VALUE / 10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)){
+            if (rev > Integer.MAX_VALUE / 10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)) {
                 return 0;
             }
-            if(rev < Integer.MIN_VALUE / 10 || (rev == Integer.MIN_VALUE / 10 && pop < -8)){
+            if (rev < Integer.MIN_VALUE / 10 || (rev == Integer.MIN_VALUE / 10 && pop < -8)) {
                 return 0;
             }
             rev = rev * 10 + pop;
@@ -105,26 +105,44 @@ public class ReverseInteger {
         return rev;
     }
 
+    public int reverseV6(int x) {        
+        int number = 0;
+        while(x != 0){
+            int digit = x % 10;
+            if(number > Integer.MAX_VALUE / 10 || (number == Integer.MAX_VALUE / 10 && digit > 7)){
+                return 0;
+            }
+            if(number < Integer.MIN_VALUE / 10 || (number == Integer.MIN_VALUE / 10&& digit < -8)){
+                return 0;
+            }
+            number = number * 10 + digit;
+            x = x/10;
+        }
+        return number;
+    }
+
     public void test(int x, int expected) {
-        System.out.println("###########################");
+        System.out.println("input=" + x);
         int result = 0;
         result = reverse(x);
-        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+        System.out.printf("[V1] Expected:[%d], actual:[%d]%n", expected, result);
         result = reverseV2(x);
-        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+        System.out.printf("[V2] Expected:[%d], actual:[%d]%n", expected, result);
         result = reverseV3(x);
-        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+        System.out.printf("[V3] Expected:[%d], actual:[%d]%n", expected, result);
         result = reverseV4(x);
-        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
+        System.out.printf("[V4] Expected:[%d], actual:[%d]%n", expected, result);
         result = reverseV5(x);
-        System.out.printf("Expected:[%d], actual:[%d]%n", expected, result);
-
+        System.out.printf("[V5] Expected:[%d], actual:[%d]%n", expected, result);
+        result = reverseV6(x);
+        System.out.printf("[V6] Expected:[%d], actual:[%d]%n", expected, result);
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
         System.out.println("Integer.MAX_VALUE=" + Integer.MAX_VALUE);
         System.out.println("Integer.MIN_VALUE=" + Integer.MIN_VALUE);
-        ReverseInteger util = new ReverseInteger();
+        LeetCode7 util = new LeetCode7();
 
         int x = 0;
         x = 123;
