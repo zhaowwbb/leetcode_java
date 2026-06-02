@@ -1,4 +1,4 @@
-public class RegularExpressionMatching {
+public class LeetCode10 {
 
     public boolean isMatchV4(String s, String p) {
         if (null == s || null == p) {
@@ -213,26 +213,57 @@ public class RegularExpressionMatching {
     public boolean isMatchV7(String s, String p) {
         int m = s.length();
         int n = p.length();
-        boolean[][] dp = new boolean[m+1][n+1];
+        boolean[][] dp = new boolean[m + 1][n + 1];
         dp[0][0] = true;
 
+        for (int j = 2; j <= n; j++) {
+            if (p.charAt(j - 1) == '*') {
+                dp[0][j] = dp[0][j - 2];
+            }
+        }
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                char curC = s.charAt(i - 1);
+                char curP = p.charAt(j - 1);
+                if (curP == '.' || curC == curP) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (curP == '*') {
+                    dp[i][j] = dp[i][j - 2];
+
+                    char preChar = p.charAt(j - 2);
+                    if (preChar == '.' || preChar == curC) {
+                        dp[i][j] = dp[i][j] || dp[i - 1][j];
+                    }
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+
+    public boolean isMatchV8(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+        boolean[][] dp = new boolean[m + 1][n+1];
+        dp[0][0]= true;
         for(int j = 2; j <= n; j++){
             if(p.charAt(j - 1) == '*'){
                 dp[0][j] = dp[0][j - 2];
             }
         }
-
         for(int i = 1; i <= m; i++){
             for(int j = 1; j <= n; j++){
-                char curC = s.charAt(i - 1);
-                char curP = p.charAt(j - 1);
-                if(curP == '.' || curC == curP){
+                char currentC = s.charAt(i-1);
+                char currentP = p.charAt(j - 1);
+                if(currentC == currentP || currentP == '.'){
                     dp[i][j] = dp[i-1][j-1];
-                }else if(curP == '*'){
+                }else if(currentP == '*'){
+                    //0 occurrence
                     dp[i][j] = dp[i][j-2];
 
-                    char preChar = p.charAt(j - 2);
-                    if(preChar == '.' || preChar == curC){
+                    char preP = p.charAt(j - 2);
+                    if(preP == currentC || preP == '.'){
                         dp[i][j] = dp[i][j] || dp[i-1][j];
                     }
                 }
@@ -244,20 +275,27 @@ public class RegularExpressionMatching {
 
     public void test(String s, String p, boolean expectedResult) {
         boolean result = false;
-        result = isMatchV3(s, p);
-        System.out.printf("V3 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
-        result = isMatchV4(s, p);
-        System.out.printf("V4 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
-        result = isMatchV5(s, p);
-        System.out.printf("V5 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
-        result = isMatchV6(s, p);
-        System.out.printf("V6 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
+        // result = isMatchV3(s, p);
+        // System.out.printf("V3 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p,
+        // expectedResult, result);
+        // result = isMatchV4(s, p);
+        // System.out.printf("V4 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p,
+        // expectedResult, result);
+        // result = isMatchV5(s, p);
+        // System.out.printf("V5 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p,
+        // expectedResult, result);
+        // result = isMatchV6(s, p);
+        // System.out.printf("V6 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p,
+        // expectedResult, result);
         result = isMatchV7(s, p);
         System.out.printf("V7 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
+        result = isMatchV8(s, p);
+        System.out.printf("V8 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
-        RegularExpressionMatching util = new RegularExpressionMatching();
+        LeetCode10 util = new LeetCode10();
         util.test("aab", "c*a*b", true);
         util.test("mississippi", "mis*is*p*.", false);
         util.test("", "a*b*c*", true);
