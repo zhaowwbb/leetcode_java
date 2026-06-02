@@ -1,4 +1,4 @@
-public class StringToInteger {
+public class LeetCode8 {
 
     public int myAtoiV2(String s) {
         if (null == s || s.length() == 0)
@@ -215,21 +215,94 @@ public class StringToInteger {
         return number * sign;
     }
 
-    public void test(String s, int expectedResult) {
-        System.out.println("####################################");
-        int result = myAtoi(s);
-        System.out.printf("s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
-        result = myAtoiV2(s);
-        System.out.printf("s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
-        result = myAtoiV3(s);
-        System.out.printf("s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
-        result = myAtoiV4(s);
-        System.out.printf("s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
+    public int myAtoiV5(String s) {
+        if (null == s)
+            return 0;
+        int pos = 0;
+        // skip white space
+        while (pos < s.length() && s.charAt(pos) == ' ') {
+            pos++;
+        }
+        // check sign
+        int sign = 1;
+        if (s.charAt(pos) == '+' || s.charAt(pos) == '-') {
+            if (s.charAt(pos) == '-') {
+                sign = -1;
+            }
+            pos++;
+        }
+        int result = 0;
+        while (pos < s.length() && s.charAt(pos) >= '0' && s.charAt(pos) <= '9') {
+            int digit = s.charAt(pos) - '0';
+            if (result > Integer.MAX_VALUE / 10 ||
+                    (result == Integer.MAX_VALUE / 10 &&
+                            digit > Integer.MAX_VALUE % 10)) {
 
+                return sign == 1
+                        ? Integer.MAX_VALUE
+                        : Integer.MIN_VALUE;
+            }
+            result = result * 10 + digit;
+            pos++;
+        }
+        return result * sign;
+    }
+
+    public int myAtoiV6(String s) {
+        if(null == s || s.length() == 0)return 0;
+        int pos = 0;
+        int sign = 1;
+        int len = s.length();
+        int result = 0;
+        while(pos < len && s.charAt(pos) == ' '){
+            pos++;
+        }
+        if(pos < len && (s.charAt(pos) == '+' || s.charAt(pos) == '-')){
+            if(s.charAt(pos) == '-'){
+                sign = -1;
+            }
+            pos++;
+        }
+        while(pos < len && Character.isDigit(s.charAt(pos))){
+            int digit = s.charAt(pos) - '0';
+            if(result > Integer.MAX_VALUE/10 || (result == Integer.MAX_VALUE/10 && digit > Integer.MAX_VALUE % 10)){
+                if(sign > 0){
+                    return Integer.MAX_VALUE;
+                }else{
+                    return Integer.MIN_VALUE;
+                }
+            }
+
+            result = result * 10 + digit;
+            pos++;
+        }
+        return result * sign;
+    }
+
+    public void test(String s, int expectedResult) {
+        // System.out.println("####################################");
+        int result = 0;
+        // result = myAtoi(s);
+        // System.out.printf("[V1] s=[%s],expected:[%d], actual:[%d]%n", s,
+        // expectedResult, result);
+
+        // result = myAtoiV2(s);
+        // System.out.printf("[V2] s=[%s],expected:[%d], actual:[%d]%n", s,
+        // expectedResult, result);
+        // result = myAtoiV3(s);
+        // System.out.printf("[V3] s=[%s],expected:[%d], actual:[%d]%n", s,
+        // expectedResult, result);
+        result = myAtoiV4(s);
+        System.out.printf("[V4] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
+        result = myAtoiV5(s);
+        System.out.printf("[V5] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
+        result = myAtoiV6(s);
+        System.out.printf("[V6] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
-        StringToInteger util = new StringToInteger();
+        LeetCode8 util = new LeetCode8();
         String s = "";
         int expectedResult = 0;
 
@@ -253,6 +326,16 @@ public class StringToInteger {
         s = "words and 987";
         expectedResult = 0;
         util.test(s, expectedResult);
+        s = "-2147483648";
+        expectedResult = -2147483648;
+        util.test(s, expectedResult);
 
+        s = "-21474836482";
+        expectedResult = -2147483648;
+        util.test(s, expectedResult);
+
+        s = "21474836472";
+        expectedResult = 2147483647;
+        util.test(s, expectedResult);
     }
 }
