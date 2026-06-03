@@ -53,6 +53,43 @@ public class Knapsack {
 
     public static int solveKnapsackV3(int capacity, int[] weights, int[] values, int n) {
         int[][] dp = new int[n + 1][capacity + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int w = 0; w <= capacity; w++) {
+                if (i == 0 || w == 0) {
+                    dp[i][w] = 0;
+                } else if (weights[i - 1] <= w) {
+                    int first = values[i - 1] + dp[i - 1][w - weights[i - 1]];
+                    int second = dp[i - 1][w];
+                    dp[i][w] = Math.max(first, second);
+                } else {
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+        return dp[n][capacity];
+    }
+
+    public static int solveKnapsackV4(int capacity, int[] weights, int[] values, int n) {
+        int[][] dp = new int[n + 1][capacity + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int w = 0; w <= capacity; w++) {
+                if (i == 0 || w == 0) {
+                    dp[i][w] = 0;
+                } else if (weights[i - 1] <= w) {
+                    int first = values[i - 1] + dp[i - 1][w - weights[i - 1]];
+                    int second = dp[i - 1][w];
+                    dp[i][w] = Math.max(first, second);
+                } else {
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+
+        return dp[n][capacity];
+    }
+
+    public static int solveKnapsackV5(int capacity, int[] weights, int[] values, int n) {
+        int[][] dp = new int[n+1][capacity + 1];
         for(int i = 0; i <= n; i++){
             for(int w = 0; w <= capacity; w++){
                 if(i == 0 || w == 0){
@@ -69,6 +106,8 @@ public class Knapsack {
         return dp[n][capacity];
     }
 
+    
+
     public static void main(String[] args) {
         int[] values = { 60, 100, 120 };
         int[] weights = { 10, 20, 30 };
@@ -81,5 +120,10 @@ public class Knapsack {
         System.out.println("[V2]Maximum value in backpack: " + maxValue);
         maxValue = solveKnapsackV3(capacity, weights, values, n);
         System.out.println("[V3]Maximum value in backpack: " + maxValue);
+        maxValue = solveKnapsackV4(capacity, weights, values, n);
+        System.out.println("[V4]Maximum value in backpack: " + maxValue);
+        maxValue = solveKnapsackV5(capacity, weights, values, n);
+        System.out.println("[V5]Maximum value in backpack: " + maxValue);
+
     }
 }
