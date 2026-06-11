@@ -25,7 +25,7 @@ public class UnboundedKnapsack {
         }
 
         int n = weights.length;
-        
+
         // dp[i] will store the maximum value achievable with weight capacity 'i'
         int[] dp = new int[capacity + 1];
 
@@ -36,7 +36,8 @@ public class UnboundedKnapsack {
                 if (weights[i] <= w) {
                     // Update the maximum value for capacity 'w' by either:
                     // 1. Keeping the current value at dp[w]
-                    // 2. Taking the item 'i' and looking up the optimal value for the remaining capacity (w - weights[i])
+                    // 2. Taking the item 'i' and looking up the optimal value for the remaining
+                    // capacity (w - weights[i])
                     dp[w] = Math.max(dp[w], dp[w - weights[i]] + values[i]);
                 }
             }
@@ -45,11 +46,37 @@ public class UnboundedKnapsack {
         return dp[capacity];
     }
 
+    public static int getMaxKnapsackValueV2(int capacity, int[] weights, int[] values) {
+        int n = values.length;
+        int[] dp = new int[capacity + 1];
+        for (int w = 0; w <= capacity; w++) {
+            for (int i = 0; i < n; i++) {
+                if (weights[i] <= w) {
+                    dp[w] = Math.max(dp[w], values[i] + dp[w - weights[i]]);
+                }
+            }
+        }
+
+        return dp[capacity];
+    }
+
+    public static int getMaxKnapsackValueV3(int capacity, int[] weights, int[] values) {
+        int[] dp = new int[capacity + 1];
+        for (int w = 1; w <= capacity; w++) {
+            for (int i = 0; i < values.length; i++) {
+                if (weights[i] <= w) {
+                    dp[w] = Math.max(dp[w], values[i] + dp[w - weights[i]]);
+                }
+            }
+        }
+        return dp[capacity];
+    }
+
     public static void main(String[] args) {
         // Test Case
         int capacity = 8;
-        int[] values = {10, 40, 50, 70};
-        int[] weights = {1, 3, 4, 5};
+        int[] values = { 10, 40, 50, 70 };
+        int[] weights = { 1, 3, 4, 5 };
 
         System.out.println("Executing Unbounded Knapsack Optimization...");
         System.out.println("Weights:  " + Arrays.toString(weights));
@@ -57,8 +84,14 @@ public class UnboundedKnapsack {
         System.out.println("Capacity: " + capacity);
 
         int maxVal = getMaxKnapsackValue(capacity, weights, values);
-        
+
         System.out.println("------------------------------------------");
-        System.out.println("Maximum Value Obtainable: " + maxVal); // Expected Output: 110 (Taking weight 3 and weight 5 -> 40 + 70)
+        System.out.println("[V1]Maximum Value Obtainable: " + maxVal); // Expected Output: 110 (Taking weight 3 and
+                                                                       // weight 5 -> 40 + 70)
+
+        maxVal = getMaxKnapsackValueV2(capacity, weights, values);
+        System.out.println("[V2]Maximum Value Obtainable: " + maxVal);
+        maxVal = getMaxKnapsackValueV3(capacity, weights, values);
+        System.out.println("[V3]Maximum Value Obtainable: " + maxVal);
     }
 }
