@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Sorting {
 
     private void swap(int[] nums, int i, int j) {
@@ -65,7 +67,7 @@ public class Sorting {
     }
 
     public void quickSort3(int[] nums, int low, int high) {
-        if(low < high){
+        if (low < high) {
             int pivot = partition3(nums, low, high);
             quickSort3(nums, low, pivot - 1);
             quickSort3(nums, pivot + 1, high);
@@ -75,14 +77,39 @@ public class Sorting {
     public int partition3(int[] nums, int low, int high) {
         int highValue = nums[high];
         int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (nums[j] < highValue) {
+                i++;
+                swap(nums, i, j);
+            }
+        }
+        swap(nums, high, i + 1);
+        return i + 1;
+    }
+
+    public void sort4(int[] nums) {
+        quickSortV4(nums, 0, nums.length - 1);
+    }
+
+    public void quickSortV4(int[] nums, int low, int high) {
+        if(low < high){
+            int pivot = partitionV4(nums, low, high);
+            quickSortV4(nums, low, pivot -1);
+            quickSortV4(nums, pivot + 1, high);
+        }
+    }
+
+    public int partitionV4(int[] nums, int low, int high) {
+        int highValue = nums[high];
+        int i = low - 1;
         for(int j = low; j < high; j++){
             if(nums[j] < highValue){
                 i++;
                 swap(nums, i, j);
             }
         }
-        swap(nums, high, i + 1);
-        return i+ 1;
+        swap(nums, i+1, high);
+        return i + 1;
     }
 
     public static void main(String[] args) {
@@ -90,24 +117,26 @@ public class Sorting {
         int[] data = { 10, 7, 8, 9, 1, 5 };
         util.sort(data);
 
-        for (int n : data)
-            System.out.print(n + " ");
-        System.out.println("");
-        System.out.println("################");
+        // for (int n : data)
+        // System.out.print(n + " ");
+        // System.out.println("");
+        // System.out.println("################");
 
-        data = new int[] { 10, 7, 8, 9, 1, 5 };
-        util.sort2(data);
+        // data = new int[] { 10, 7, 8, 9, 1, 5 };
+        // util.sort2(data);
 
-        for (int n : data)
-            System.out.print(n + " ");
-        System.out.println("");
-        System.out.println("################");
+        // for (int n : data)
+        // System.out.print(n + " ");
+        // System.out.println("");
+        // System.out.println("################");
 
         data = new int[] { 10, 7, 8, 9, 1, 5 };
         util.sort3(data);
+        System.out.println("[V3]" + Arrays.toString(data));
 
-        for (int n : data)
-            System.out.print(n + " ");
+        data = new int[] { 10, 7, 8, 9, 1, 5 };
+        util.sort4(data);
+        System.out.println("[V4]" + Arrays.toString(data));
 
     }
 }
