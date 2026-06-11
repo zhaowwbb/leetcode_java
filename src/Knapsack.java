@@ -130,6 +130,30 @@ public class Knapsack {
         return dp[n][capacity];
     }
 
+    public static int solveKnapsackV7(int capacity, int[] weights, int[] values, int n) {
+
+        int[][] dp = new int[n + 1][capacity + 1];
+
+        for (int i = 0; i <= n; i++) {
+            for (int w = 0; w <= capacity; w++) {
+                if (i == 0 || w == 0) {
+                    dp[i][w] = 0;
+                } else {
+                    if (weights[i - 1] <= w) {
+                        int first = dp[i - 1][w];
+                        int second = values[i - 1] + dp[i - 1][w - weights[i - 1]];
+                        dp[i][w] = Math.max(first, second);
+                    } else {
+                        dp[i][w] = dp[i - 1][w];
+                    }
+                }
+
+            }
+        }
+
+        return dp[n][capacity];
+    }
+
     public static void main(String[] args) {
         int[] values = { 60, 100, 120 };
         int[] weights = { 10, 20, 30 };
@@ -148,5 +172,7 @@ public class Knapsack {
         System.out.println("[V5]Maximum value in backpack: " + maxValue);
         maxValue = solveKnapsackV6(capacity, weights, values, n);
         System.out.println("[V6]Maximum value in backpack: " + maxValue);
+        maxValue = solveKnapsackV7(capacity, weights, values, n);
+        System.out.println("[V7]Maximum value in backpack: " + maxValue);
     }
 }
