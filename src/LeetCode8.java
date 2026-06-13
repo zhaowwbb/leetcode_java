@@ -249,26 +249,28 @@ public class LeetCode8 {
     }
 
     public int myAtoiV6(String s) {
-        if(null == s || s.length() == 0)return 0;
+        if (null == s || s.length() == 0)
+            return 0;
         int pos = 0;
         int sign = 1;
         int len = s.length();
         int result = 0;
-        while(pos < len && s.charAt(pos) == ' '){
+        while (pos < len && s.charAt(pos) == ' ') {
             pos++;
         }
-        if(pos < len && (s.charAt(pos) == '+' || s.charAt(pos) == '-')){
-            if(s.charAt(pos) == '-'){
+        if (pos < len && (s.charAt(pos) == '+' || s.charAt(pos) == '-')) {
+            if (s.charAt(pos) == '-') {
                 sign = -1;
             }
             pos++;
         }
-        while(pos < len && Character.isDigit(s.charAt(pos))){
+        while (pos < len && Character.isDigit(s.charAt(pos))) {
             int digit = s.charAt(pos) - '0';
-            if(result > Integer.MAX_VALUE/10 || (result == Integer.MAX_VALUE/10 && digit > Integer.MAX_VALUE % 10)){
-                if(sign > 0){
+            if (result > Integer.MAX_VALUE / 10
+                    || (result == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10)) {
+                if (sign > 0) {
                     return Integer.MAX_VALUE;
-                }else{
+                } else {
                     return Integer.MIN_VALUE;
                 }
             }
@@ -277,6 +279,43 @@ public class LeetCode8 {
             pos++;
         }
         return result * sign;
+    }
+
+    public int myAtoiV7(String s) {
+        int result = 0;
+        if(null == s)return result;
+        //remove white space
+        int pos = 0;
+        while(pos < s.length() && s.charAt(pos) == ' '){
+            pos++;
+        }
+        int sign = 1;
+        //handle sign
+        if(s.charAt(pos) == '+' || s.charAt(pos) == '-'){
+            if(s.charAt(pos) == '-'){
+                sign = -1;
+            }
+            pos++;
+        }
+        //read number
+        while(pos < s.length()){
+            char c = s.charAt(pos);
+            if(!Character.isDigit(c)){
+                break;
+            }
+            int digit = c - '0';
+            if(result > Integer.MAX_VALUE/10 || (result == Integer.MAX_VALUE/10 && digit > 7)){
+                if(sign > 0){
+                    return Integer.MAX_VALUE;
+                }else{
+                    return Integer.MIN_VALUE;
+                }
+            }
+            result = result * 10 + digit;
+            pos++;
+        }
+
+        return result*sign;
     }
 
     public void test(String s, int expectedResult) {
@@ -298,6 +337,8 @@ public class LeetCode8 {
         System.out.printf("[V5] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
         result = myAtoiV6(s);
         System.out.printf("[V6] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
+        result = myAtoiV7(s);
+        System.out.printf("[V7] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
         System.out.println("##########################");
     }
 
