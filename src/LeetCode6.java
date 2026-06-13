@@ -177,7 +177,8 @@ public class LeetCode6 {
     public String convertV6(String s, int numRows) {
         if (s.length() <= numRows)
             return s;
-        if(numRows == 1)return s;
+        if (numRows == 1)
+            return s;
         StringBuilder[] rows = new StringBuilder[numRows];
         for (int i = 0; i < numRows; i++) {
             rows[i] = new StringBuilder();
@@ -204,31 +205,65 @@ public class LeetCode6 {
         return sb.toString();
     }
 
-
     public String convertV7(String s, int numRows) {
-        if(numRows > s.length() || numRows == 1)return s;
+        if (numRows > s.length() || numRows == 1)
+            return s;
         StringBuilder[] rows = new StringBuilder[numRows];
-        for(int i = 0; i < numRows; i++){
+        for (int i = 0; i < numRows; i++) {
             rows[i] = new StringBuilder();
         }
         int currentRow = 0;
         boolean goDown = false;
-        for(char c : s.toCharArray()){
+        for (char c : s.toCharArray()) {
             rows[currentRow].append(c);
-            if(currentRow == 0 || currentRow == numRows - 1){
+            if (currentRow == 0 || currentRow == numRows - 1) {
                 goDown = !goDown;
             }
-            if(goDown){
+            if (goDown) {
                 currentRow++;
-            }else{
+            } else {
                 currentRow--;
             }
         }
 
         StringBuilder sb = new StringBuilder();
-         for(int i = 0; i < numRows; i++){
+        for (int i = 0; i < numRows; i++) {
             sb.append(rows[i].toString());
-        }       
+        }
+        return sb.toString();
+    }
+
+    public String convertV8(String s, int numRows) {
+        if (numRows == 1 || s.length() < numRows)
+            return s;
+        StringBuilder[] rows = new StringBuilder[numRows];
+        for (int i = 0; i < numRows; i++) {
+            rows[i] = new StringBuilder();
+        }
+        boolean goDown = false;
+        int pos = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (pos == 0) {
+                goDown = true;
+            }
+            if (pos == numRows - 1) {
+                goDown = false;
+            }
+            rows[pos].append(c);
+            if (goDown) {
+                pos++;
+            } else {
+                pos--;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < numRows; i++) {
+            sb.append(rows[i]);
+        }
         return sb.toString();
     }
 
@@ -238,23 +273,26 @@ public class LeetCode6 {
         // result = convert(s, numRows);
         // System.out.printf("[V1] Expected:[%s], actual:[%s]%n", expected, result);
 
-        result = convertV2(s, numRows);
-        System.out.printf("[V2] Expected:[%s], actual:[%s]%n", expected, result);
+        // result = convertV2(s, numRows);
+        // System.out.printf("[V2] Expected:[%s], actual:[%s]%n", expected, result);
 
-        result = convertV3(s, numRows);
-        System.out.printf("[V3] Expected:[%s], actual:[%s]%n", expected, result);
+        // result = convertV3(s, numRows);
+        // System.out.printf("[V3] Expected:[%s], actual:[%s]%n", expected, result);
 
-        result = convertV4(s, numRows);
-        System.out.printf("[V4] Expected:[%s], actual:[%s]%n", expected, result);
+        // result = convertV4(s, numRows);
+        // System.out.printf("[V4] Expected:[%s], actual:[%s]%n", expected, result);
 
-        result = convertV5(s, numRows);
-        System.out.printf("[V5] Expected:[%s], actual:[%s]%n", expected, result);
+        // result = convertV5(s, numRows);
+        // System.out.printf("[V5] Expected:[%s], actual:[%s]%n", expected, result);
 
-        result = convertV6(s, numRows);
-        System.out.printf("[V6] Expected:[%s], actual:[%s]%n", expected, result);
+        // result = convertV6(s, numRows);
+        // System.out.printf("[V6] Expected:[%s], actual:[%s]%n", expected, result);
 
         result = convertV7(s, numRows);
         System.out.printf("[V7] Expected:[%s], actual:[%s]%n", expected, result);
+
+        result = convertV8(s, numRows);
+        System.out.printf("[V8] Expected:[%s], actual:[%s]%n", expected, result);
 
         System.out.println("##########################");
     }
@@ -269,7 +307,7 @@ public class LeetCode6 {
         util.test(s, 4, "PINALSIGYAHRPI");
         s = "A";
         util.test(s, 1, "A");
-                s = "AB";
+        s = "AB";
         util.test(s, 1, "AB");
     }
 }
