@@ -115,11 +115,47 @@ public class LeetCode3 {
         return maxLen;
     }
 
+    public int lengthOfLongestSubstringV7(String s) {
+        int maxLen = 0;
+        if (null == s)
+            return maxLen;
+        int left = 0;
+        Map<Character, Integer> charToIndex = new HashMap<>();
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            if (charToIndex.containsKey(c)) {
+                left = Math.max(left, charToIndex.get(c) + 1);
+            }
+            charToIndex.put(c, right);
+            int len = right - left + 1;
+            maxLen = Math.max(maxLen, len);
+        }
+
+        return maxLen;
+    }
+
+    public int lengthOfLongestSubstringV8(String s) {
+        int maxLen = 0;
+        if(null == s || s.length() == 0)return maxLen;
+        int left = 0;
+        Map<Character, Integer> charToIndex = new HashMap<>();
+        for(int right = 0; right < s.length(); right++){
+            char curChar = s.charAt(right);
+            if(charToIndex.containsKey(curChar)){
+                left = Math.max(left, charToIndex.get(curChar) + 1);
+            }
+            charToIndex.put(curChar, right);
+            maxLen = Math.max(maxLen, right - left + 1);
+        }
+        return maxLen;
+    }
+
     public void test(String s, int expect) {
         System.out.println("Input: " + s);
 
-        int result = lengthOfLongestSubstring(s);
-        System.out.printf("[V1] Expected: [%d], actual: [%d]%n", expect, result);
+        int result = 0;
+        // result = lengthOfLongestSubstring(s);
+        // System.out.printf("[V1] Expected: [%d], actual: [%d]%n", expect, result);
 
         // result = lengthOfLongestSubstringV2(s);
         // System.out.printf("[V2] Expected: [%d], actual: [%d]%n", expect, result);
@@ -127,14 +163,20 @@ public class LeetCode3 {
         // result = lengthOfLongestSubstringV3(s);
         // System.out.printf("[V3] Expected: [%d], actual: [%d]%n", expect, result);
 
-        result = lengthOfLongestSubstringV4(s);
-        System.out.printf("[V4] Expected: [%d], actual: [%d]%n", expect, result);
+        // result = lengthOfLongestSubstringV4(s);
+        // System.out.printf("[V4] Expected: [%d], actual: [%d]%n", expect, result);
 
         result = lengthOfLongestSubstringV5(s);
         System.out.printf("[V5] Expected: [%d], actual: [%d]%n", expect, result);
 
         result = lengthOfLongestSubstringV6(s);
         System.out.printf("[V6] Expected: [%d], actual: [%d]%n", expect, result);
+
+        result = lengthOfLongestSubstringV7(s);
+        System.out.printf("[V7] Expected: [%d], actual: [%d]%n", expect, result);
+
+        result = lengthOfLongestSubstringV8(s);
+        System.out.printf("[V8] Expected: [%d], actual: [%d]%n", expect, result);
         System.out.println("##########################");
     }
 
