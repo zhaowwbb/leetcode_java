@@ -325,15 +325,51 @@ public class LeetCode4 {
         return 0;
     }
 
+    public double findMedianSortedArraysV10(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        if (m > n) {
+            return findMedianSortedArraysV10(nums2, nums1);
+        }
+        int halfSize = (m + n + 1) / 2;
+        double result = 0;
+
+        int left = 0;
+        int right = m;
+        while (left <= right) {
+            int partition1 = (left + right) / 2;
+            int partition2 = halfSize - partition1;
+
+            int leftMax1 = partition1 == 0 ? Integer.MIN_VALUE : nums1[partition1 - 1];
+            int rightMin1 = partition1 == m ? Integer.MAX_VALUE : nums1[partition1];
+            int leftMax2 = partition2 == 0 ? Integer.MIN_VALUE : nums2[partition2 - 1];
+            int rightMin2 = partition2 == n ? Integer.MAX_VALUE : nums2[partition2];
+            if (leftMax1 <= rightMin2 && leftMax2 <= rightMin1) {
+                if((m + n)%2 == 1){
+                    return (double)Math.max(leftMax1, leftMax2);
+                }else{
+                    return (Math.max(leftMax1, leftMax2) + Math.min(rightMin1, rightMin2))/2.0;
+                }
+            } else if (leftMax1 > rightMin2) {
+                right = partition1 - 1;
+            } else {
+                left = partition1 + 1;
+            }
+        }
+
+        return result;
+    }
+
     public void test(int[] nums1, int[] nums2, double expect) {
         System.out.println(
                 "Input: nums1 = " + java.util.Arrays.toString(nums1) + ", nums2 = " + java.util.Arrays.toString(nums2));
 
-        double result = findMedianSortedArrays(nums1, nums2);
-        System.out.println("[V1] expected: " + expect + ", actual: " + result);
+        double result = 0;
+        // result = findMedianSortedArrays(nums1, nums2);
+        // System.out.println("[V1] expected: " + expect + ", actual: " + result);
 
-        result = findMedianSortedArraysV2(nums1, nums2);
-        System.out.println("[V2] expected: " + expect + ", actual: " + result);
+        // result = findMedianSortedArraysV2(nums1, nums2);
+        // System.out.println("[V2] expected: " + expect + ", actual: " + result);
 
         // result = findMedianSortedArraysV3(nums1, nums2);
         // System.out.println("[V3] expected: " + expect + ", actual: " + result);
@@ -344,17 +380,20 @@ public class LeetCode4 {
         // result = findMedianSortedArraysV5(nums1, nums2);
         // System.out.println("[V5] expected: " + expect + ", actual: " + result);
 
-        result = findMedianSortedArraysV6(nums1, nums2);
-        System.out.println("[V6] expected: " + expect + ", actual: " + result);
+        // result = findMedianSortedArraysV6(nums1, nums2);
+        // System.out.println("[V6] expected: " + expect + ", actual: " + result);
 
-        result = findMedianSortedArraysV7(nums1, nums2);
-        System.out.println("[V7] expected: " + expect + ", actual: " + result);
+        // result = findMedianSortedArraysV7(nums1, nums2);
+        // System.out.println("[V7] expected: " + expect + ", actual: " + result);
 
         result = findMedianSortedArraysV8(nums1, nums2);
         System.out.println("[V8] expected: " + expect + ", actual: " + result);
 
         result = findMedianSortedArraysV9(nums1, nums2);
         System.out.println("[V9] expected: " + expect + ", actual: " + result);
+
+        result = findMedianSortedArraysV10(nums1, nums2);
+        System.out.println("[V10] expected: " + expect + ", actual: " + result);
         System.out.println("##########################");
     }
 
