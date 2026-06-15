@@ -1,4 +1,4 @@
-public class IntegerToRoman {
+public class LeetCode12 {
 
     public String intToRomanV2(int num) {
         int[] values = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
@@ -127,10 +127,27 @@ public class IntegerToRoman {
     public String intToRomanV4(int num) {
         StringBuilder sb = new StringBuilder();
         int n = SYMBOL_ARRAY_V4.length;
-        for(int i = 0; i < n; i++){
-            while(num >= VALUE_ARRAY_V4[i]){
-                num-= VALUE_ARRAY_V4[i];
+        for (int i = 0; i < n; i++) {
+            while (num >= VALUE_ARRAY_V4[i]) {
+                num -= VALUE_ARRAY_V4[i];
                 sb.append(SYMBOL_ARRAY_V4[i]);
+            }
+        }
+        return sb.toString();
+    }
+
+    String[] SYMBOL_ARRAY = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+    int[] VALUE_ARRAY = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+
+    public String intToRomanV5(int num) {
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+        while (num != 0) {
+            if (num >= VALUE_ARRAY[index]) {
+                sb.append(SYMBOL_ARRAY[index]);
+                num -= VALUE_ARRAY[index];
+            } else {
+                index++;
             }
         }
         return sb.toString();
@@ -138,20 +155,24 @@ public class IntegerToRoman {
 
     public void test(int num, String expectedResult) {
         String result = intToRoman(num);
-        System.out.printf("num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
+        System.out.printf("[V1] num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
 
         result = intToRomanV2(num);
-        System.out.printf("num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
+        System.out.printf("[V2] num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
 
         result = intToRomanV3(num);
-        System.out.printf("num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
+        System.out.printf("[V3] num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
 
         result = intToRomanV4(num);
-        System.out.printf("num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
+        System.out.printf("[V4] num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
+
+        result = intToRomanV5(num);
+        System.out.printf("[V5] num=[%d], expected:[%s], actual:[%s]%n", num, expectedResult, result);
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
-        IntegerToRoman util = new IntegerToRoman();
+        LeetCode12 util = new LeetCode12();
         util.test(3749, "MMMDCCXLIX");
         util.test(58, "LVIII");
         util.test(1994, "MCMXCIV");
