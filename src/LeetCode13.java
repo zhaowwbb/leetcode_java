@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class RomanToInteger {
+public class LeetCode13 {
 
     private int getVal(char c) {
         switch (c) {
@@ -121,6 +121,27 @@ public class RomanToInteger {
         return num;
     }
 
+    int[] VALUES = {1000, 500, 100, 50, 10, 5, 1};
+    char[] SYMBOLS = {'M','D','C','L','X','V','I'};
+    public int romanToIntV5(String s) {
+        int num = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i = 0; i < VALUES.length; i++){
+            map.put(SYMBOLS[i], VALUES[i]);
+        }
+        for(int i = 0; i < s.length(); i++){
+            char c = s.charAt(i);
+            int currentValue = map.get(c);
+
+            if(i < s.length() - 1 && currentValue < map.get(s.charAt(i + 1))){
+                num -= currentValue;
+            }else{
+                num += currentValue; 
+            }
+        }
+        return num;
+    }
+
     public void test(String s, int expectedResult) {
         int result = 0;
         result = romanToInt(s);
@@ -131,10 +152,14 @@ public class RomanToInteger {
         System.out.printf("[V3] s=[%s], expected:[%d], actual:[%d] %n", s, expectedResult, result);
         result = romanToIntV4(s);
         System.out.printf("[V4] s=[%s], expected:[%d], actual:[%d] %n", s, expectedResult, result);
+        result = romanToIntV5(s);
+        System.out.printf("[V5] s=[%s], expected:[%d], actual:[%d] %n", s, expectedResult, result);
+
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
-        RomanToInteger util = new RomanToInteger();
+        LeetCode13 util = new LeetCode13();
         util.test("III", 3);
         util.test("LVIII", 58);
         util.test("MCMXCIV", 1994);
