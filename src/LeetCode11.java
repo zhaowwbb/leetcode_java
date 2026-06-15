@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class ContainerWithMostWater {
+public class LeetCode11 {
 
     public int maxArea(int[] height) {
         if (null == height || height.length < 2)
@@ -53,18 +53,46 @@ public class ContainerWithMostWater {
         return max;
     }
 
+    public int maxAreaV4(int[] height) {
+        int maxArea = 0;
+        if (null == height || height.length < 2)
+            return maxArea;
+        int left = 0;
+        int right = height.length - 1;
+        while (left < right) {
+            int distance = right - left;
+            int area = 0;
+            if (height[left] < height[right]) {
+                area = distance * height[left];
+                left++;
+            } else {
+                area = distance * height[right];
+                right--;
+            }
+            maxArea = Math.max(area, maxArea);
+        }
+        return maxArea;
+    }
+
     public void test(int[] height, int expectedResult) {
         int result = 0;
         result = maxArea(height);
-        System.out.printf("height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult, result);
+        System.out.printf("[V1] height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult,
+                result);
         result = maxAreaV2(height);
-        System.out.printf("height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult, result);
+        System.out.printf("[V2] height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult,
+                result);
         result = maxAreaV3(height);
-        System.out.printf("height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult, result);
+        System.out.printf("[V3] height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult,
+                result);
+        result = maxAreaV4(height);
+        System.out.printf("[V4] height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult,
+                result);
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
-        ContainerWithMostWater util = new ContainerWithMostWater();
+        LeetCode11 util = new LeetCode11();
         int[] height = new int[] { 1, 8, 6, 2, 5, 4, 8, 3, 7 };
         util.test(height, 49);
         height = new int[] { 1, 1 };
