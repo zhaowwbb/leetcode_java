@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class LongestCommonPrefix {
+public class LeetCode14 {
 
     public String longestCommonPrefixV2(String[] strs) {
         if (null == strs || strs.length == 0)
@@ -89,19 +89,44 @@ public class LongestCommonPrefix {
 
     }
 
+    public String longestCommonPrefixV5(String[] strs) {
+        int commonPos = Integer.MAX_VALUE;
+        // String preStr = "";
+
+        String prefix = strs[0];
+
+        for (int i = 0; i < prefix.length(); i++) {
+            char c = prefix.charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                if (strs[j].length() == i || strs[j].charAt(i) != c) {
+                    return prefix.substring(0, i);
+                }
+            }
+        }
+
+        return prefix;
+    }
+
     public void test(String[] strs, String expectedResult) {
         String result = longestCommonPrefix(strs);
         System.out.printf("[V1]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
+
         result = longestCommonPrefixV2(strs);
         System.out.printf("[V2]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
+
         result = longestCommonPrefixV3(strs);
         System.out.printf("[V3]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
+
         result = longestCommonPrefixV4(strs);
         System.out.printf("[V4]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
+
+        result = longestCommonPrefixV5(strs);
+        System.out.printf("[V5]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
+        System.out.println("##########################");
     }
 
     public static void main(String[] args) {
-        LongestCommonPrefix util = new LongestCommonPrefix();
+        LeetCode14 util = new LeetCode14();
 
         String[] strs = { "flower", "flow", "flight" };
         util.test(strs, "fl");
