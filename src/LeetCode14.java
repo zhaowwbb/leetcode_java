@@ -107,6 +107,23 @@ public class LeetCode14 {
         return prefix;
     }
 
+    public String longestCommonPrefixV6(String[] strs) {
+        String result = "";
+        if(null == strs)return result;
+        if(strs.length == 1)return strs[0];
+        String first = strs[0];
+        for(int i = 0; i < first.length(); i++){
+            char c = first.charAt(i);
+            for(int j = 1; j < strs.length; j++){
+                String s = strs[j];
+                if(i == s.length() || c != s.charAt(i)){
+                    return first.substring(0, i);
+                }
+            }
+        }
+        return first;
+    }
+
     public void test(String[] strs, String expectedResult) {
         String result = longestCommonPrefix(strs);
         System.out.printf("[V1]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
@@ -122,6 +139,9 @@ public class LeetCode14 {
 
         result = longestCommonPrefixV5(strs);
         System.out.printf("[V5]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
+
+        result = longestCommonPrefixV6(strs);
+        System.out.printf("[V6]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
         System.out.println("##########################");
     }
 
