@@ -1,4 +1,4 @@
-public class RemoveNthNodeFromEndofList {
+public class LeetCode19 {
     /**
      * Definition for singly-linked list.
      * public class ListNode {
@@ -153,18 +153,47 @@ public class RemoveNthNodeFromEndofList {
         dummyNode.next = head;
         ListNode fast = dummyNode;
         ListNode slow = dummyNode;
-        //move fast node
-        for(int i = 1; i <= n + 1; i++){
+        // move fast node
+        for (int i = 1; i <= n + 1; i++) {
             fast = fast.next;
         }
-        while(fast != null){
+        while (fast != null) {
             fast = fast.next;
             slow = slow.next;
         }
-        //remove
+        // remove
         slow.next = slow.next.next;
-        
+
         return dummyNode.next;
+    }
+
+    public ListNode removeNthFromEndV6(ListNode head, int n) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode preNode = dummy;
+        ListNode fastNode = head;
+        for (int i = 0; i < n; i++) {
+            if (preNode.next != null) {
+                fastNode = preNode.next;
+                preNode = fastNode;
+            } else {
+                // < n node
+                return dummy.next;
+            }
+        }
+        preNode = dummy;
+        while (preNode.next != null) {
+            if(fastNode.next == null){
+                //delete
+                ListNode tmp = preNode.next;
+                preNode.next = tmp.next;
+                break; 
+            }
+            preNode = preNode.next;
+            fastNode = fastNode.next;
+        }
+
+        return dummy.next;
     }
 
     public void test(ListNode head, int n) {
@@ -177,15 +206,19 @@ public class RemoveNthNodeFromEndofList {
         // result = removeNthFromEndV4(head, n);
         // System.out.println("[V4] Remove n=" + n);
 
-        result = removeNthFromEndV5(head, n);
-        System.out.println("[V5] Remove n=" + n);
+        // result = removeNthFromEndV5(head, n);
+        // System.out.println("[V5] Remove n=" + n);
+        // printNode(result);
+
+        result = removeNthFromEndV6(head, n);
+        System.out.println("[V6] Remove n=" + n);
         printNode(result);
 
         System.out.println("############################");
     }
 
     public static void main(String[] args) {
-        RemoveNthNodeFromEndofList util = new RemoveNthNodeFromEndofList();
+        LeetCode19 util = new LeetCode19();
         int[] nums = { 1, 2, 3, 4, 5 };
         ListNode head = util.createListNodeFromArray(nums);
 
