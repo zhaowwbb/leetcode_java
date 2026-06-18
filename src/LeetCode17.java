@@ -163,6 +163,27 @@ public class LeetCode17 {
         }
     }
 
+    public List<String> letterCombinationsV6(String digits) {
+        List<String> list = new ArrayList<>();
+        backtraceV6(new StringBuilder(), list, digits, 0);
+        return list;
+    }
+
+    public void backtraceV6(StringBuilder sb, List<String> list, String digits, int pos){
+        if(pos == digits.length()){
+            list.add(sb.toString());
+            return;
+        }
+        char c = digits.charAt(pos);
+        int index = c - '0';
+        char[] charList = letterMap[index];
+        for(int i = 0; i < charList.length; i++){
+            sb.append(charList[i]);
+            backtraceV6(sb, list, digits, pos + 1);
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+
     public void test(String digits) {
         System.out.println("digits=" + digits);
         List<String> result = letterCombinations(digits);
@@ -179,6 +200,9 @@ public class LeetCode17 {
 
         result = letterCombinationsV5(digits);
         printResult(result, "V5");
+
+        result = letterCombinationsV6(digits);
+        printResult(result, "V6");        
         System.out.println("#########################");
     }
 
