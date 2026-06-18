@@ -1,46 +1,7 @@
+import java.util.List;
+import java.util.Objects;
+
 public class LeetCode19 {
-    /**
-     * Definition for singly-linked list.
-     * public class ListNode {
-     * int val;
-     * ListNode next;
-     * ListNode() {}
-     * ListNode(int val) { this.val = val; }
-     * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
-     * }
-     */
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
-
-    public ListNode createListNodeFromArray(int[] nums) {
-        ListNode root = null;
-        ListNode preNode = null;
-        for (int i = 0; i < nums.length; i++) {
-            if (null == preNode) {
-                root = new ListNode(nums[i]);
-                preNode = root;
-            } else {
-                ListNode n = new ListNode(nums[i]);
-                preNode.next = n;
-                preNode = n;
-            }
-        }
-        return root;
-    }
 
     public ListNode removeNthFromEndV3(ListNode head, int n) {
         ListNode dummyHead = new ListNode(0);
@@ -57,30 +18,6 @@ public class LeetCode19 {
             slow = slow.next;
         }
         slow.next = slow.next.next;
-
-        return dummyHead.next;
-
-    }
-
-    public ListNode removeNthFromEndV2(ListNode head, int n) {
-        ListNode dummyHead = new ListNode(0);
-        dummyHead.next = head;
-        boolean isStop = false;
-        ListNode fastNode = dummyHead;
-        ListNode slowNode = dummyHead;
-        while (fastNode != null && slowNode != null) {
-            // move fast
-            for (int i = 0; i <= n; i++) {
-                fastNode = fastNode.next;
-                if (null == fastNode) {
-                    return dummyHead.next;
-                }
-            }
-            if (fastNode == null) {
-                slowNode.next = slowNode.next.next;
-            }
-            slowNode = slowNode.next;
-        }
         return dummyHead.next;
     }
 
@@ -107,16 +44,6 @@ public class LeetCode19 {
         }
         preNode.next = preNode.next.next;
         return head;
-    }
-
-    private void printNode(ListNode head) {
-        ListNode n = head;
-        while (n != null) {
-            System.out.print("[" + n.val + "]->");
-            n = n.next;
-        }
-        System.out.print("[]");
-        System.out.println("");
     }
 
     public ListNode removeNthFromEndV4(ListNode head, int n) {
@@ -183,11 +110,11 @@ public class LeetCode19 {
         }
         preNode = dummy;
         while (preNode.next != null) {
-            if(fastNode.next == null){
-                //delete
+            if (fastNode.next == null) {
+                // delete
                 ListNode tmp = preNode.next;
                 preNode.next = tmp.next;
-                break; 
+                break;
             }
             preNode = preNode.next;
             fastNode = fastNode.next;
@@ -196,39 +123,46 @@ public class LeetCode19 {
         return dummy.next;
     }
 
-    public void test(ListNode head, int n) {
-        printNode(head);
-        ListNode result = null;
-        // ListNode result = removeNthFromEndV3(head, n);
-        // System.out.println("[V3] Remove n=" + n);
-        // printNode(result);
-
-        // result = removeNthFromEndV4(head, n);
-        // System.out.println("[V4] Remove n=" + n);
-
-        // result = removeNthFromEndV5(head, n);
-        // System.out.println("[V5] Remove n=" + n);
-        // printNode(result);
-
-        result = removeNthFromEndV6(head, n);
-        System.out.println("[V6] Remove n=" + n);
-        printNode(result);
-
-        System.out.println("############################");
-    }
-
     public static void main(String[] args) {
-        LeetCode19 util = new LeetCode19();
-        int[] nums = { 1, 2, 3, 4, 5 };
-        ListNode head = util.createListNodeFromArray(nums);
+        LeetCode19 solver = new LeetCode19();
 
-        util.test(head, 2);
-        nums = new int[] { 1 };
-        head = util.createListNodeFromArray(nums);
-        util.test(head, 1);
+        System.out
+                .println("Running Consolidated Single-Call Test Suite...\n------------------------------------------");
 
-        nums = new int[] { 1, 2 };
-        head = util.createListNodeFromArray(nums);
-        util.test(head, 1);
+        /*
+         * We assemble a composite list designed to evaluate multiple conditions.
+         * Target: Remove the 5th element from the end (n = 5).
+         * 
+         * Index from end: 10 9 8 7 6 5 4 3 2 1
+         * Input List: [10, 20, 0, 1, 2, 3, 4, 5, 0, 99]
+         * ^
+         * (Target Node)
+         * 
+         * By removing the 5th node from the end ('3'):
+         * - It tests intermediate deletion (3 is between 2 and 4).
+         * - It preserves the head boundary integrity (10 and 20 are left untouched).
+         * - It preserves the trailing segments ([4, 5, 0, 99] remain intact).
+         */
+        ListNode compositeHead = Util.createLinkedList(new int[] { 10, 20, 0, 1, 2, 3, 4, 5, 0, 99 });
+        int n = 5;
+
+        // The EXACTLY ONE allowed call to the solver
+        ListNode resultHead = solver.removeNthFromEndV6(compositeHead, n);
+
+        List<Integer> actualOutput = Util.linkedListToArrayList(resultHead);
+        List<Integer> expectedOutput = List.of(10, 20, 0, 1, 2, 4, 5, 0, 99); // '3' is removed
+
+        // Verification
+        if (Objects.equals(expectedOutput, actualOutput)) {
+            System.out.println("[PASS] Multi-scenario criteria met in a single algorithmic execution step.");
+            System.out.println("       Resulting Stream: " + actualOutput);
+        } else {
+            System.err.println("[FAIL] Composite structure check failed.");
+            System.err.println("       Expected: " + expectedOutput);
+            System.err.println("       Actual:   " + actualOutput);
+        }
+
+        System.out.println("------------------------------------------\nExecution Complete.");
+
     }
 }
