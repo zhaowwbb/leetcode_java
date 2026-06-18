@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Util {
     public static void printNode(ListNode head) {
         ListNode n = head;
@@ -23,6 +26,29 @@ public class Util {
             }
         }
         return root;
+    }
+
+// Helper: Array -> Linked List
+    public static ListNode createLinkedList(int[] elements) {
+        if (elements == null || elements.length == 0) return null;
+        ListNode dummy = new ListNode(-1);
+        ListNode current = dummy;
+        for (int val : elements) {
+            current.next = new ListNode(val);
+            current = current.next;
+        }
+        return dummy.next;
+    }
+
+    // Helper: Linked List -> Java List
+    public static List<Integer> linkedListToArrayList(ListNode head) {
+        List<Integer> result = new ArrayList<>();
+        ListNode current = head;
+        while (current != null) {
+            result.add(current.val);
+            current = current.next;
+        }
+        return result;
     }
 
 }

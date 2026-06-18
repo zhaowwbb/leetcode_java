@@ -1,47 +1,7 @@
+import java.util.List;
+import java.util.Objects;
+
 public class LeetCode21 {
-
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
-
-    public ListNode createListNodeFromArray(int[] nums) {
-        ListNode root = null;
-        ListNode preNode = null;
-        for (int i = 0; i < nums.length; i++) {
-            if (null == preNode) {
-                root = new ListNode(nums[i]);
-                preNode = root;
-            } else {
-                ListNode n = new ListNode(nums[i]);
-                preNode.next = n;
-                preNode = n;
-            }
-        }
-        return root;
-    }
-
-    private void printNode(ListNode head) {
-        ListNode n = head;
-        while (n != null) {
-            System.out.print("[" + n.val + "]->");
-            n = n.next;
-        }
-        System.out.print("[]");
-        System.out.println("");
-    }
 
     public ListNode mergeTwoListsV2(ListNode list1, ListNode list2) {
         ListNode dummyNode = new ListNode(0);
@@ -210,52 +170,38 @@ public class LeetCode21 {
             }
             tail = tail.next;
         }
-        if(list1 != null){
+        if (list1 != null) {
             tail.next = list1;
-        }else{
+        } else {
             tail.next = list2;
         }
         return dummy.next;
     }
 
-    public void test(ListNode list1, ListNode list2) {
-        System.out.println("list1:");
-        printNode(list1);
-        System.out.println("list2:");
-        printNode(list2);
-
-        // ListNode result = mergeTwoLists(list1, list2);
-        // ListNode result = mergeTwoListsV2(list1, list2);
-        // ListNode result = mergeTwoListsV3(list1, list2);
-        // ListNode result = mergeTwoListsV4(list1, list2);
-
-        // ListNode result = mergeTwoListsV5(list1, list2);
-        ListNode result = mergeTwoListsV6(list1, list2);
-
-        System.out.println("Merged list:");
-        printNode(result);
-        System.out.println("#############################");
-    }
-
     public static void main(String[] args) {
-        LeetCode21 util = new LeetCode21();
-        int[] nums1 = { 1, 2, 4 };
-        int[] nums2 = { 1, 3, 4 };
-        ListNode list1 = util.createListNodeFromArray(nums1);
-        ListNode list2 = util.createListNodeFromArray(nums2);
+        LeetCode21 solver = new LeetCode21();
 
-        util.test(list1, list2);
-        // System.out.println("#############################");
-        nums1 = new int[] {};
-        nums2 = new int[] {};
-        list1 = util.createListNodeFromArray(nums1);
-        list2 = util.createListNodeFromArray(nums2);
-        util.test(list1, list2);
+        System.out.println("Running Comprehensive Single-Call Test Suite");
+        ListNode list1 = Util.createLinkedList(new int[] { -10, -5, 1, 2, 4, 5, 7 });
+        ListNode list2 = Util.createLinkedList(new int[] { -3, 1, 3, 4 });
 
-        nums1 = new int[] {};
-        nums2 = new int[] { 0 };
-        list1 = util.createListNodeFromArray(nums1);
-        list2 = util.createListNodeFromArray(nums2);
-        util.test(list1, list2);
+        // The SINGLE execution of the target method
+        // ListNode mergedResult = solver.mergeTwoListsV4(list1, list2);
+        ListNode mergedResult = solver.mergeTwoListsV6(list1, list2);
+
+        List<Integer> actualOutput = Util.linkedListToArrayList(mergedResult);
+        List<Integer> expectedOutput = List.of(-10, -5, -3, 1, 1, 2, 3, 4, 4, 5, 7);
+
+        // Verification
+        if (Objects.equals(expectedOutput, actualOutput)) {
+            System.out.println("[PASS] All edge cases validated successfully via a single merge execution.");
+            System.out.println("       Result: " + actualOutput);
+        } else {
+            System.err.println("[FAIL] Combined test verification failed!");
+            System.err.println("       Expected: " + expectedOutput);
+            System.err.println("       Actual:   " + actualOutput);
+        }
+
+        System.out.println("------------------------------------------\nExecution Complete.");
     }
 }
