@@ -1,4 +1,4 @@
-public class MergeTwoSortedLists {
+public class LeetCode21 {
 
     public class ListNode {
         int val;
@@ -166,6 +166,58 @@ public class MergeTwoSortedLists {
         return dummyNode.next;
     }
 
+    public ListNode mergeTwoListsV5(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(0);
+        // dummy.next = list1;
+        ListNode node = dummy;
+        while (list1 != null || list2 != null) {
+            int v1 = list1 != null ? list1.val : Integer.MIN_VALUE;
+            int v2 = list2 != null ? list2.val : Integer.MIN_VALUE;
+            if (v1 < v2) {
+                if (list1 != null) {
+                    node.next = list1;
+                    list1 = list1.next;
+                } else {
+                    node.next = list2;
+                    list2 = list2.next;
+                }
+                node = node.next;
+            } else {
+                if (list2 != null) {
+                    node.next = list2;
+                    list2 = list2.next;
+                } else {
+                    node.next = list1;
+                    list1 = list1.next;
+                }
+                node = node.next;
+            }
+        }
+
+        return dummy.next;
+    }
+
+    public ListNode mergeTwoListsV6(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                tail.next = list1;
+                list1 = list1.next;
+            } else {
+                tail.next = list2;
+                list2 = list2.next;
+            }
+            tail = tail.next;
+        }
+        if(list1 != null){
+            tail.next = list1;
+        }else{
+            tail.next = list2;
+        }
+        return dummy.next;
+    }
+
     public void test(ListNode list1, ListNode list2) {
         System.out.println("list1:");
         printNode(list1);
@@ -175,14 +227,18 @@ public class MergeTwoSortedLists {
         // ListNode result = mergeTwoLists(list1, list2);
         // ListNode result = mergeTwoListsV2(list1, list2);
         // ListNode result = mergeTwoListsV3(list1, list2);
-        ListNode result = mergeTwoListsV4(list1, list2);
+        // ListNode result = mergeTwoListsV4(list1, list2);
+
+        // ListNode result = mergeTwoListsV5(list1, list2);
+        ListNode result = mergeTwoListsV6(list1, list2);
+
         System.out.println("Merged list:");
         printNode(result);
         System.out.println("#############################");
     }
 
     public static void main(String[] args) {
-        MergeTwoSortedLists util = new MergeTwoSortedLists();
+        LeetCode21 util = new LeetCode21();
         int[] nums1 = { 1, 2, 4 };
         int[] nums2 = { 1, 3, 4 };
         ListNode list1 = util.createListNodeFromArray(nums1);
