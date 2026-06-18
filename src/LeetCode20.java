@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-public class ValidParentheses {
+public class LeetCode20 {
 
     public boolean isValidV2(String s) {
         Stack<Character> stack = new Stack();
@@ -92,28 +92,75 @@ public class ValidParentheses {
     }
 
     public boolean isValidV4(String s) {
-        if(null == s || s.length() % 2 != 0)return false;
+        if (null == s || s.length() % 2 != 0)
+            return false;
         Stack<Character> stack = new Stack<>();
         Map<Character, Character> map = new HashMap<>();
         map.put(')', '(');
         map.put(']', '[');
-        map.put('}','{'); 
-        for(char c : s.toCharArray()){
-            if(map.containsKey(c)){
-                if(!stack.isEmpty()){
+        map.put('}', '{');
+        for (char c : s.toCharArray()) {
+            if (map.containsKey(c)) {
+                if (!stack.isEmpty()) {
                     char top = stack.pop();
-                    if(top != map.get(c)){
+                    if (top != map.get(c)) {
                         return false;
                     }
-                }else{
+                } else {
                     return false;
                 }
-            }else{
+            } else {
                 stack.push(c);
             }
         }
 
         return stack.isEmpty();
+    }
+
+    public boolean isValidV5(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else {
+                if (stack.size() == 0)
+                    return false;
+                if ((c == ')' && stack.peek() == '(') || (c == ']' && stack.peek() == '[')
+                        || (c == '}' && stack.peek() == '{')) {
+                    stack.pop();
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+        }
+        // System.out.println("stack.size()=" + stack.size());
+        return stack.size() == 0;
+    }
+
+    public boolean isValidV6(String s) {
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> map = new HashMap<>();
+        map.put(')', '(');
+        map.put(']', '[');
+        map.put('}', '{');
+        for (char c : s.toCharArray()) {
+            if (map.containsKey(c)) {
+                if (!stack.isEmpty()) {
+                    if (stack.peek() == map.get(c)) {
+                        stack.pop();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+        return stack.size() == 0;
     }
 
     public void test(String s, boolean expectedResult) {
@@ -125,11 +172,15 @@ public class ValidParentheses {
         System.out.printf("[V3] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
         result = isValidV4(s);
         System.out.printf("[V4] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
+        result = isValidV5(s);
+        System.out.printf("[V5] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
+        result = isValidV6(s);
+        System.out.printf("[V6] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
         System.out.println("--------------------------------------------------");
     }
 
     public static void main(String[] args) {
-        ValidParentheses util = new ValidParentheses();
+        LeetCode20 util = new LeetCode20();
         util.test("()", true);
         util.test("()[]{}", true);
         util.test("(]", false);
