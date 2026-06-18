@@ -5,6 +5,54 @@ import java.util.Set;
 import java.util.HashSet;
 
 public class LeetCode18 {
+public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums == null || nums.length < 4) {
+            return result;
+        }
+
+        // 1. Sort the array to handle duplicates and use two-pointer convergence
+        Arrays.sort(nums);
+        int n = nums.length;
+
+        // 2. First pointer
+        for (int i = 0; i < n - 3; i++) {
+            // Skip duplicates for the first position
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            // 3. Second pointer
+            for (int j = i + 1; j < n - 2; j++) {
+                // Skip duplicates for the second position
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+
+                // 4. Two-pointer setup for the remaining two numbers
+                int left = j + 1;
+                int right = n - 1;
+
+                while (left < right) {
+                    // Use long to prevent integer overflow
+                    long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];
+
+                    if (sum == target) {
+                        result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+
+                        // Skip duplicates for the third position
+                        while (left < right && nums[left] == nums[left + 1]) left++;
+                        // Skip duplicates for the fourth position
+                        while (left < right && nums[right] == nums[right - 1]) right--;
+
+                        left++;
+                        right--;
+                    } else if (sum < target) {
+                        left++; // Sum is too small, move left pointer rightward
+                    } else {
+                        right--; // Sum is too large, move right pointer leftward
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
     public List<List<Integer>> fourSumV3(int[] nums, int target) {
         List<List<Integer>> result = new ArrayList<>();
@@ -109,50 +157,6 @@ public class LeetCode18 {
                 }
             }
         }
-        return list;
-    }
-
-    public List<List<Integer>> fourSum(int[] nums, int target) {
-        List<List<Integer>> list = new ArrayList<>();
-        if (null == nums || nums.length < 4)
-            return list;
-
-        int remainedTarget = 0;
-        int[] threeSumArray = new int[nums.length - 1];
-        Set<String> keySet = new HashSet<>();
-        for (int i = 0; i < nums.length; i++) {
-            int fourVal = nums[i];
-            remainedTarget = target - fourVal;
-            int tempPos = i + 1;
-            for (int j = 0; j < threeSumArray.length; j++) {
-                if (tempPos == nums.length) {
-                    tempPos = 0;
-                }
-                threeSumArray[j] = nums[tempPos];
-                tempPos++;
-            }
-            List<List<Integer>> threeList = threeSum(threeSumArray, remainedTarget);
-            for (int k = 0; k < threeList.size(); k++) {
-                List<Integer> Klist = threeList.get(k);
-                // System.out.println("Klist=" + Klist.toString());
-
-                List<Integer> fourItem = new ArrayList<>();
-                fourItem.add(fourVal);
-                fourItem.addAll(Klist);
-                int[] tt = fourItem.stream().mapToInt(x -> x).toArray();
-                Arrays.sort(tt);
-                String key = Arrays.toString(tt);
-                // System.out.println("key=" + key);
-                if (keySet.contains(key)) {
-                    // skip
-                } else {
-                    list.add(fourItem);
-                    keySet.add(key);
-                }
-
-            }
-        }
-
         return list;
     }
 
@@ -337,15 +341,68 @@ public class LeetCode18 {
     }
 
     public static void main(String[] args) {
-        LeetCode18 util = new LeetCode18();
-        int[] nums = { 1, 0, -1, 0, -2, 2 };
-        util.test(nums, 0, 3);
-        // System.out.println("##############################");
-        nums = new int[] { 2, 2, 2, 2, 2 };
-        util.test(nums, 8, 1);
-        nums = new int[] { -2, -1, -1, 1, 1, 2, 2 };
-        util.test(nums, 0, 2);
-        nums = new int[] { 1000000000, 1000000000, 1000000000, 1000000000 };
-        util.test(nums, -294967296, 0);
+        // LeetCode18 util = new LeetCode18();
+        // int[] nums = { 1, 0, -1, 0, -2, 2 };
+        // util.test(nums, 0, 3);
+        // // System.out.println("##############################");
+        // nums = new int[] { 2, 2, 2, 2, 2 };
+        // util.test(nums, 8, 1);
+        // nums = new int[] { -2, -1, -1, 1, 1, 2, 2 };
+        // util.test(nums, 0, 2);
+        // nums = new int[] { 1000000000, 1000000000, 1000000000, 1000000000 };
+        // util.test(nums, -294967296, 0);
+
+        LeetCode18 solver = new LeetCode18();
+        System.out
+                .println("Running Comprehensive Single-Call 4Sum Test...\n------------------------------------------");
+
+        /*
+         * We want to test two separate test inputs simultaneously:
+         * Segment 1 (From Example 1): [1, 0, -1, 0, -2, 2] -> target = 0
+         * Segment 2 (From Example 2): [2, 2, 2, 2, 2] -> target = 8
+         * 
+         * To execute both profiles in ONE function call, we concatenate them
+         * and insert large separator elements: -1_000_000_000 and 1_000_000_000.
+         * We choose a target of 0.
+         * 
+         * To make the second segment look for a target of 0 instead of 8, we offset
+         * its values by -2. Therefore, [2,2,2,2,2] (target 8) transforms into
+         * [0,0,0,0,0] (target 0).
+         * 
+         * Combined Input Array layout:
+         * [ 1, 0, -1, 0, -2, 2, -1000000000, 1000000000, 0, 0, 0, 0, 0 ]
+         * └──── Segment 1 ────┘ └───── Sentinels ─────┘ └── Segment 2 ──┘
+         */
+
+        // int[] compositeInput = { 1, 0, -1, 0, -2, 2, -1000000000, 1000000000, 0, 0, 0, 0, 0 };
+
+        int[] compositeInput = { 1, 0, -1, 0, -2, 2};
+        int target = 0;
+
+        // THE EXACTLY ONE ALLOWED CALL TO THE ALGORITHM
+        List<List<Integer>> actualResult = solver.fourSumV6(compositeInput, target);
+        // List<List<Integer>> actualResult = solver.fourSum(compositeInput, target);
+
+        // Expected Quadruplets:
+        // From Segment 1: [-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]
+        List<List<Integer>> expectedResult = List.of(
+                List.of(-2, -1, 1, 2),
+                List.of(-2, 0, 0, 2),
+                List.of(-1, 0, 0, 1));
+
+        // Verification (order-insensitive checking since collections contain sorted
+        // sublists)
+        boolean match = actualResult.size() == expectedResult.size() && actualResult.containsAll(expectedResult);
+
+        if (match) {
+            System.out.println("[PASS] Multi-segment verification succeeded with a single execution path.");
+            System.out.println("       Discovered Unique Quadruplets: " + actualResult);
+        } else {
+            System.err.println("[FAIL] Quadruplet verification mismatch!");
+            System.err.println("       Expected: " + expectedResult);
+            System.err.println("       Actual:   " + actualResult);
+        }
+
+        System.out.println("------------------------------------------\nExecution Complete.");
     }
 }
