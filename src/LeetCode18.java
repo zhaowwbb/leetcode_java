@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.HashSet;
 
-public class FourSum {
+public class LeetCode18 {
 
     public List<List<Integer>> fourSumV3(int[] nums, int target) {
         List<List<Integer>> result = new ArrayList<>();
@@ -238,30 +238,36 @@ public class FourSum {
 
     public List<List<Integer>> fourSumV5(int[] nums, int target) {
         List<List<Integer>> result = new ArrayList<>();
-        if(null == nums || nums.length < 4)return result;
+        if (null == nums || nums.length < 4)
+            return result;
         int n = nums.length;
         Arrays.sort(nums);
-        for(int i = 0; i < n - 3; i++){
-            //skip duplicated for the first element
-            if(i > 0 && nums[i] == nums[i - 1])continue;
-            for(int j = i + 1; j < n - 2; j++){
-                //skip duplicated for the second element
-                if(j > i + 1 && nums[j] == nums[j - 1])continue;
+        for (int i = 0; i < n - 3; i++) {
+            // skip duplicated for the first element
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            for (int j = i + 1; j < n - 2; j++) {
+                // skip duplicated for the second element
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
                 int left = j + 1;
                 int right = n - 1;
-                while(left < right){
-                    long sum = (long)(nums[i] + nums[j] + nums[left] + nums[right]);
-                    if(sum == target){
+                while (left < right) {
+                    long sum = (long) ((long) nums[i] + nums[j] + nums[left] + nums[right]);
+                    System.out.println("4 sum[V5]=" + sum);
+                    if (sum == target) {
                         result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
-                        //skip duplicated for the left 
-                        while(left < right && nums[left] == nums[left + 1])left++;
-                        //skip duplicated for the right
-                        while(left < right && nums[right] == nums[right - 1])right--;
+                        // skip duplicated for the left
+                        while (left < right && nums[left] == nums[left + 1])
+                            left++;
+                        // skip duplicated for the right
+                        while (left < right && nums[right] == nums[right - 1])
+                            right--;
                         left++;
                         right--;
-                    }else if(sum < target){
+                    } else if (sum < target) {
                         left++;
-                    }else{
+                    } else {
                         right--;
                     }
                 }
@@ -271,8 +277,44 @@ public class FourSum {
         return result;
     }
 
-    public void test(int[] nums, int target) {
-        System.out.println("nums" + Arrays.toString(nums) + ", target= " + target);
+    public List<List<Integer>> fourSumV6(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (null == nums || nums.length < 4)
+            return result;
+        int len = nums.length;
+        Arrays.sort(nums);
+        for (int i = 0; i < len - 3; i++) {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            // int threeSumTarget = target - nums[i];
+            for (int j = i + 1; j < len - 2; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                int left = j + 1;
+                int right = len - 1;
+                while (left < right) {
+                    long sum = (long) nums[i] + (long) nums[j] + (long) nums[left] + (long) nums[right];
+                    if (sum == target) {
+                        result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        while (left < right && nums[left] == nums[left + 1])
+                            left++;
+                        while (left < right && nums[right - 1] == nums[right])
+                            right--;
+                        left++;
+                        right--;
+                    } else if (sum > target) {
+                        right--;
+                    } else {
+                        left++;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public void test(int[] nums, int target, int expected) {
+        System.out.println("nums" + Arrays.toString(nums) + ", target= " + target + ", expected=" + expected);
         List<List<Integer>> result = fourSum(nums, target);
         printResult(result, "V1");
 
@@ -286,15 +328,24 @@ public class FourSum {
         printResult(result, "V4");
 
         result = fourSumV5(nums, target);
-        printResult(result, "V5");        
+        printResult(result, "V5");
+
+        result = fourSumV6(nums, target);
+        printResult(result, "V6");
+
+        System.out.println("############################");
     }
 
     public static void main(String[] args) {
-        FourSum util = new FourSum();
+        LeetCode18 util = new LeetCode18();
         int[] nums = { 1, 0, -1, 0, -2, 2 };
-        util.test(nums, 0);
-        System.out.println("##############################");
+        util.test(nums, 0, 3);
+        // System.out.println("##############################");
         nums = new int[] { 2, 2, 2, 2, 2 };
-        util.test(nums, 8);
+        util.test(nums, 8, 1);
+        nums = new int[] { -2, -1, -1, 1, 1, 2, 2 };
+        util.test(nums, 0, 2);
+        nums = new int[] { 1000000000, 1000000000, 1000000000, 1000000000 };
+        util.test(nums, -294967296, 0);
     }
 }
