@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class LeetCode6 {
 
     public String convertV2(String s, int numRows) {
@@ -267,47 +271,77 @@ public class LeetCode6 {
         return sb.toString();
     }
 
-    public void test(String s, int numRows, String expected) {
-        System.out.println("s=" + s + ",numRows" + numRows);
-        String result = "";
-        // result = convert(s, numRows);
-        // System.out.printf("[V1] Expected:[%s], actual:[%s]%n", expected, result);
+    static class ZigzagTestCase {
+        String description;
+        String input;
+        int numRows;
+        String expected;
 
-        // result = convertV2(s, numRows);
-        // System.out.printf("[V2] Expected:[%s], actual:[%s]%n", expected, result);
-
-        // result = convertV3(s, numRows);
-        // System.out.printf("[V3] Expected:[%s], actual:[%s]%n", expected, result);
-
-        // result = convertV4(s, numRows);
-        // System.out.printf("[V4] Expected:[%s], actual:[%s]%n", expected, result);
-
-        // result = convertV5(s, numRows);
-        // System.out.printf("[V5] Expected:[%s], actual:[%s]%n", expected, result);
-
-        // result = convertV6(s, numRows);
-        // System.out.printf("[V6] Expected:[%s], actual:[%s]%n", expected, result);
-
-        result = convertV7(s, numRows);
-        System.out.printf("[V7] Expected:[%s], actual:[%s]%n", expected, result);
-
-        result = convertV8(s, numRows);
-        System.out.printf("[V8] Expected:[%s], actual:[%s]%n", expected, result);
-
-        System.out.println("##########################");
+        public ZigzagTestCase(String description, String input, int numRows, String expected) {
+            this.description = description;
+            this.input = input;
+            this.numRows = numRows;
+            this.expected = expected;
+        }
     }
 
     public static void main(String[] args) {
-        LeetCode6 util = new LeetCode6();
-        String s = "";
+        LeetCode6 solver = new LeetCode6();
+        System.out.println("Running Zigzag Conversion Test Suite...\n------------------------------------------");
 
-        s = "PAYPALISHIRING";
-        util.test(s, 3, "PAHNAPLSIIGYIR");
-        s = "PAYPALISHIRING";
-        util.test(s, 4, "PINALSIGYAHRPI");
-        s = "A";
-        util.test(s, 1, "A");
-        s = "AB";
-        util.test(s, 1, "AB");
+        // 1. Define collection of test configurations
+        List<ZigzagTestCase> testCases = new ArrayList<>();
+
+        // Example 1: "PAYPALISHIRING", numRows = 3 -> "PAHNAPLSIIGYIR"
+        testCases.add(new ZigzagTestCase(
+                "Standard multi-row standard configuration",
+                "PAYPALISHIRING",
+                3,
+                "PAHNAPLSIIGYIR"));
+
+        // Example 2: "PAYPALISHIRING", numRows = 4 -> "PINALSIGYAHRPI"
+        testCases.add(new ZigzagTestCase(
+                "Increased depth row boundaries",
+                "PAYPALISHIRING",
+                4,
+                "PINALSIGYAHRPI"));
+
+        // Edge Case: numRows = 1
+        testCases.add(new ZigzagTestCase(
+                "Single row pass-through boundary",
+                "ABCDE",
+                1,
+                "ABCDE"));
+
+        // Edge Case: numRows greater than string length
+        testCases.add(new ZigzagTestCase(
+                "Row count exceeds string sequence length",
+                "AB",
+                4,
+                "AB"));
+
+        // 2. Iterate and verify test structures, invoking core logic exactly once per
+        // scenario
+        int passed = 0;
+        for (int i = 0; i < testCases.size(); i++) {
+            ZigzagTestCase tc = testCases.get(i);
+
+            // Core execution point
+            // String actual = solver.convert(tc.input, tc.numRows);
+            String actual = solver.convertV8(tc.input, tc.numRows);
+
+            if (Objects.equals(tc.expected, actual)) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       Input:    \"" + tc.input + "\" with rows: " + tc.numRows);
+                System.err.println("       Expected: \"" + tc.expected + "\"");
+                System.err.println("       Actual:   \"" + actual + "\"");
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
     }
 }

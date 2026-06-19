@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class LeetCode10 {
 
     public boolean isMatchV4(String s, String p) {
@@ -279,7 +282,7 @@ public class LeetCode10 {
         boolean[][] dp = new boolean[sLen + 1][pLen + 1];
         dp[0][0] = true;
         for (int j = 2; j <= pLen; j++) {
-            if (p.charAt(j-1) == '*') {
+            if (p.charAt(j - 1) == '*') {
                 dp[0][j] = dp[0][j - 2];
             }
         }
@@ -301,33 +304,83 @@ public class LeetCode10 {
         return dp[sLen][pLen];
     }
 
-    public void test(String s, String p, boolean expectedResult) {
-        boolean result = false;
-        // result = isMatchV3(s, p);
-        // System.out.printf("V3 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p,
-        // expectedResult, result);
-        // result = isMatchV4(s, p);
-        // System.out.printf("V4 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p,
-        // expectedResult, result);
-        // result = isMatchV5(s, p);
-        // System.out.printf("V5 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p,
-        // expectedResult, result);
-        // result = isMatchV6(s, p);
-        // System.out.printf("V6 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p,
-        // expectedResult, result);
-        result = isMatchV7(s, p);
-        System.out.printf("V7 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
-        result = isMatchV8(s, p);
-        System.out.printf("V8 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
-        result = isMatchV9(s, p);
-        System.out.printf("V9 s=[%s], p=[%s], expected:[%b], actual:[%b]%n", s, p, expectedResult, result);
-        System.out.println("##########################");
+    static class RegexTestCase {
+        String description;
+        String s;
+        String p;
+        boolean expected;
+
+        public RegexTestCase(String description, String s, String p, boolean expected) {
+            this.description = description;
+            this.s = s;
+            this.p = p;
+            this.expected = expected;
+        }
     }
 
     public static void main(String[] args) {
-        LeetCode10 util = new LeetCode10();
-        util.test("aab", "c*a*b", true);
-        util.test("mississippi", "mis*is*p*.", false);
-        util.test("", "a*b*c*", true);
+        LeetCode10 solver = new LeetCode10();
+        System.out.println(
+                "Running Regular Expression Matching Test Suite...\n------------------------------------------");
+
+        // 1. Collate test layouts tracking specific wildcard constraints
+        List<RegexTestCase> testCases = new ArrayList<>();
+
+        // Example 1: Missing match case
+        testCases.add(new RegexTestCase(
+                "Basic character mismatch without wildcards",
+                "aa",
+                "a",
+                false));
+
+        // Example 2: Star wildcard match
+        testCases.add(new RegexTestCase(
+                "Star match multiplying preceding element",
+                "aa",
+                "a*",
+                true));
+
+        // Example 3: Dot and Star combinations
+        testCases.add(new RegexTestCase(
+                "Dot-Star sequence matching everything",
+                "ab",
+                ".*",
+                true));
+
+        // Complex Case: Zero occurrences handling
+        testCases.add(new RegexTestCase(
+                "Star sequences acting as zero occurrences in middle",
+                "aab",
+                "c*a*b",
+                true));
+
+        // Complex Case: Partial match failure
+        testCases.add(new RegexTestCase(
+                "Incomplete sequence consumption mismatch",
+                "abcd",
+                "d*",
+                false));
+
+        // 2. Iterate and process assertions exactly once per defined setup block
+        int passed = 0;
+        for (int i = 0; i < testCases.size(); i++) {
+            RegexTestCase tc = testCases.get(i);
+
+            // Core execution point
+            boolean actual = solver.isMatchV9(tc.s, tc.p);
+
+            if (actual == tc.expected) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       String:  \"" + tc.s + "\" | Pattern: \"" + tc.p + "\"");
+                System.err.println("       Expected: " + tc.expected);
+                System.err.println("       Actual:   " + actual);
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
     }
 }

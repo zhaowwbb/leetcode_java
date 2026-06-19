@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class LeetCode8 {
 
     public int myAtoiV2(String s) {
@@ -283,31 +286,32 @@ public class LeetCode8 {
 
     public int myAtoiV7(String s) {
         int result = 0;
-        if(null == s)return result;
-        //remove white space
+        if (null == s)
+            return result;
+        // remove white space
         int pos = 0;
-        while(pos < s.length() && s.charAt(pos) == ' '){
+        while (pos < s.length() && s.charAt(pos) == ' ') {
             pos++;
         }
         int sign = 1;
-        //handle sign
-        if(s.charAt(pos) == '+' || s.charAt(pos) == '-'){
-            if(s.charAt(pos) == '-'){
+        // handle sign
+        if (s.charAt(pos) == '+' || s.charAt(pos) == '-') {
+            if (s.charAt(pos) == '-') {
                 sign = -1;
             }
             pos++;
         }
-        //read number
-        while(pos < s.length()){
+        // read number
+        while (pos < s.length()) {
             char c = s.charAt(pos);
-            if(!Character.isDigit(c)){
+            if (!Character.isDigit(c)) {
                 break;
             }
             int digit = c - '0';
-            if(result > Integer.MAX_VALUE/10 || (result == Integer.MAX_VALUE/10 && digit > 7)){
-                if(sign > 0){
+            if (result > Integer.MAX_VALUE / 10 || (result == Integer.MAX_VALUE / 10 && digit > 7)) {
+                if (sign > 0) {
                     return Integer.MAX_VALUE;
-                }else{
+                } else {
                     return Integer.MIN_VALUE;
                 }
             }
@@ -315,68 +319,94 @@ public class LeetCode8 {
             pos++;
         }
 
-        return result*sign;
+        return result * sign;
     }
 
-    public void test(String s, int expectedResult) {
-        // System.out.println("####################################");
-        int result = 0;
-        // result = myAtoi(s);
-        // System.out.printf("[V1] s=[%s],expected:[%d], actual:[%d]%n", s,
-        // expectedResult, result);
+    static class AtoiTestCase {
+        String description;
+        String input;
+        int expected;
 
-        // result = myAtoiV2(s);
-        // System.out.printf("[V2] s=[%s],expected:[%d], actual:[%d]%n", s,
-        // expectedResult, result);
-        // result = myAtoiV3(s);
-        // System.out.printf("[V3] s=[%s],expected:[%d], actual:[%d]%n", s,
-        // expectedResult, result);
-        result = myAtoiV4(s);
-        System.out.printf("[V4] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
-        result = myAtoiV5(s);
-        System.out.printf("[V5] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
-        result = myAtoiV6(s);
-        System.out.printf("[V6] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
-        result = myAtoiV7(s);
-        System.out.printf("[V7] s=[%s],expected:[%d], actual:[%d]%n", s, expectedResult, result);
-        System.out.println("##########################");
+        public AtoiTestCase(String description, String input, int expected) {
+            this.description = description;
+            this.input = input;
+            this.expected = expected;
+        }
     }
 
     public static void main(String[] args) {
-        LeetCode8 util = new LeetCode8();
-        String s = "";
-        int expectedResult = 0;
+        LeetCode8 solver = new LeetCode8();
+        System.out
+                .println("Running String to Integer (atoi) Test Suite...\n------------------------------------------");
 
-        // case 1
-        s = "42";
-        expectedResult = 42;
-        util.test(s, expectedResult);
-        // case 2
-        s = " -042";
-        expectedResult = -42;
-        util.test(s, expectedResult);
-        // case 3
-        s = "1337c0d3";
-        expectedResult = 1337;
-        util.test(s, expectedResult);
-        // case 4
-        s = "0-1";
-        expectedResult = 0;
-        util.test(s, expectedResult);
-        // case 5
-        s = "words and 987";
-        expectedResult = 0;
-        util.test(s, expectedResult);
-        s = "-2147483648";
-        expectedResult = -2147483648;
-        util.test(s, expectedResult);
+        // 1. Collate test layouts tracking specific constraints
+        List<AtoiTestCase> testCases = new ArrayList<>();
 
-        s = "-21474836482";
-        expectedResult = -2147483648;
-        util.test(s, expectedResult);
+        // Example 1: Standard positive conversion with leading space
+        testCases.add(new AtoiTestCase(
+                "Standard positive integer with leading whitespaces",
+                "   42",
+                42));
 
-        s = "21474836472";
-        expectedResult = 2147483647;
-        util.test(s, expectedResult);
+        // Example 2: Negative number parsing
+        testCases.add(new AtoiTestCase(
+                "Negative value with explicit sign prefix",
+                " -042",
+                -42));
+
+        // Example 3: Words/characters appended onto the end
+        testCases.add(new AtoiTestCase(
+                "Ignore downstream non-digit trailing contents",
+                "1337c0d3",
+                1337));
+
+        // Example 4: Invalid conversion start
+        testCases.add(new AtoiTestCase(
+                "Early character prevents initialization reading",
+                "words and 987",
+                0));
+
+        // Edge Case: Extreme integer value overflow
+        testCases.add(new AtoiTestCase(
+                "Positive capacity saturation threshold clamping",
+                "91283472332",
+                Integer.MAX_VALUE // 2147483647
+        ));
+
+        // Edge Case: Extreme integer value underflow
+        testCases.add(new AtoiTestCase(
+                "Negative capacity saturation threshold clamping",
+                "-91283472332",
+                Integer.MIN_VALUE // -2147483648
+        ));
+
+        // Edge Case: Single explicit lone polarity marker
+        testCases.add(new AtoiTestCase(
+                "Incomplete prefix layout containing only polarity sign",
+                "-",
+                0));
+
+        // 2. Iterate and process assertions exactly once per defined setup block
+        int passed = 0;
+        for (int i = 0; i < testCases.size(); i++) {
+            AtoiTestCase tc = testCases.get(i);
+
+            // Core execution point
+            // int actual = solver.myAtoi(tc.input);
+            int actual = solver.myAtoiV7(tc.input);
+
+            if (actual == tc.expected) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       Input:    \"" + tc.input + "\"");
+                System.err.println("       Expected: " + tc.expected);
+                System.err.println("       Actual:   " + actual);
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
     }
 }

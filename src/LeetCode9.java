@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class LeetCode9 {
 
     public boolean isPalindromeV2(int x) {
@@ -59,25 +62,27 @@ public class LeetCode9 {
     }
 
     public boolean isPalindromeV5(int x) {
-        if(x <0)return false;
+        if (x < 0)
+            return false;
         String s = String.valueOf(x);
-        int left = 0; 
+        int left = 0;
         int right = s.length() - 1;
-        while(left <= right && s.charAt(left) == s.charAt(right)){
-            left ++;
-            right --;
+        while (left <= right && s.charAt(left) == s.charAt(right)) {
+            left++;
+            right--;
         }
-        if(left > right){
+        if (left > right) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     public boolean isPalindromeV6(int x) {
-        if(x < 0 || (x % 10 == 0 && x != 0))return false;
+        if (x < 0 || (x % 10 == 0 && x != 0))
+            return false;
         int reverseHalf = 0;
-        while(x > reverseHalf){
+        while (x > reverseHalf) {
             int pop = x % 10;
             reverseHalf = reverseHalf * 10 + pop;
             x /= 10;
@@ -85,26 +90,82 @@ public class LeetCode9 {
         return x == reverseHalf || reverseHalf / 10 == x;
     }
 
-    public void test(int x, boolean expectedResult) {
-        boolean result = isPalindrome(x);
-        System.out.printf("[V1] x=[%d],expected:[%b], actual:[%b]%n", x, expectedResult, result);
-        result = isPalindromeV2(x);
-        System.out.printf("[V2] x=[%d],expected:[%b], actual:[%b]%n", x, expectedResult, result);
-        result = isPalindromeV3(x);
-        System.out.printf("[V3] x=[%d],expected:[%b], actual:[%b]%n", x, expectedResult, result);
-        result = isPalindromeV4(x);
-        System.out.printf("[V4] x=[%d],expected:[%b], actual:[%b]%n", x, expectedResult, result);
-        result = isPalindromeV5(x);
-        System.out.printf("[V5] x=[%d],expected:[%b], actual:[%b]%n", x, expectedResult, result);
-        result = isPalindromeV6(x);
-        System.out.printf("[V6] x=[%d],expected:[%b], actual:[%b]%n", x, expectedResult, result);        
-        System.out.println("##########################");
+    static class PalindromeTestCase {
+        String description;
+        int input;
+        boolean expected;
+
+        public PalindromeTestCase(String description, int input, boolean expected) {
+            this.description = description;
+            this.input = input;
+            this.expected = expected;
+        }
     }
 
     public static void main(String[] args) {
-        LeetCode9 util = new LeetCode9();
-        util.test(121, true);
-        util.test(-121, false);
-        util.test(10, false);
+        LeetCode9 solver = new LeetCode9();
+        System.out.println("Running Palindrome Number Test Suite...\n------------------------------------------");
+
+        // 1. Collate test layouts tracking specific mathematical constraints
+        List<PalindromeTestCase> testCases = new ArrayList<>();
+
+        // Example 1: Standard odd-length palindrome
+        testCases.add(new PalindromeTestCase(
+                "Standard odd-length symmetric number",
+                121,
+                true));
+
+        // Example 2: Negative numbers
+        testCases.add(new PalindromeTestCase(
+                "Negative number with leading minus sign symbol boundary",
+                -121,
+                false));
+
+        // Example 3: Non-palindrome with trailing zero reflection conflict
+        testCases.add(new PalindromeTestCase(
+                "Positive number with trailing zero sequence",
+                10,
+                false));
+
+        // Edge Case: Single-digit number
+        testCases.add(new PalindromeTestCase(
+                "Single-digit integer baseline asset",
+                7,
+                true));
+
+        // Edge Case: Standard even-length palindrome
+        testCases.add(new PalindromeTestCase(
+                "Standard even-length symmetric number",
+                1221,
+                true));
+
+        // Edge Case: Absolute zero
+        testCases.add(new PalindromeTestCase(
+                "Zero value baseline",
+                0,
+                true));
+
+        // 2. Iterate and process assertions exactly once per defined setup block
+        int passed = 0;
+        for (int i = 0; i < testCases.size(); i++) {
+            PalindromeTestCase tc = testCases.get(i);
+
+            // Core execution point
+            // boolean actual = solver.isPalindrome(tc.input);
+            boolean actual = solver.isPalindromeV6(tc.input);
+
+            if (actual == tc.expected) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       Input:    " + tc.input);
+                System.err.println("       Expected: " + tc.expected);
+                System.err.println("       Actual:   " + actual);
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
     }
 }
