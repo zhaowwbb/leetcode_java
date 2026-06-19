@@ -136,12 +136,13 @@ public class LeetCode3 {
 
     public int lengthOfLongestSubstringV8(String s) {
         int maxLen = 0;
-        if(null == s || s.length() == 0)return maxLen;
+        if (null == s || s.length() == 0)
+            return maxLen;
         int left = 0;
         Map<Character, Integer> charToIndex = new HashMap<>();
-        for(int right = 0; right < s.length(); right++){
+        for (int right = 0; right < s.length(); right++) {
             char curChar = s.charAt(right);
-            if(charToIndex.containsKey(curChar)){
+            if (charToIndex.containsKey(curChar)) {
                 left = Math.max(left, charToIndex.get(curChar) + 1);
             }
             charToIndex.put(curChar, right);
@@ -150,41 +151,81 @@ public class LeetCode3 {
         return maxLen;
     }
 
-    public void test(String s, int expect) {
-        System.out.println("Input: " + s);
+    static class SubstringTestCase {
+        String description;
+        String input;
+        int expected;
 
-        int result = 0;
-        // result = lengthOfLongestSubstring(s);
-        // System.out.printf("[V1] Expected: [%d], actual: [%d]%n", expect, result);
-
-        // result = lengthOfLongestSubstringV2(s);
-        // System.out.printf("[V2] Expected: [%d], actual: [%d]%n", expect, result);
-
-        // result = lengthOfLongestSubstringV3(s);
-        // System.out.printf("[V3] Expected: [%d], actual: [%d]%n", expect, result);
-
-        // result = lengthOfLongestSubstringV4(s);
-        // System.out.printf("[V4] Expected: [%d], actual: [%d]%n", expect, result);
-
-        result = lengthOfLongestSubstringV5(s);
-        System.out.printf("[V5] Expected: [%d], actual: [%d]%n", expect, result);
-
-        result = lengthOfLongestSubstringV6(s);
-        System.out.printf("[V6] Expected: [%d], actual: [%d]%n", expect, result);
-
-        result = lengthOfLongestSubstringV7(s);
-        System.out.printf("[V7] Expected: [%d], actual: [%d]%n", expect, result);
-
-        result = lengthOfLongestSubstringV8(s);
-        System.out.printf("[V8] Expected: [%d], actual: [%d]%n", expect, result);
-        System.out.println("##########################");
+        public SubstringTestCase(String description, String input, int expected) {
+            this.description = description;
+            this.input = input;
+            this.expected = expected;
+        }
     }
 
     public static void main(String[] args) {
-        LeetCode3 utils = new LeetCode3();
-        utils.test("au", 2);
-        utils.test("abcabcbb", 3);
-        utils.test("bbbbb", 1);
-        utils.test("pwwkew", 3);
+        LeetCode3 solver = new LeetCode3();
+        System.out.println("Running Longest Substring Test Suite...\n------------------------------------------");
+
+        // 1. Define the collection of test inputs and expected outputs
+        List<SubstringTestCase> testCases = new ArrayList<>();
+
+        // Example 1: "abcabcbb" -> "abc" (3)
+        testCases.add(new SubstringTestCase(
+                "Standard mixing string with recurring characters",
+                "abcabcbb",
+                3));
+
+        // Example 2: "bbbbb" -> "b" (1)
+        testCases.add(new SubstringTestCase(
+                "All identical characters",
+                "bbbbb",
+                1));
+
+        // Example 3: "pwwkew" -> "wke" (3)
+        testCases.add(new SubstringTestCase(
+                "Substring in the middle with an overlapping repetition",
+                "pwwkew",
+                3));
+
+        // Edge Case: Empty string
+        testCases.add(new SubstringTestCase(
+                "Empty string input boundary",
+                "",
+                0));
+
+        // Edge Case: Absolute unique string
+        testCases.add(new SubstringTestCase(
+                "Completely unique characters",
+                "abcdefg",
+                7));
+
+        // Edge Case: Structural trap like "tmmzuxt" where left shouldn't move backward
+        testCases.add(new SubstringTestCase(
+                "String requiring left pointer stability control",
+                "tmmzuxt",
+                5));
+
+        // 2. Run validations, invoking the method exactly once per scenario layout
+        int passed = 0;
+        for (int i = 0; i < testCases.size(); i++) {
+            SubstringTestCase tc = testCases.get(i);
+
+            // Core invocation point
+            int actual = solver.lengthOfLongestSubstringV8(tc.input);
+
+            if (actual == tc.expected) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       Input:    \"" + tc.input + "\"");
+                System.err.println("       Expected: " + tc.expected);
+                System.err.println("       Actual:   " + actual);
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
     }
 }

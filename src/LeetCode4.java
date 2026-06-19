@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class LeetCode4 {
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -345,10 +348,10 @@ public class LeetCode4 {
             int leftMax2 = partition2 == 0 ? Integer.MIN_VALUE : nums2[partition2 - 1];
             int rightMin2 = partition2 == n ? Integer.MAX_VALUE : nums2[partition2];
             if (leftMax1 <= rightMin2 && leftMax2 <= rightMin1) {
-                if((m + n)%2 == 1){
-                    return (double)Math.max(leftMax1, leftMax2);
-                }else{
-                    return (Math.max(leftMax1, leftMax2) + Math.min(rightMin1, rightMin2))/2.0;
+                if ((m + n) % 2 == 1) {
+                    return (double) Math.max(leftMax1, leftMax2);
+                } else {
+                    return (Math.max(leftMax1, leftMax2) + Math.min(rightMin1, rightMin2)) / 2.0;
                 }
             } else if (leftMax1 > rightMin2) {
                 right = partition1 - 1;
@@ -360,57 +363,87 @@ public class LeetCode4 {
         return result;
     }
 
-    public void test(int[] nums1, int[] nums2, double expect) {
-        System.out.println(
-                "Input: nums1 = " + java.util.Arrays.toString(nums1) + ", nums2 = " + java.util.Arrays.toString(nums2));
+    static class MedianTestCase {
+        String description;
+        int[] nums1;
+        int[] nums2;
+        double expected;
 
-        double result = 0;
-        // result = findMedianSortedArrays(nums1, nums2);
-        // System.out.println("[V1] expected: " + expect + ", actual: " + result);
-
-        // result = findMedianSortedArraysV2(nums1, nums2);
-        // System.out.println("[V2] expected: " + expect + ", actual: " + result);
-
-        // result = findMedianSortedArraysV3(nums1, nums2);
-        // System.out.println("[V3] expected: " + expect + ", actual: " + result);
-
-        // result = findMedianSortedArraysV4(nums1, nums2);
-        // System.out.println("[V4] expected: " + expect + ", actual: " + result);
-
-        // result = findMedianSortedArraysV5(nums1, nums2);
-        // System.out.println("[V5] expected: " + expect + ", actual: " + result);
-
-        // result = findMedianSortedArraysV6(nums1, nums2);
-        // System.out.println("[V6] expected: " + expect + ", actual: " + result);
-
-        // result = findMedianSortedArraysV7(nums1, nums2);
-        // System.out.println("[V7] expected: " + expect + ", actual: " + result);
-
-        result = findMedianSortedArraysV8(nums1, nums2);
-        System.out.println("[V8] expected: " + expect + ", actual: " + result);
-
-        result = findMedianSortedArraysV9(nums1, nums2);
-        System.out.println("[V9] expected: " + expect + ", actual: " + result);
-
-        result = findMedianSortedArraysV10(nums1, nums2);
-        System.out.println("[V10] expected: " + expect + ", actual: " + result);
-        System.out.println("##########################");
+        public MedianTestCase(String description, int[] nums1, int[] nums2, double expected) {
+            this.description = description;
+            this.nums1 = nums1;
+            this.nums2 = nums2;
+            this.expected = expected;
+        }
     }
 
     public static void main(String[] args) {
-        LeetCode4 utils = new LeetCode4();
+        LeetCode4 solver = new LeetCode4();
+        System.out.println(
+                "Running Median of Two Sorted Arrays Test Suite...\n------------------------------------------");
 
-        int[] nums1 = { 1, 3 };
-        int[] nums2 = { 2 };
-        utils.test(nums1, nums2, 2.00000);
+        // 1. Accumulate test structures mapping inputs to expected double precision
+        // medians
+        List<MedianTestCase> testCases = new ArrayList<>();
 
-        nums1 = new int[] { 1, 2 };
-        nums2 = new int[] { 3, 4 };
-        utils.test(nums1, nums2, 2.50000);
+        // Example 1: Combined [1, 2, 3] -> Odd length median
+        testCases.add(new MedianTestCase(
+                "Odd combined length",
+                new int[] { 1, 3 },
+                new int[] { 2 },
+                2.0));
 
-        nums1 = new int[] {};
-        nums2 = new int[] { 1 };
-        utils.test(nums1, nums2, 1.00000);
+        // Example 2: Combined [1, 2, 3, 4] -> Even length median (2 + 3) / 2
+        testCases.add(new MedianTestCase(
+                "Even combined length",
+                new int[] { 1, 2 },
+                new int[] { 3, 4 },
+                2.5));
+
+        // Edge Case: One completely empty array
+        testCases.add(new MedianTestCase(
+                "First array is empty",
+                new int[] {},
+                new int[] { 2, 3, 4, 5 },
+                3.5));
+
+        // Edge Case: Completely disjoint arrays
+        testCases.add(new MedianTestCase(
+                "Completely non-overlapping elements",
+                new int[] { 10, 11, 12 },
+                new int[] { 1, 2, 3, 4 },
+                4.0));
+
+        // Edge Case: Identical elements across arrays
+        testCases.add(new MedianTestCase(
+                "Arrays containing completely matching elements",
+                new int[] { 2, 2, 2 },
+                new int[] { 2, 2, 2, 2 },
+                2.0));
+
+        // 2. Run validations, invoking the method exactly once per configuration layout
+        int passed = 0;
+        double epsilon = 0.00001; // Small threshold tolerance for floating point comparisons
+
+        for (int i = 0; i < testCases.size(); i++) {
+            MedianTestCase tc = testCases.get(i);
+
+            // Core invocation point
+            double actual = solver.findMedianSortedArraysV10(tc.nums1, tc.nums2);
+
+            if (Math.abs(actual - tc.expected) < epsilon) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       Expected: " + tc.expected);
+                System.err.println("       Actual:   " + actual);
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
+
     }
 
 }

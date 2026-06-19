@@ -1,6 +1,9 @@
 // import java.lang.classfile.components.ClassPrinter.ListNode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Definition for singly-linked list.
@@ -13,47 +16,6 @@ import java.util.Arrays;
  * }
  */
 public class LeetCode2 {
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
-
-    private ListNode createListNode(int[] arr) {
-        ListNode head = null;
-        ListNode current = null;
-        for (int num : arr) {
-            ListNode newNode = new ListNode(num);
-            if (head == null) {
-                head = newNode;
-                current = head;
-            } else {
-                current.next = newNode;
-                current = current.next;
-            }
-        }
-        return head;
-    }
-
-    private void printListNode(ListNode node) {
-        ListNode temp = node;
-        while (temp != null) {
-            System.out.print(temp.val + " -> ");
-            temp = temp.next;
-        }
-        System.out.println("null");
-    }
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         StringBuilder result = new StringBuilder();
@@ -210,13 +172,13 @@ public class LeetCode2 {
 
     public ListNode addTwoNumbersV5(ListNode l1, ListNode l2) {
         ListNode dummy = new ListNode(0);
-        int high = 0;
+        int carry = 0;
         ListNode cur = dummy;
-        while (l1 != null && l2 != null && high != 0) {
+        while (l1 != null || l2 != null || carry != 0) {
             int leftVal = l1 != null ? l1.val : 0;
             int rightVal = l2 != null ? l2.val : 0;
-            int nextVal = leftVal + rightVal + high;
-            high = nextVal / 10;
+            int nextVal = leftVal + rightVal + carry;
+            carry = nextVal / 10;
             nextVal = nextVal % 10;
             cur.next = new ListNode(nextVal);
             cur = cur.next;
@@ -225,56 +187,76 @@ public class LeetCode2 {
                 l1 = l1.next;
             if (l2 != null)
                 l2 = l2.next;
-            // l1
         }
         return dummy.next;
     }
 
-    public void test(int[] nums1, int[] nums2, String expected) {
-        System.out.println("ListNode 1=" + Arrays.toString(nums1));
-        System.out.println("ListNode 2=" + Arrays.toString(nums2));
-        System.out.println("Expected=" + expected);
+    static class AddTwoNumbersTestCase {
+        String description;
+        int[] l1Values;
+        int[] l2Values;
+        List<Integer> expected;
 
-        ListNode l1 = createListNode(nums1);
-        ListNode l2 = createListNode(nums2);
-
-        ListNode result = addTwoNumbers(l1, l2);
-        System.out.print("[V1] ");
-        printListNode(result);
-
-        addTwoNumbersV2(l1, l2);
-        System.out.print("[V2] ");
-        printListNode(result);
-
-        addTwoNumbersV3(l1, l2);
-        System.out.print("[V3] ");
-        printListNode(result);
-
-        addTwoNumbersV4(l1, l2);
-        System.out.print("[V4] ");
-        printListNode(result);
-
-        addTwoNumbersV5(l1, l2);
-        System.out.print("[V5] ");
-        printListNode(result);
-        System.out.println("################################");
+        public AddTwoNumbersTestCase(String description, int[] l1Values, int[] l2Values, List<Integer> expected) {
+            this.description = description;
+            this.l1Values = l1Values;
+            this.l2Values = l2Values;
+            this.expected = expected;
+        }
     }
 
     public static void main(String[] args) {
+        LeetCode2 solver = new LeetCode2();
+        System.out.println("Running Add Two Numbers Test Suite...\n------------------------------------------");
 
-        LeetCode2 utils = new LeetCode2();
-        int[] nums1 = {};
-        int[] nums2 = {};
-        nums1 = new int[] { 2, 4, 3 };
-        nums2 = new int[] { 5, 6, 4 };
-        utils.test(nums1, nums2, "[7,0,8]");
+        // 1. Build the suite collection mapping inputs to structured validations
+        List<AddTwoNumbersTestCase> testCases = new ArrayList<>();
 
-        nums1 = new int[] { 0 };
-        nums2 = new int[] { 0 };
-        utils.test(nums1, nums2, "[0]");
+        // Example 1: 342 + 465 = 807
+        testCases.add(new AddTwoNumbersTestCase(
+                "Standard matching length addition with carry-over",
+                new int[] { 2, 4, 3 },
+                new int[] { 5, 6, 4 },
+                List.of(7, 0, 8)));
 
-        nums1 = new int[] { 9, 9, 9, 9, 9, 9, 9 };
-        nums2 = new int[] { 9, 9, 9, 9 };
-        utils.test(nums1, nums2, "[8,9,9,9,0,0,0,1]");
+        // Example 2: 0 + 0 = 0
+        testCases.add(new AddTwoNumbersTestCase(
+                "Single zero nodes",
+                new int[] { 0 },
+                new int[] { 0 },
+                List.of(0)));
+
+        // Example 3: 9999999 + 9999 = 10009998
+        testCases.add(new AddTwoNumbersTestCase(
+                "Mismatched list lengths with a cascading final carry",
+                new int[] { 9, 9, 9, 9, 9, 9, 9 },
+                new int[] { 9, 9, 9, 9 },
+                List.of(8, 9, 9, 9, 0, 0, 0, 1)));
+
+        // 2. Iterate and execute each configuration exactly once
+        int passed = 0;
+        for (int i = 0; i < testCases.size(); i++) {
+            AddTwoNumbersTestCase tc = testCases.get(i);
+
+            ListNode head1 = Util.createLinkedList(tc.l1Values);
+            ListNode head2 = Util.createLinkedList(tc.l2Values);
+
+            // Execute the core algorithm target
+            // ListNode actualHead = solver.addTwoNumbers(head1, head2);
+            ListNode actualHead = solver.addTwoNumbersV5(head1, head2);
+            List<Integer> actualResultList = Util.linkedListToArrayList(actualHead);
+
+            if (Objects.equals(tc.expected, actualResultList)) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       Expected: " + tc.expected);
+                System.err.println("       Actual:   " + actualResultList);
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
     }
 }

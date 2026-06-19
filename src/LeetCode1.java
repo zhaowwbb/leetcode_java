@@ -1,7 +1,3 @@
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.*;
 
 public class LeetCode1 {
@@ -136,53 +132,73 @@ public class LeetCode1 {
         return result;
     }
 
-    public void test(int[] nums, int target, int expectFirst, int expectSecond) {
-        System.out.println("nums= " + Arrays.toString(nums) + ", target=" + target);
-        int[] result = {};
-        result = twoSum(nums, target);
-        System.out.printf("[V1] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
+    static class TwoSumTestCase {
+        String description;
+        int[] nums;
+        int target;
+        int[] expected;
 
-        result = twoSumOptimized(nums, target);
-        System.out.printf("[V2] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
-
-        result = twoSum2(nums, target);
-        System.out.printf("[V3] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
-
-        result = twoSum3(nums, target);
-        System.out.printf("[V4] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
-
-        result = twoSumV5(nums, target);
-        System.out.printf("[V5] Expected:[%d, %d], actual:[%d, %d]%n", expectFirst, expectSecond, result[0], result[1]);
+        public TwoSumTestCase(String description, int[] nums, int target, int[] expected) {
+            this.description = description;
+            this.nums = nums;
+            this.target = target;
+            this.expected = expected;
+        }
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        System.out.println("Running 2Sum Data-Driven Test Suite...\n------------------------------------------");
+        LeetCode1 solver = new LeetCode1();
+        // 1. Define the list of test cases including inputs, targets, and expected
+        // indices
+        List<TwoSumTestCase> testCases = new ArrayList<>();
 
-        LeetCode1 utils = new LeetCode1();
+        testCases.add(new TwoSumTestCase(
+                "Standard case",
+                new int[] { 2, 7, 11, 15 }, 9,
+                new int[] { 0, 1 }));
 
-        // Example: p2 is the largest (10), so it should return 1
-        int result = utils.findMaxPosition(5, 10, 3);
-        System.out.println("The position of the maximum value is: " + result);
+        testCases.add(new TwoSumTestCase(
+                "Unsorted array with negative numbers",
+                new int[] { 3, -2, 1, 9, 5 }, 3,
+                new int[] { 1, 4 }));
 
-        // Test Case 1: Mixed patterns
-        // Index 1 (curr=2.0): 10 > 7 and 15 > 7 (Yes)
-        // Index 2 (curr=15.0): 2 < 10 and 4 < 10 (Yes)
-        List<Double> test1 = Arrays.asList(10.0, 2.0, 15.0, 4.0, 20.0);
-        System.out.println("Test 1 Result (Expected 2): " + utils.countPatternOccurrences(test1));
+        testCases.add(new TwoSumTestCase(
+                "Identical values mapping to target",
+                new int[] { 3, 3 }, 6,
+                new int[] { 0, 1 }));
 
-        // Test Case 2: No patterns (differences are exactly 5 or less)
-        List<Double> test2 = Arrays.asList(10.0, 5.0, 10.0);
-        System.out.println("Test 2 Result (Expected 0): " + utils.countPatternOccurrences(test2));
+        testCases.add(new TwoSumTestCase(
+                "Target requires non-adjacent elements",
+                new int[] { 1, 5, 8, 3 }, 4,
+                new int[] { 0, 3 }));
 
-        // Test Case 3: Empty or small list
-        List<Double> test3 = Arrays.asList(1.0, 10.0);
-        System.out.println("Test 3 Result (Expected 0): " + utils.countPatternOccurrences(test3));
+        // 2. Iterate and verify each layout sequentially
+        int passed = 0;
+        for (int i = 0; i < testCases.size(); i++) {
+            TwoSumTestCase tc = testCases.get(i);
 
-        int[] nums = { 2, 7, 11, 15 };
-        utils.test(nums, 9, 0, 1);
-        nums = new int[] { 3, 2, 4 };
-        utils.test(nums, 6, 1, 2);
-        nums = new int[] { 3, 3 };
-        utils.test(nums, 6, 0, 1);
+            // Invoke the 2Sum logic precisely once per execution loop layout
+            int[] actual = solver.twoSumV5(tc.nums, tc.target);
+
+            // Sort both to ensure order discrepancies don't break validation
+            int[] actualSorted = actual.clone();
+            int[] expectedSorted = tc.expected.clone();
+            Arrays.sort(actualSorted);
+            Arrays.sort(expectedSorted);
+
+            if (Arrays.equals(actualSorted, expectedSorted)) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       Input:    " + Arrays.toString(tc.nums) + " | Target: " + tc.target);
+                System.err.println("       Expected: " + Arrays.toString(tc.expected));
+                System.err.println("       Actual:   " + Arrays.toString(actual));
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
     }
 }

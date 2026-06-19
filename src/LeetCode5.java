@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class LeetCode5 {
 
     public String longestPalindromeV3(String s) {
@@ -235,53 +238,78 @@ public class LeetCode5 {
         return s.substring(left, right + 1);
     }
 
-    public void test(String s, String expected) {
-        System.out.println("s=" + s);
-        String result = "";
+    static class PalindromeTestCase {
+        String description;
+        String input;
+        List<String> validExpectedOutputs; // Multiple options allowed if there are ties
 
-        // result = longestPalindrome(s);
-        // System.out.printf("[V1] Expected:[%s], actual:[%s]%n", expected, result);
-
-        // result = longestPalindromeV2(s);
-        // System.out.printf("[V2] Expected:[%s], actual:[%s]%n", expected, result);
-
-        // result = longestPalindromeV3(s);
-        // System.out.printf("[V3] Expected:[%s], actual:[%s]%n", expected, result);
-
-        // result = longestPalindromeV4(s);
-        // System.out.printf("[V4] Expected:[%s], actual:[%s]%n", expected, result);
-
-        // result = longestPalindromeV5(s);
-        // System.out.printf("[V5] Expected:[%s], actual:[%s]%n", expected, result);
-
-        result = longestPalindromeV6(s);
-        System.out.printf("[V6] Expected:[%s], actual:[%s]%n", expected, result);
-
-        result = longestPalindromeV7(s);
-        System.out.printf("[V7] Expected:[%s], actual:[%s]%n", expected, result);
-
-        result = longestPalindromeV8(s);
-        System.out.printf("[V8] Expected:[%s], actual:[%s]%n", expected, result);
-
-        result = longestPalindromeV9(s);
-        System.out.printf("[V9] Expected:[%s], actual:[%s]%n", expected, result);
-
-        System.out.println("##########################");
+        public PalindromeTestCase(String description, String input, List<String> validExpectedOutputs) {
+            this.description = description;
+            this.input = input;
+            this.validExpectedOutputs = validExpectedOutputs;
+        }
     }
 
     public static void main(String[] args) {
-        String ss = "ABCD";
-        // System.out.println("ss=" + ss.substring(0, 4));
+        LeetCode5 solver = new LeetCode5();
+        System.out.println(
+                "Running Longest Palindromic Substring Test Suite...\n------------------------------------------");
 
-        LeetCode5 util = new LeetCode5();
-        String s = "";
-        s = "babad";
-        util.test(s, "bab");
-        s = "cbbd";
-        util.test(s, "bb");
-        s = "babad";
-        util.test(s, "bab");
-        s = "abcdefghij**racecarace**klmnopqrst";
-        util.test(s, "racecarace");
+        // 1. Build the collection of test inputs and multiple valid expected strings
+        List<PalindromeTestCase> testCases = new ArrayList<>();
+
+        // Example 1: "babad" -> "bab" or "aba" are both completely valid answers
+        testCases.add(new PalindromeTestCase(
+                "Standard mixing string with alternative symmetric ties",
+                "babad",
+                List.of("bab", "aba")));
+
+        // Example 2: "cbbd" -> "bb"
+        testCases.add(new PalindromeTestCase(
+                "Even-length palindrome substring",
+                "cbbd",
+                List.of("bb")));
+
+        // Edge Case: Single character
+        testCases.add(new PalindromeTestCase(
+                "Single character boundary string",
+                "a",
+                List.of("a")));
+
+        // Edge Case: Entire string is a palindrome
+        testCases.add(new PalindromeTestCase(
+                "Full string is already a valid palindrome",
+                "racecar",
+                List.of("racecar")));
+
+        // Edge Case: All identical characters
+        testCases.add(new PalindromeTestCase(
+                "Continuous repeating sequence",
+                "ccccc",
+                List.of("ccccc")));
+
+        // 2. Iterate and execute validation checks exactly once per test scenario
+        int passed = 0;
+        for (int i = 0; i < testCases.size(); i++) {
+            PalindromeTestCase tc = testCases.get(i);
+
+            // Core algorithm invocation point
+            // String actual = solver.longestPalindrome(tc.input);
+            String actual = solver.longestPalindromeV9(tc.input);
+
+            // Verify if the actual output matches any of our valid expected outputs
+            if (tc.validExpectedOutputs.contains(actual)) {
+                System.out.println(String.format("[PASS] Test %d: %s", i + 1, tc.description));
+                passed++;
+            } else {
+                System.err.println(String.format("[FAIL] Test %d: %s", i + 1, tc.description));
+                System.err.println("       Input:    \"" + tc.input + "\"");
+                System.err.println("       Expected (one of): " + tc.validExpectedOutputs);
+                System.err.println("       Actual:            \"" + actual + "\"");
+            }
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println(String.format("Execution Result: %d/%d Tests Passed.", passed, testCases.size()));
     }
 }
