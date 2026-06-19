@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -178,30 +180,84 @@ public class LeetCode21 {
         return dummy.next;
     }
 
+    // Helper method to build a linked list from an array
+    private static ListNode buildList(int[] arr) {
+        if (arr == null || arr.length == 0)
+            return null;
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        for (int val : arr) {
+            current.next = new ListNode(val);
+            current = current.next;
+        }
+        return dummy.next;
+    }
+
+    // Helper method to convert a linked list to an ArrayList for easy comparison
+    private static List<Integer> listToArrayList(ListNode head) {
+        List<Integer> result = new ArrayList<>();
+        ListNode current = head;
+        while (current != null) {
+            result.add(current.val);
+            current = current.next;
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         LeetCode21 solver = new LeetCode21();
 
-        System.out.println("Running Comprehensive Single-Call Test Suite");
-        ListNode list1 = Util.createLinkedList(new int[] { -10, -5, 1, 2, 4, 5, 7 });
-        ListNode list2 = Util.createLinkedList(new int[] { -3, 1, 3, 4 });
+        // 2D Array datasets for list1 and list2
+        int[][] list1Inputs = {
+                { 1, 2, 4 },
+                {},
+                {}
+        };
+        int[][] list2Inputs = {
+                { 1, 3, 4 },
+                {},
+                { 0 }
+        };
 
-        // The SINGLE execution of the target method
-        // ListNode mergedResult = solver.mergeTwoListsV4(list1, list2);
-        ListNode mergedResult = solver.mergeTwoListsV6(list1, list2);
+        // Expected outputs as standard arrays
+        int[][] expectedOutputs = {
+                { 1, 1, 2, 3, 4, 4 },
+                {},
+                { 0 }
+        };
 
-        List<Integer> actualOutput = Util.linkedListToArrayList(mergedResult);
-        List<Integer> expectedOutput = List.of(-10, -5, -3, 1, 1, 2, 3, 4, 4, 5, 7);
+        System.out.println("--- Running Merge Two Sorted Lists Tests ---");
 
-        // Verification
-        if (Objects.equals(expectedOutput, actualOutput)) {
-            System.out.println("[PASS] All edge cases validated successfully via a single merge execution.");
-            System.out.println("       Result: " + actualOutput);
-        } else {
-            System.err.println("[FAIL] Combined test verification failed!");
-            System.err.println("       Expected: " + expectedOutput);
-            System.err.println("       Actual:   " + actualOutput);
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < list1Inputs.length; i++) {
+            // Build the dynamic structures fresh for each pass
+            ListNode l1 = buildList(list1Inputs[i]);
+            ListNode l2 = buildList(list2Inputs[i]);
+
+            // Convert expected array to List structure for comparison
+            List<Integer> expectedList = new ArrayList<>();
+            for (int val : expectedOutputs[i])
+                expectedList.add(val);
+
+            // The single function call
+            ListNode resultHead = solver.mergeTwoListsV6(l1, l2);
+
+            // Convert actual linked list result back to an ArrayList for verification
+            List<Integer> actualList = listToArrayList(resultHead);
+
+            // Create strings for visualization
+            String input1Str = Arrays.toString(list1Inputs[i]);
+            String input2Str = Arrays.toString(list2Inputs[i]);
+
+            // Validation check
+            if (actualList.equals(expectedList)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (" + input1Str + " + " + input2Str + " -> "
+                        + actualList + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + input1Str + " and " + input2Str +
+                        " | Expected: " + expectedList + ", but got: " + actualList);
+            }
         }
-
-        System.out.println("------------------------------------------\nExecution Complete.");
     }
 }

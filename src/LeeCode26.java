@@ -48,7 +48,7 @@ public class LeeCode26 {
             return 0;
         int insertIndex = 1;
         for (int i = 1; i < nums.length; i++) {
-            if(nums[i] != nums[i-1]){
+            if (nums[i] != nums[i - 1]) {
                 nums[insertIndex] = nums[i];
                 insertIndex++;
             }
@@ -56,33 +56,64 @@ public class LeeCode26 {
         return insertIndex;
     }
 
-    public void test(int[] nums, int expected) {
-        int[] copy = Arrays.copyOf(nums, nums.length);
-        System.out.println("Input:");
-        System.out.println(Arrays.toString(copy));
-        int k = 0;
-        k = removeDuplicates(copy);
-        System.out.printf("[V1] expected:[%d], actual:[%d] %n", expected, k);
-        System.out.println(Arrays.toString(copy));
-
-        copy = Arrays.copyOf(nums, nums.length);
-        k = removeDuplicatesV2(copy);
-        System.out.printf("[V2] expected:[%d], actual:[%d] %n", expected, k);
-        System.out.println(Arrays.toString(copy));
-
-        copy = Arrays.copyOf(nums, nums.length);
-        k = removeDuplicatesV3(copy);
-        System.out.printf("[V3] expected:[%d], actual:[%d] %n", expected, k);
-        System.out.println(Arrays.toString(copy));
-        System.out.println("=======================================");
-    }
-
     public static void main(String[] args) {
-        LeeCode26 util = new LeeCode26();
-        int[] nums = { 0, 0, 1, 1, 1, 2, 2, 3, 3, 4 };
-        util.test(nums, 5);
+        LeeCode26 solver = new LeeCode26();
 
-        nums = new int[] { 1, 1, 2 };
-        util.test(nums, 2);
+        // Multi-case datasets
+        int[][] testInputs = {
+                { 1, 1, 2 },
+                { 0, 0, 1, 1, 1, 2, 2, 3, 3, 4 },
+                { 1, 2, 3 },
+                {}
+        };
+
+        int[] expectedLengths = { 2, 5, 3, 0 };
+
+        int[][] expectedArrays = {
+                { 1, 2 },
+                { 0, 1, 2, 3, 4 },
+                { 1, 2, 3 },
+                {}
+        };
+
+        System.out.println("--- Running Remove Duplicates from Sorted Array Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            int expectedLen = expectedLengths[i];
+            int[] expectedArr = expectedArrays[i];
+
+            // Capture original state for failure logs before it gets modified in-place
+            String originalInputStr = Arrays.toString(currentInput);
+
+            // The single function call (modifies currentInput in-place)
+            int actualLen = solver.removeDuplicatesV3(currentInput);
+
+            // Validation step 1: Check returned length
+            boolean lengthMatches = (actualLen == expectedLen);
+
+            // Validation step 2: Check first 'k' elements in the modified array
+            boolean elementsMatch = true;
+            for (int j = 0; j < actualLen; j++) {
+                if (currentInput[j] != expectedArr[j]) {
+                    elementsMatch = false;
+                    break;
+                }
+            }
+
+            // Evaluation check
+            if (lengthMatches && elementsMatch) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Input: " + originalInputStr +
+                        " -> Unique Elements: " + Arrays.toString(Arrays.copyOf(currentInput, actualLen)) + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + originalInputStr +
+                        "\n  Expected Length: " + expectedLen + " | Got: " + actualLen +
+                        "\n  Expected Elements: " + Arrays.toString(expectedArr) +
+                        " | Got First " + actualLen + " Elements: "
+                        + Arrays.toString(Arrays.copyOf(currentInput, actualLen)));
+            }
+        }
     }
 }

@@ -121,62 +121,74 @@ public class LeetCode36 {
         return true;
     }
 
-    public void test(char[][] board, boolean expected) {
-        // printBoard(board);
-        boolean actual = isValidSudoku(board);
-        System.out.printf("[V1] expect=%b, actual=%b%n", expected, actual);
-        actual = isValidSudokuV2(board);
-        System.out.printf("[V2] expect=%b, actual=%b%n", expected, actual);
-        System.out.println("##########################");
+    // Helper method to format the 9x9 matrix for readable terminal debugging output
+    private static String formatBoard(char[][] board) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 9; i++) {
+            if (i > 0 && i % 3 == 0)
+                sb.append("------+-------+------\n");
+            for (int j = 0; j < 9; j++) {
+                if (j > 0 && j % 3 == 0)
+                    sb.append("| ");
+                sb.append(board[i][j]).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
+    // Test logic in the main method
     public static void main(String[] args) {
-        LeetCode36 lc = new LeetCode36();
+        LeetCode36 solver = new LeetCode36();
 
-        String[][] board1 = {
-                { "5", "3", ".", ".", "7", ".", ".", ".", "." },
-                { "6", ".", ".", "1", "9", "5", ".", ".", "." },
-                { ".", "9", "8", ".", ".", ".", ".", "6", "." },
-                { "8", ".", ".", ".", "6", ".", ".", ".", "3" },
-                { "4", ".", ".", "8", ".", "3", ".", ".", "1" },
-                { "7", ".", ".", ".", "2", ".", ".", ".", "6" },
-                { ".", "6", ".", ".", ".", ".", "2", "8", "." },
-                { ".", ".", ".", "4", "1", "9", ".", ".", "5" },
-                { ".", ".", ".", ".", "8", ".", ".", "7", "9" }
+        // Test case 1: Valid Board
+        char[][] validBoard = {
+                { '5', '3', '.', '.', '7', '.', '.', '.', '.' },
+                { '6', '.', '.', '1', '9', '5', '.', '.', '.' },
+                { '.', '9', '8', '.', '.', '.', '.', '6', '.' },
+                { '8', '.', '.', '.', '6', '.', '.', '.', '3' },
+                { '4', '.', '.', '8', '.', '3', '.', '.', '1' },
+                { '7', '.', '.', '.', '2', '.', '.', '.', '6' },
+                { '.', '6', '.', '.', '.', '.', '2', '8', '.' },
+                { '.', '.', '.', '4', '1', '9', '.', '.', '5' },
+                { '.', '.', '.', '.', '8', '.', '.', '7', '9' }
         };
 
-        // Convert it
-        char[][] finalBoard = convertToCharMatrix(board1);
-        lc.test(finalBoard, true);
-
-        String[][] board2 = {
-                { "8", "3", ".", ".", "7", ".", ".", ".", "." },
-                { "6", ".", ".", "1", "9", "5", ".", ".", "." },
-                { ".", "9", "8", ".", ".", ".", ".", "6", "." },
-                { "8", ".", ".", ".", "6", ".", ".", ".", "3" },
-                { "4", ".", ".", "8", ".", "3", ".", ".", "1" },
-                { "7", ".", ".", ".", "2", ".", ".", ".", "6" },
-                { ".", "6", ".", ".", ".", ".", "2", "8", "." },
-                { ".", ".", ".", "4", "1", "9", ".", ".", "5" },
-                { ".", ".", ".", ".", "8", ".", ".", "7", "9" }
+        // Test case 2: Invalid Board (Value '8' repeated in the top-left 3x3 sub-grid)
+        char[][] invalidBoard = {
+                { '8', '3', '.', '.', '7', '.', '.', '.', '.' },
+                { '6', '.', '.', '1', '9', '5', '.', '.', '.' },
+                { '.', '9', '8', '.', '.', '.', '.', '6', '.' },
+                { '8', '.', '.', '.', '6', '.', '.', '.', '3' },
+                { '4', '.', '.', '8', '.', '3', '.', '.', '1' },
+                { '7', '.', '.', '.', '2', '.', '.', '.', '6' },
+                { '.', '6', '.', '.', '.', '.', '2', '8', '.' },
+                { '.', '.', '.', '4', '1', '9', '.', '.', '5' },
+                { '.', '.', '.', '.', '8', '.', '.', '7', '9' }
         };
 
-        finalBoard = convertToCharMatrix(board2);
-        lc.test(finalBoard, false);
+        char[][][] testInputs = { validBoard, invalidBoard };
+        boolean[] expectedOutputs = { true, false };
 
-        String[][] board3 = {
-                { ".", ".", "4", ".", ".", ".", "6", "3", "." },
-                { ".", ".", ".", ".", ".", ".", ".", ".", "." },
-                { "5", ".", ".", ".", ".", ".", ".", "9", "." },
-                { ".", ".", ".", "5", "6", ".", ".", ".", "." },
-                { "4", ".", "3", ".", ".", ".", ".", ".", "1" },
-                { ".", ".", ".", "7", ".", ".", ".", ".", "." },
-                { ".", ".", ".", "5", ".", ".", ".", ".", "." },
-                { ".", ".", ".", ".", ".", ".", ".", ".", "." },
-                { ".", ".", ".", ".", ".", ".", ".", ".", "." }
-        };
+        System.out.println("--- Running Valid Sudoku Tests ---");
 
-        finalBoard = convertToCharMatrix(board3);
-        lc.test(finalBoard, false);
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            char[][] currentInput = testInputs[i];
+            boolean expected = expectedOutputs[i];
+
+            // The single function call
+            boolean actual = solver.isValidSudokuV2(currentInput);
+
+            // Validation check
+            if (actual == expected) {
+                System.out.println(
+                        "Test Case " + (i + 1) + ": PASSED (Expected: " + expected + " -> Got: " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED!\n" + formatBoard(currentInput) +
+                        "  Expected: " + expected + " | Got: " + actual + "\n");
+            }
+        }
     }
 }

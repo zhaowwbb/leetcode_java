@@ -105,18 +105,21 @@ public class LeetCode37 {
     }
 
     public boolean isValidV3(char[][] board, int row, int col, char c) {
-        for(int i = 0; i < 9; i++){
-            //row check
-            if(board[row][i] == c)return false;
-            //column check
-            if(board[i][col] == c)return false;
+        for (int i = 0; i < 9; i++) {
+            // row check
+            if (board[row][i] == c)
+                return false;
+            // column check
+            if (board[i][col] == c)
+                return false;
         }
 
         int boxR = (row / 3) * 3;
         int boxC = (col / 3) * 3;
-        for(int r = boxR; r < boxR + 3; r++){
-            for(int cc = boxC; cc < boxC + 3; cc++){
-                if(board[r][cc] == c)return false;
+        for (int r = boxR; r < boxR + 3; r++) {
+            for (int cc = boxC; cc < boxC + 3; cc++) {
+                if (board[r][cc] == c)
+                    return false;
             }
         }
         return true;
@@ -145,18 +148,18 @@ public class LeetCode37 {
         return true;
     }
 
-    public boolean backtrackV4(char[][] board){
-        for(int row = 0; row < 9; row++){
-            for (int col = 0; col < 9; col++){
-                if(board[row][col] == '.'){
-                    for(char number = '1'; number <= '9'; number++){
-                        if(isValidV4(board,row, col, number)){
+    public boolean backtrackV4(char[][] board) {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                if (board[row][col] == '.') {
+                    for (char number = '1'; number <= '9'; number++) {
+                        if (isValidV4(board, row, col, number)) {
                             board[row][col] = number;
-                            if(backtrackV4(board)){
+                            if (backtrackV4(board)) {
                                 return true;
                             }
                             board[row][col] = '.';
-                        }                        
+                        }
                     }
                     return false;
                 }
@@ -165,37 +168,56 @@ public class LeetCode37 {
         return true;
     }
 
-    public boolean isValidV4(char[][] board, int row, int col, char number){
-        for(int i = 0; i < 9; i++){
-            if(board[row][i] == number)return false;
-            if(board[i][col] == number)return false;
+    public boolean isValidV4(char[][] board, int row, int col, char number) {
+        for (int i = 0; i < 9; i++) {
+            if (board[row][i] == number)
+                return false;
+            if (board[i][col] == number)
+                return false;
         }
         int boxRow = (row / 3) * 3;
         int boxCol = (col / 3) * 3;
-        for(int r = boxRow; r < boxRow + 3; r++){
-            for(int c = boxCol; c < boxCol + 3; c++){
-                if(board[r][c] == number)return false;
+        for (int r = boxRow; r < boxRow + 3; r++) {
+            for (int c = boxCol; c < boxCol + 3; c++) {
+                if (board[r][c] == number)
+                    return false;
             }
         }
         return true;
     }
 
-    public void test(char[][] board, char[][] expectedOutput) {
-        System.out.println("Start generate Sudoku");
-        solveSudoku(board);
-        // One-liner deep comparison
-        boolean isMatch = Arrays.deepEquals(board, expectedOutput);
-
-        if (isMatch) {
-            System.out.println("Success! The board matches the expected output.");
-        } else {
-            System.out.println("Failure! The boards do not match.");
+    // Helper method to visually format the 9x9 matrix for diagnostic outputs
+    private static String formatBoard(char[][] board) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 9; i++) {
+            if (i > 0 && i % 3 == 0)
+                sb.append("------+-------+------\n");
+            for (int j = 0; j < 9; j++) {
+                if (j > 0 && j % 3 == 0)
+                    sb.append("| ");
+                sb.append(board[i][j]).append(" ");
+            }
+            sb.append("\n");
         }
+        return sb.toString();
     }
 
+    // Helper method to perform a deep copy of a 2D char array to preserve original
+    // states
+    private static char[][] deepCopy(char[][] original) {
+        char[][] copy = new char[9][9];
+        for (int i = 0; i < 9; i++) {
+            copy[i] = Arrays.copyOf(original[i], 9);
+        }
+        return copy;
+    }
+
+    // Test logic in the main method
     public static void main(String[] args) {
-        LeetCode37 lc = new LeetCode37();
-        char[][] board = {
+        LeetCode37 solver = new LeetCode37();
+
+        // Sample puzzle input (unsolved configuration)
+        char[][] inputBoard = {
                 { '5', '3', '.', '.', '7', '.', '.', '.', '.' },
                 { '6', '.', '.', '1', '9', '5', '.', '.', '.' },
                 { '.', '9', '8', '.', '.', '.', '.', '6', '.' },
@@ -207,7 +229,8 @@ public class LeetCode37 {
                 { '.', '.', '.', '.', '8', '.', '.', '7', '9' }
         };
 
-        char[][] expectedOutput = {
+        // Expected solved board output configuration
+        char[][] expectedBoard = {
                 { '5', '3', '4', '6', '7', '8', '9', '1', '2' },
                 { '6', '7', '2', '1', '9', '5', '3', '4', '8' },
                 { '1', '9', '8', '3', '4', '2', '5', '6', '7' },
@@ -219,6 +242,41 @@ public class LeetCode37 {
                 { '3', '4', '5', '2', '8', '6', '1', '7', '9' }
         };
 
-        lc.test(board, expectedOutput);
+        char[][][] testInputs = { inputBoard };
+        char[][][] expectedOutputs = { expectedBoard };
+
+        System.out.println("--- Running Sudoku Solver Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            char[][] currentInput = testInputs[i];
+            char[][] expected = expectedOutputs[i];
+
+            // Create a deep copy to keep an intact copy of the original board puzzle state
+            char[][] originalPuzzleCopy = deepCopy(currentInput);
+
+            // The single function call (mutates currentInput in-place)
+            solver.solveSudoku(currentInput);
+
+            // Deep validation check across the multi-dimensional structure
+            boolean boardsMatch = true;
+            for (int r = 0; r < 9; r++) {
+                if (!Arrays.equals(currentInput[r], expected[r])) {
+                    boardsMatch = false;
+                    break;
+                }
+            }
+
+            if (boardsMatch) {
+                System.out.println(
+                        "Test Case " + (i + 1) + ": PASSED\n\nSolved Board Result:\n" + formatBoard(currentInput));
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED!\n" +
+                        "--- Original Puzzle ---\n" + formatBoard(originalPuzzleCopy) +
+                        "--- Expected Solved ---\n" + formatBoard(expected) +
+                        "--- Got Actual Result ---\n" + formatBoard(currentInput));
+            }
+        }
     }
 }

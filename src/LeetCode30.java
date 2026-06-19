@@ -372,40 +372,40 @@ public class LeetCode30 {
 
     public List<Integer> findSubstringV8(String s, String[] words) {
         List<Integer> result = new ArrayList<>();
-        if(null == s || s.length() == 0 || null == words || words.length == 0){
+        if (null == s || s.length() == 0 || null == words || words.length == 0) {
             return result;
         }
         int wordLen = words[0].length();
         int wordCount = words.length;
         int subStrLen = wordLen * wordCount;
-        if(s.length() < subStrLen){
+        if (s.length() < subStrLen) {
             return result;
         }
         Map<String, Integer> wordFreq = new HashMap<>();
-        for(String word : words){
+        for (String word : words) {
             wordFreq.put(word, wordFreq.getOrDefault(word, 0) + 1);
         }
-        for(int i = 0; i < wordLen; i++){
+        for (int i = 0; i < wordLen; i++) {
             int left = i;
             int right = i;
             Map<String, Integer> currentFreq = new HashMap<>();
             int count = 0;
-            while(right + wordLen <= s.length()){
+            while (right + wordLen <= s.length()) {
                 String word = s.substring(right, right + wordLen);
                 right += wordLen;
-                if(wordFreq.containsKey(word)){
+                if (wordFreq.containsKey(word)) {
                     currentFreq.put(word, currentFreq.getOrDefault(word, 0) + 1);
                     count++;
-                    while(currentFreq.get(word) > wordFreq.get(word)){
+                    while (currentFreq.get(word) > wordFreq.get(word)) {
                         String leftWord = s.substring(left, left + wordLen);
-                        currentFreq.put(leftWord, currentFreq.get(leftWord)  - 1);
+                        currentFreq.put(leftWord, currentFreq.get(leftWord) - 1);
                         count--;
                         left += wordLen;
                     }
-                    if(count == wordCount){
+                    if (count == wordCount) {
                         result.add(left);
                     }
-                }else{
+                } else {
                     currentFreq.clear();
                     count = 0;
                     left = right;
@@ -415,56 +415,56 @@ public class LeetCode30 {
         return result;
     }
 
-    public void test(String s, String[] words, String expected) {
-        System.out.printf("Input s:[%s]   %n", s);
-        System.out.println("words:" + Arrays.toString(words));
-        List<Integer> result = findSubstring(s, words);
-        System.out.println("[V1]expected :" + expected + ", Result :" + result);
-
-        result = findSubstringV2(s, words);
-        System.out.println("[V2]expected :" + expected + ", Result :" + result);
-
-        result = findSubstringV3(s, words);
-        System.out.println("[V3]expected :" + expected + ", Result :" + result);
-
-        result = findSubstringV4(s, words);
-        System.out.println("[V4]expected :" + expected + ", Result :" + result);
-
-        result = findSubstringV5(s, words);
-        System.out.println("[V5]expected :" + expected + ", Result :" + result);
-
-        result = findSubstringV6(s, words);
-        System.out.println("[V6]expected :" + expected + ", Result :" + result);
-
-        result = findSubstringV7(s, words);
-        System.out.println("[V7]expected :" + expected + ", Result :" + result);
-
-        result = findSubstringV8(s, words);
-        System.out.println("[V8]expected :" + expected + ", Result :" + result);
-        System.out.println("=======================================");
-    }
-
     public static void main(String[] args) {
-        LeetCode30 lc = new LeetCode30();
+        LeetCode30 solver = new LeetCode30();
 
-        String s = "barfoothefoobarman";
-        String[] words = new String[] { "foo", "bar" };
-        lc.test(s, words, "[9, 0]");
+        // Multi-case datasets
+        String[] testStrings = {
+                "barfoothefoobarman",
+                "wordgoodgoodgoodwordofficial",
+                "barfoofoobarthefoobarman"
+        };
+        String[][] testWords = {
+                { "foo", "bar" },
+                { "word", "good", "best", "word" },
+                { "bar", "foo", "the" }
+        };
 
-        s = "wordgoodgoodgoodbestword";
-        words = new String[] { "word", "good", "best", "word" };
-        lc.test(s, words, "[]");
+        // Master list containing expected array structures for each test case
+        List<List<Integer>> expectedOutputs = new ArrayList<>();
+        expectedOutputs.add(Arrays.asList(0, 9));
+        expectedOutputs.add(new ArrayList<>()); // Expected empty list
+        expectedOutputs.add(Arrays.asList(6, 9, 12));
 
-        s = "barfoofoobarthefoobarman";
-        words = new String[] { "bar", "foo", "the" };
-        lc.test(s, words, "[9, 6, 12]");
+        System.out.println("--- Running Substring with Concatenation of All Words Tests ---");
 
-        s = "aaa";
-        words = new String[] { "a", "a" };
-        lc.test(s, words, "[0,1]");
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testStrings.length; i++) {
+            String currentStr = testStrings[i];
+            String[] currentWords = testWords[i];
+            List<Integer> expected = expectedOutputs.get(i);
 
-        s = "aaaaaaaaaaaaaa";
-        words = new String[] { "aa", "aa" };
-        lc.test(s, words, "[0,1,2,3,4,5,6,7,8,9,10]");
+            // The single function call
+            List<Integer> actual = solver.findSubstringV8(currentStr, currentWords);
+
+            // Sort copies of both lists to make the validation check order-insensitive
+            List<Integer> sortedActual = new ArrayList<>(actual);
+            List<Integer> sortedExpected = new ArrayList<>(expected);
+            Collections.sort(sortedActual);
+            Collections.sort(sortedExpected);
+
+            String wordsDisplay = Arrays.toString(currentWords);
+
+            // Validation check
+            if (sortedActual.equals(sortedExpected)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (s: \"" + currentStr + "\", words: "
+                        + wordsDisplay + " -> " + actual + ")");
+            } else {
+                System.err.println(
+                        "Test Case " + (i + 1) + ": FAILED! s: \"" + currentStr + "\" | words: " + wordsDisplay +
+                                "\n  Expected: " + expected + "\n  Got:      " + actual);
+            }
+        }
     }
 }

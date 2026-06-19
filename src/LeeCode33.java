@@ -71,26 +71,39 @@ public class LeeCode33 {
         return -1;
     }
 
-    public void test(int[] nums, int target, int expected) {
-        int actual = search(nums, target);
-        System.out.println("nums=" + Arrays.toString(nums));
-        System.out.printf("[V1] target=%d, expect=%d, actual=%d%n", target, expected, actual);
-        actual = searchV2(nums, target);
-        System.out.printf("[V2] target=%d, expect=%d, actual=%d%n", target, expected, actual);
-        actual = searchV3(nums, target);
-        System.out.printf("[V3] target=%d, expect=%d, actual=%d%n", target, expected, actual);
-        System.out.println("##########################");
-    }
-
     public static void main(String[] args) {
-        LeeCode33 lc = new LeeCode33();
-        int[] nums = new int[] { 4, 5, 6, 7, 0, 1, 2 };
-        lc.test(nums, 0, 4);
-        nums = new int[] { 4, 5, 6, 7, 0, 1, 2 };
-        lc.test(nums, 3, -1);
-        nums = new int[] { 1 };
-        lc.test(nums, 0, -1);
-        nums = new int[] { 3, 1 };
-        lc.test(nums, 1, 1);
+        LeeCode33 solver = new LeeCode33();
+
+        // Multi-case datasets
+        int[][] testInputs = {
+                { 4, 5, 6, 7, 0, 1, 2 },
+                { 4, 5, 6, 7, 0, 1, 2 },
+                { 1 },
+                { 5, 1, 3 }
+        };
+        int[] testTargets = { 0, 3, 0, 5 };
+        int[] expectedOutputs = { 4, -1, -1, 0 };
+
+        System.out.println("--- Running Search in Rotated Sorted Array Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            int target = testTargets[i];
+            int expected = expectedOutputs[i];
+
+            // The single function call
+            int actual = solver.searchV3(currentInput, target);
+
+            // Validation check
+            if (actual == expected) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Array: " + Arrays.toString(currentInput) +
+                        ", Target: " + target + " -> Index: " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Array: " + Arrays.toString(currentInput) +
+                        " | Target: " + target + "\n  Expected Index: " + expected + " | Got: " + actual);
+            }
+        }
     }
 }

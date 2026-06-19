@@ -2,19 +2,20 @@ public class LeeCode28 {
 
     public int strStr(String haystack, String needle) {
         int index = -1;
-        if(null ==haystack || null == needle)return index;
+        if (null == haystack || null == needle)
+            return index;
         int left = 0;
-        while(left < haystack.length() - needle.length()){
+        while (left < haystack.length() - needle.length()) {
             int i = 0;
             int tmpIndex = left;
-            while(i < needle.length() && haystack.charAt(left) == needle.charAt(i)){
+            while (i < needle.length() && haystack.charAt(left) == needle.charAt(i)) {
                 left++;
                 i++;
             }
-            if(i == needle.length()){
-                //found match
+            if (i == needle.length()) {
+                // found match
                 return tmpIndex;
-            }else{
+            } else {
                 left += i;
             }
         }
@@ -23,41 +24,54 @@ public class LeeCode28 {
 
     public int strStrV2(String haystack, String needle) {
         int index = -1;
-        if(null == haystack || null == needle)return index;
+        if (null == haystack || null == needle)
+            return index;
         int hLen = haystack.length();
         int nLen = needle.length();
 
-        if(hLen < nLen)return index;
-        for(int i = 0; i < hLen - nLen; i++){
+        if (hLen < nLen)
+            return index;
+        for (int i = 0; i < hLen - nLen; i++) {
             int j = 0;
-            while(j < nLen && haystack.charAt(i + j) == needle.charAt(j)){
+            while (j < nLen && haystack.charAt(i + j) == needle.charAt(j)) {
                 j++;
             }
-            if(j == nLen){
-                //found
+            if (j == nLen) {
+                // found
                 return i;
             }
         }
         return index;
     }
 
-    public void test(String haystack, String needle, int expected) {
-        System.out.println("haystack=[" + haystack + "[], needle=[" + needle + "]   ");
-        int result = strStr(haystack, needle);
-        System.out.printf("[V1] expected:[%d], actual:[%d] %n", expected, result);
-
-        result = strStrV2(haystack, needle);
-        System.out.printf("[V2] expected:[%d], actual:[%d] %n", expected, result);
-        System.out.println("=======================================");
-    }
-
     public static void main(String[] args) {
-        LeeCode28 lc = new LeeCode28();
-        String haystack = "sadbutsad";
-        String needle = "sad";
-        lc.test(haystack, needle, 0);
-        haystack = "leetcode";
-        needle = "leeto";
-        lc.test(haystack, needle, -1);
+        LeeCode28 solver = new LeeCode28();
+
+        // Multi-case datasets
+        String[] haystacks = { "sadbutsad", "leetcode", "hello", "abc" };
+        String[] needles = { "sad", "leeto", "ll", "a" };
+        int[] expectedOutputs = { 0, -1, 2, 0 };
+
+        System.out.println("--- Running Find First Occurrence Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < haystacks.length; i++) {
+            String currentHaystack = haystacks[i];
+            String currentNeedle = needles[i];
+            int expected = expectedOutputs[i];
+
+            // The single function call
+            int actual = solver.strStrV2(currentHaystack, currentNeedle);
+
+            // Validation check
+            if (actual == expected) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (\"" +
+                        currentHaystack + "\", \"" + currentNeedle + "\" -> " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Haystack: \"" + currentHaystack +
+                        "\" | Needle: \"" + currentNeedle + "\" | Expected: " + expected + ", but got: " + actual);
+            }
+        }
     }
 }

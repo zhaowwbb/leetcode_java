@@ -82,26 +82,33 @@ public class LeeCode29 {
         return negative ? -quotient : quotient;
     }
 
-    public void test(int dividend, int divisor, int expected) {
-        System.out.printf("Input dividend:[%d]  divisor:[%d] %n", dividend, divisor);
-        int result = divide(dividend, divisor);
-        System.out.printf("[V1] expected:[%d], actual:[%d] %n", expected, result);
-
-        result = divideV2(dividend, divisor);
-        System.out.printf("[V2] expected:[%d], actual:[%d] %n", expected, result);
-
-        result = divideV3(dividend, divisor);
-        System.out.printf("[V3] expected:[%d], actual:[%d] %n", expected, result);
-        System.out.println("=======================================");
-    }
-
     public static void main(String[] args) {
-        LeeCode29 lc = new LeeCode29();
-        lc.test(10, 3, 3);
-        lc.test(7, -3, -2);
-        lc.test(-2147483648, 1, -2147483648);
-        lc.test(-2147483648, -1, 2147483647);
-        lc.test(2147483647, 1, 2147483647);
-        lc.test(2147483647, -1, -2147483647);
+        LeeCode29 solver = new LeeCode29();
+
+        // Multi-case datasets including standard and edge-case boundaries
+        int[] dividends = { 10, 7, 0, 1, -2147483648, -2147483648 };
+        int[] divisors = { 3, -3, 1, 1, -1, 2 };
+        int[] expectedOutputs = { 3, -2, 0, 1, 2147483647, -1073741824 };
+
+        System.out.println("--- Running Divide Two Integers Tests ---");
+
+        // Sequential validation using a single function call point
+        for (int i = 0; i < dividends.length; i++) {
+            int currentDividend = dividends[i];
+            int currentDivisor = divisors[i];
+            int expected = expectedOutputs[i];
+
+            // The single function call
+            int actual = solver.divideV3(currentDividend, currentDivisor);
+
+            // Validation check
+            if (actual == expected) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (" +
+                        currentDividend + " / " + currentDivisor + " -> " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! " + currentDividend + " / " + currentDivisor +
+                        " | Expected: " + expected + ", but got: " + actual);
+            }
+        }
     }
 }

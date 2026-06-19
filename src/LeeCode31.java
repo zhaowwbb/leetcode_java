@@ -174,25 +174,26 @@ public class LeeCode31 {
     }
 
     public void nextPermutationV6(int[] nums) {
-        if(null == nums || nums.length <= 1)return;
+        if (null == nums || nums.length <= 1)
+            return;
         int len = nums.length;
         int i = len - 2;
-        while(i >=0 && nums[i] >= nums[i+1]){
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
             i--;
         }
-        if(i >= 0){
+        if (i >= 0) {
             int j = len - 1;
-            while(j >= 0 && nums[i] >= nums[j]){
+            while (j >= 0 && nums[i] >= nums[j]) {
                 j--;
             }
             int temp = nums[i];
             nums[i] = nums[j];
             nums[j] = temp;
         }
-        //reverse
+        // reverse
         int left = i + 1;
         int right = len - 1;
-        while(left < right){
+        while (left < right) {
             int temp = nums[left];
             nums[left] = nums[right];
             nums[right] = temp;
@@ -201,63 +202,47 @@ public class LeeCode31 {
         }
     }
 
-    public void test(int[] nums, String expected) {
-        int[] copy = nums.clone();
-        System.out.println("Input:" + Arrays.toString(copy));
-
-        nextPermutation(copy);
-        // System.out.println("[V1]expected:" + expected + ",Result:" +
-        // Arrays.toString(copy));
-        // System.out.println("[V1]expected:" + expected);
-        // System.out.println("[V1]Result :" + Arrays.toString(copy));
-
-        // copy = nums.clone();
-        // nextPermutationV2(copy);
-        // System.out.println("[V2]expected:" + expected + ",Result:" +
-        // Arrays.toString(copy));
-
-        // copy = nums.clone();
-        // nextPermutationV3(copy);
-        // System.out.println("[V3]expected:" + expected + ",Result:" +
-        // Arrays.toString(copy));
-
-        copy = nums.clone();
-        nextPermutationV4(copy);
-        System.out.println("[V4]expected:" + expected + ",Result:" + Arrays.toString(copy));
-
-        copy = nums.clone();
-        nextPermutationV5(copy);
-        System.out.println("[V5]expected:" + expected + ",Result:" + Arrays.toString(copy));
-
-        copy = nums.clone();
-        nextPermutationV6(copy);
-        System.out.println("[V6]expected:" + expected + ",Result:" + Arrays.toString(copy));
-
-        System.out.println("====================");
-    }
-
     public static void main(String[] args) {
-        LeeCode31 lc = new LeeCode31();
+        LeeCode31 solver = new LeeCode31();
 
-        int[] nums = new int[] { 1, 2, 3 };
-        lc.test(nums, "[1,3,2]");
+        // Multi-case datasets
+        int[][] testInputs = {
+                { 1, 2, 3 },
+                { 3, 2, 1 },
+                { 1, 1, 5 },
+                { 1, 3, 2 }
+        };
 
-        nums = new int[] { 3, 2, 1 };
-        lc.test(nums, "[1,2,3]");
+        int[][] expectedOutputs = {
+                { 1, 3, 2 },
+                { 1, 2, 3 }, // Fully descending resets back to fully ascending
+                { 1, 5, 1 },
+                { 2, 1, 3 }
+        };
 
-        nums = new int[] { 1, 1, 5 };
-        lc.test(nums, "[1,5,1]");
+        System.out.println("--- Running Next Permutation Tests ---");
 
-        nums = new int[] { 1, 3, 2 };
-        lc.test(nums, "[2,1,3]");
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            int[] expected = expectedOutputs[i];
 
-        nums = new int[] { 2, 3, 1 };
-        lc.test(nums, "[3,1,2]");
+            // Capture the initial state string before the in-place array mutation occurs
+            String originalInputStr = Arrays.toString(currentInput);
 
-        nums = new int[] { 5, 4, 7, 5, 3, 2 };
-        lc.test(nums, "[5,5,2,3,4,7]");
+            // The single function call
+            solver.nextPermutationV6(currentInput);
 
-        nums = new int[] { 4, 2, 0, 2, 3, 2, 0 };
-        lc.test(nums, "[4,2,0,3,0,2,2]");
+            // Validation check
+            if (Arrays.equals(currentInput, expected)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Input: " + originalInputStr +
+                        " -> " + Arrays.toString(currentInput) + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + originalInputStr +
+                        "\n  Expected: " + Arrays.toString(expected) +
+                        "\n  Got:      " + Arrays.toString(currentInput));
+            }
+        }
     }
 }

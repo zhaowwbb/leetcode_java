@@ -19,10 +19,11 @@ public class LeeCode27 {
     }
 
     public int removeElementV2(int[] nums, int val) {
-        if(null == nums)return 0;
+        if (null == nums)
+            return 0;
         int deleteIndex = 0;
-        for(int i = 0; i < nums.length; i++){
-            if(nums[i] != val){
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != val) {
                 nums[deleteIndex] = nums[i];
                 deleteIndex++;
             }
@@ -30,31 +31,68 @@ public class LeeCode27 {
         return deleteIndex;
     }
 
-    public void test(int[] nums, int val, int expected) {
-        int[] copy = Arrays.copyOf(nums, nums.length);
-        System.out.println("Input: val=" + val);
-        System.out.println(Arrays.toString(copy));
-        int result = 0;
-        result = removeElement(copy, val);
-        System.out.printf("[V1] expected:[%d], actual:[%d] %n", expected, result);
-        System.out.println(Arrays.toString(copy));
-
-        copy = Arrays.copyOf(nums, nums.length);
-        result = removeElementV2(copy, val);
-        System.out.printf("[V2] expected:[%d], actual:[%d] %n", expected, result);
-        System.out.println(Arrays.toString(copy));
-        System.out.println("=======================================");
-    }
-
     public static void main(String[] args) {
-        LeeCode27 lc = new LeeCode27();
+        LeeCode27 solver = new LeeCode27();
+        // Multi-case datasets
+        int[][] testInputs = {
+                { 3, 2, 2, 3 },
+                { 0, 1, 2, 2, 3, 0, 4, 2 },
+                { 1 },
+                {}
+        };
+        int[] testVals = { 3, 2, 1, 7 };
 
-        int[] nums = { 3, 2, 2, 3 };
-        int val = 3;
-        lc.test(nums, val, 2);
+        int[] expectedLengths = { 2, 5, 0, 0 };
+        int[][] expectedArrays = {
+                { 2, 2 },
+                { 0, 1, 3, 0, 4 },
+                {},
+                {}
+        };
 
-        nums = new int[] { 0, 1, 2, 2, 3, 0, 4, 2 };
-        val = 2;
-        lc.test(nums, val, 5);
+        System.out.println("--- Running Remove Element Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            int valToRemove = testVals[i];
+            int expectedLen = expectedLengths[i];
+            int[] expectedArr = expectedArrays[i];
+
+            // Capture original state for clear diagnostic logs before in-place mutations
+            String originalInputStr = Arrays.toString(currentInput);
+
+            // The single function call
+            int actualLen = solver.removeElementV2(currentInput, valToRemove);
+
+            // Verification Step 1: Check length matches
+            boolean lengthMatches = (actualLen == expectedLen);
+
+            // Verification Step 2: Check elements up to index actualLen (ignoring order or
+            // remnants)
+            // Note: Since LeetCode accepts elements in any order, we sort the sub-segments
+            // to check them reliably
+            int[] actualSubArray = Arrays.copyOf(currentInput, actualLen);
+            int[] expectedSubArray = Arrays.copyOf(expectedArr, expectedLen);
+            Arrays.sort(actualSubArray);
+            Arrays.sort(expectedSubArray);
+
+            boolean elementsMatch = Arrays.equals(actualSubArray, expectedSubArray);
+
+            // Evaluation check
+            if (lengthMatches && elementsMatch) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Input: " + originalInputStr +
+                        ", remove: " + valToRemove + " -> Elements: "
+                        + Arrays.toString(Arrays.copyOf(currentInput, actualLen)) + ")");
+            } else {
+                System.err.println(
+                        "Test Case " + (i + 1) + ": FAILED! Input: " + originalInputStr + " | target: " + valToRemove +
+                                "\n  Expected Length: " + expectedLen + " | Got: " + actualLen +
+                                "\n  Expected Elements: " + Arrays.toString(expectedArr) +
+                                " | Got First " + actualLen + " Elements: "
+                                + Arrays.toString(Arrays.copyOf(currentInput, actualLen)));
+            }
+        }
     }
 }

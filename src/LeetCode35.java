@@ -47,21 +47,39 @@ public class LeetCode35 {
         return left;
     }
 
-    public void test(int[] nums, int target, int expected) {
-        System.out.println("nums=" + Arrays.toString(nums));
-        int actual = searchInsert(nums, target);
-        System.out.printf("[V1] target=%d, expect=%d, actual=%d%n", target, expected, actual);
-        actual = searchInsertV2(nums, target);
-        System.out.printf("[V2] target=%d, expect=%d, actual=%d%n", target, expected, actual);
-        System.out.println("##########################");
-    }
-
     public static void main(String[] args) {
-        LeetCode35 lc = new LeetCode35();
-        int[] nums = new int[] { 1, 3, 5, 6 };
-        lc.test(nums, 5, 2);
-        lc.test(nums, 2, 1);
-        lc.test(nums, 7, 4);
+        LeetCode35 solver = new LeetCode35();
 
+        // Multi-case datasets
+        int[][] testInputs = {
+                { 1, 3, 5, 6 },
+                { 1, 3, 5, 6 },
+                { 1, 3, 5, 6 },
+                { 1, 3, 5, 6 }
+        };
+        int[] testTargets = { 5, 2, 7, 0 };
+        int[] expectedOutputs = { 2, 1, 4, 0 };
+
+        System.out.println("--- Running Search Insert Position Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            int target = testTargets[i];
+            int expected = expectedOutputs[i];
+
+            // The single function call
+            int actual = solver.searchInsertV2(currentInput, target);
+
+            // Validation check
+            if (actual == expected) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Array: " + Arrays.toString(currentInput) +
+                        ", Target: " + target + " -> Index: " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Array: " + Arrays.toString(currentInput) +
+                        " | Target: " + target + "\n  Expected Index: " + expected + " | Got: " + actual);
+            }
+        }
     }
 }

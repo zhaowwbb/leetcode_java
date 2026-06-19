@@ -42,22 +42,22 @@ public class LeeCode34 {
             return result;
         int left = 0;
         int right = nums.length - 1;
-        while(left <= right){
-            int mid = left + (right - left)/2;
-            if(nums[mid] == target){
-                //check boundary index
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                // check boundary index
                 int start = mid;
                 int end = mid;
-                while(start - 1 >=0 && nums[start - 1] == nums[start]){
+                while (start - 1 >= 0 && nums[start - 1] == nums[start]) {
                     start--;
                 }
-                while(end + 1 < nums.length && nums[end] == nums[end + 1]){
+                while (end + 1 < nums.length && nums[end] == nums[end + 1]) {
                     end++;
                 }
-                return new int[]{start, end};
-            }else if(nums[mid] > target){
+                return new int[] { start, end };
+            } else if (nums[mid] > target) {
                 right = mid - 1;
-            }else{
+            } else {
                 left = mid + 1;
             }
         }
@@ -65,31 +65,46 @@ public class LeeCode34 {
         return result;
     }
 
-    public void test(int[] nums, int target, String expected) {
-        System.out.println("nums=" + Arrays.toString(nums));
-
-        int[] result = searchRange(nums, target);
-        String actual = Arrays.toString(result);
-        System.out.printf("[V1] target=%d, expect=%s, actual=%s%n", target, expected, actual);
-
-        result = searchRangeV2(nums, target);
-        actual = Arrays.toString(result);
-        System.out.printf("[V2] target=%d, expect=%s, actual=%s%n", target, expected, actual);
-        System.out.println("##########################");
-    }
-
     public static void main(String[] args) {
-        LeeCode34 lc = new LeeCode34();
-        int[] nums = new int[] { 5, 7, 7, 8, 8, 10 };
-        lc.test(nums, 8, "[3,4]");
+        LeeCode34 solver = new LeeCode34();
 
-        nums = new int[] { 5, 7, 7, 8, 8, 10 };
-        lc.test(nums, 6, "[-1,-1]");
+        // Multi-case datasets
+        int[][] testInputs = {
+                { 5, 7, 7, 8, 8, 10 },
+                { 5, 7, 7, 8, 8, 10 },
+                {},
+                { 2, 2 }
+        };
+        int[] testTargets = { 8, 6, 0, 2 };
 
-        nums = new int[] {};
-        lc.test(nums, 0, "[-1,-1]");
+        int[][] expectedOutputs = {
+                { 3, 4 },
+                { -1, -1 },
+                { -1, -1 },
+                { 0, 1 }
+        };
 
-        nums = new int[] { 1, 4 };
-        lc.test(nums, 4, "[1,1]");
+        System.out.println("--- Running Find First and Last Position Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            int target = testTargets[i];
+            int[] expected = expectedOutputs[i];
+
+            // The single function call
+            int[] actual = solver.searchRangeV2(currentInput, target);
+
+            // Validation check using Arrays.equals for deep array matching
+            if (Arrays.equals(actual, expected)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Array: " + Arrays.toString(currentInput) +
+                        ", Target: " + target + " -> Range: " + Arrays.toString(actual) + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Array: " + Arrays.toString(currentInput) +
+                        " | Target: " + target + "\n  Expected: " + Arrays.toString(expected) +
+                        " | Got: " + Arrays.toString(actual));
+            }
+        }
     }
 }
