@@ -1,8 +1,9 @@
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
-public class GenerateParentheses {
+public class LeetCode22 {
 
     public List<String> generateParenthesis(int n) {
         List<String> result = new ArrayList<>();
@@ -89,22 +90,41 @@ public class GenerateParentheses {
         }
     }
 
-    public void test(int n) {
-        System.out.println("n=" + n);
-        List<String> list = null;
-        list = generateParenthesis(n);
-        System.out.println("[V1]list=" + list);
-        list = generateParenthesisV2(n);
-        System.out.println("[V2]list=" + list);
-        list = generateParenthesisV3(n);
-        System.out.println("[V3]list=" + list);
-        list = generateParenthesisV4(n);
-        System.out.println("[V4]list=" + list);
-    }
-
     public static void main(String[] args) {
-        GenerateParentheses util = new GenerateParentheses();
-        util.test(3);
-        util.test(1);
+        LeetCode22 solver = new LeetCode22();
+
+        // Multi-case datasets for 'n' pairs
+        int[] testInputs = { 3, 1 };
+
+        // Master list containing expected lists of combinations for each test case
+        List<List<String>> expectedOutputs = new ArrayList<>();
+        expectedOutputs.add(Arrays.asList("((()))", "(()())", "(())()", "()(())", "()()()"));
+        expectedOutputs.add(Arrays.asList("()"));
+
+        System.out.println("--- Running Generate Parentheses Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int n = testInputs[i];
+            List<String> expected = expectedOutputs.get(i);
+
+            // The single function call
+            List<String> actual = solver.generateParenthesisV4(n);
+
+            // Sort copies of both lists to make the validation check order-insensitive
+            List<String> sortedActual = new ArrayList<>(actual);
+            List<String> sortedExpected = new ArrayList<>(expected);
+            Collections.sort(sortedActual);
+            Collections.sort(sortedExpected);
+
+            // Validation check
+            if (sortedActual.equals(sortedExpected)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (n = " + n + " -> " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! n = " + n +
+                        "\n  Expected: " + expected + "\n  Got:      " + actual);
+            }
+        }
     }
 }

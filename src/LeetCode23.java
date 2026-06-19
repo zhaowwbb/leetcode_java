@@ -1,6 +1,38 @@
 import java.util.*;
 
-public class MergeKSortedLists {
+public class LeetCode23 {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0)
+            return null;
+
+        // Initialize a Min-Heap based on node values
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> Integer.compare(a.val, b.val));
+
+        // Push the head node of each non-empty linked list into the heap
+        for (ListNode node : lists) {
+            if (node != null) {
+                minHeap.add(node);
+            }
+        }
+
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+
+        // Extract the smallest node continuously and append the next node from that
+        // list
+        while (!minHeap.isEmpty()) {
+            ListNode smallestNode = minHeap.poll();
+            current.next = smallestNode;
+            current = current.next;
+
+            if (smallestNode.next != null) {
+                minHeap.add(smallestNode.next);
+            }
+        }
+
+        return dummy.next;
+    }
 
     public ListNode mergeKListsV1(ListNode[] lists) {
         ListNode dummyNode = new ListNode(0);
@@ -142,57 +174,83 @@ public class MergeKSortedLists {
         return dummy.next;
     }
 
-    public void test() {
-        ListNode[] lists = createTestData();
-        System.out.println("Input:");
-        for (ListNode n : lists) {
-            Util.printNode(n);
+    // Helper method to build a linked list from an array
+    private static ListNode buildList(int[] arr) {
+        if (arr == null || arr.length == 0)
+            return null;
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        for (int val : arr) {
+            current.next = new ListNode(val);
+            current = current.next;
         }
-        ListNode result = mergeKListsV1(lists);
-        System.out.println("[V1] Merged result:");
-        Util.printNode(result);
-
-        // lists = createTestData();
-        // result = mergeKListsV2(lists);
-        // System.out.println("[V2] Merged result:");
-        // Util.printNode(result);
-
-        // lists = createTestData();
-        // result = mergeKListsV3(lists);
-        // System.out.println("[V3] Merged result:");
-        // Util.printNode(result);
-
-        lists = createTestData();
-        result = mergeKListsV4(lists);
-        System.out.println("[V4] Merged result:");
-        Util.printNode(result);
-
-        lists = createTestData();
-        result = mergeKListsV5(lists);
-        System.out.println("[V5] Merged result:");
-        Util.printNode(result);
-
-        lists = createTestData();
-        result = mergeKListsV6(lists);
-        System.out.println("[V6] Merged result:");
-        Util.printNode(result);
-        System.out.println("===============================");
+        return dummy.next;
     }
 
-    public static ListNode[] createTestData() {
-        int[] nums1 = { 1, 4, 5 };
-        int[] nums2 = { 1, 3, 4 };
-        int[] nums3 = { 2, 6 };
-        ListNode list1 = Util.createListNodeFromArray(nums1);
-        ListNode list2 = Util.createListNodeFromArray(nums2);
-        ListNode list3 = Util.createListNodeFromArray(nums3);
-        ListNode[] lists = new ListNode[] { list1, list2, list3 };
-        return lists;
+    // Helper method to convert a linked list back to an ArrayList for verification
+    private static List<Integer> listToArrayList(ListNode head) {
+        List<Integer> result = new ArrayList<>();
+        ListNode current = head;
+        while (current != null) {
+            result.add(current.val);
+            current = current.next;
+        }
+        return result;
     }
 
+    // Test logic in the main method
     public static void main(String[] args) {
-        MergeKSortedLists util = new MergeKSortedLists();
+        LeetCode23 solver = new LeetCode23();
 
-        util.test();
+        // Test dataset mapping a collection of 2D arrays to their combined sorted
+        // output
+        int[][][] testCasesInputs = {
+                { { 1, 4, 5 }, { 1, 3, 4 }, { 2, 6 } },
+                {},
+                { {} }
+        };
+
+        int[][] expectedOutputs = {
+                { 1, 1, 2, 3, 4, 4, 5, 6 },
+                {},
+                {}
+        };
+
+        System.out.println("--- Running Merge k Sorted Lists Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testCasesInputs.length; i++) {
+            int[][] currentCaseArrays = testCasesInputs[i];
+
+            // Build the array of standard ListNode structures dynamically
+            ListNode[] lists = new ListNode[currentCaseArrays.length];
+            for (int j = 0; j < currentCaseArrays.length; j++) {
+                lists[j] = buildList(currentCaseArrays[j]);
+            }
+
+            // Convert expected array to an ArrayList for deep comparison
+            List<Integer> expectedList = new ArrayList<>();
+            for (int val : expectedOutputs[i])
+                expectedList.add(val);
+
+            // The single function call point
+            ListNode resultHead = solver.mergeKLists(lists);
+
+            // Serialize the linked list result back to a standard collection flat form
+            List<Integer> actualList = listToArrayList(resultHead);
+
+            // Format inputs to print out informative diagnostic histories
+            String inputsFormatted = Arrays.deepToString(currentCaseArrays);
+
+            // Validation check
+            if (actualList.equals(expectedList)) {
+                System.out.println(
+                        "Test Case " + (i + 1) + ": PASSED (Input: " + inputsFormatted + " -> " + actualList + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + inputsFormatted +
+                        "\n  Expected: " + expectedList + "\n  Got:      " + actualList);
+            }
+        }
     }
 }
