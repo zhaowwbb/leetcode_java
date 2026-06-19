@@ -109,14 +109,16 @@ public class LeetCode14 {
 
     public String longestCommonPrefixV6(String[] strs) {
         String result = "";
-        if(null == strs)return result;
-        if(strs.length == 1)return strs[0];
+        if (null == strs)
+            return result;
+        if (strs.length == 1)
+            return strs[0];
         String first = strs[0];
-        for(int i = 0; i < first.length(); i++){
+        for (int i = 0; i < first.length(); i++) {
             char c = first.charAt(i);
-            for(int j = 1; j < strs.length; j++){
+            for (int j = 1; j < strs.length; j++) {
                 String s = strs[j];
-                if(i == s.length() || c != s.charAt(i)){
+                if (i == s.length() || c != s.charAt(i)) {
                     return first.substring(0, i);
                 }
             }
@@ -124,44 +126,40 @@ public class LeetCode14 {
         return first;
     }
 
-    public void test(String[] strs, String expectedResult) {
-        String result = longestCommonPrefix(strs);
-        System.out.printf("[V1]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
-
-        result = longestCommonPrefixV2(strs);
-        System.out.printf("[V2]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
-
-        result = longestCommonPrefixV3(strs);
-        System.out.printf("[V3]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
-
-        result = longestCommonPrefixV4(strs);
-        System.out.printf("[V4]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
-
-        result = longestCommonPrefixV5(strs);
-        System.out.printf("[V5]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
-
-        result = longestCommonPrefixV6(strs);
-        System.out.printf("[V6]s=[%s], expected:[%s], actual:[%s] %n", Arrays.toString(strs), expectedResult, result);
-        System.out.println("##########################");
-    }
-
     public static void main(String[] args) {
-        LeetCode14 util = new LeetCode14();
+        LeetCode14 solver = new LeetCode14();
 
-        String[] strs = { "flower", "flow", "flight" };
-        util.test(strs, "fl");
-
-        strs = new String[] { "dog", "racecar", "car" };
-        util.test(strs, "");
-
-        strs = new String[] {
-                "technique", // Length 9
-                "technician", // Length 10
-                "tech", // Length 4 (The Bottleneck)
-                "technology", // Length 10
-                "technical", // Length 9
-                "techie" // Length 6
+        // 2D Array to hold multiple test cases (each sub-array is a case)
+        String[][] testInputs = {
+                { "flower", "flow", "flight" },
+                { "dog", "racecar", "car" },
+                { "interspecies", "interstellar", "interstate" },
+                { "throne", "throne" },
+                { "" }
         };
-        util.test(strs, "tech");
+
+        String[] expectedOutputs = { "fl", "", "inters", "throne", "" };
+
+        System.out.println("--- Running Longest Common Prefix Tests ---");
+
+        // Execute and evaluate every case using a single function call point
+        for (int i = 0; i < testInputs.length; i++) {
+            String[] currentInput = testInputs[i];
+            String expected = expectedOutputs[i];
+
+            // The single function call
+            String actual = solver.longestCommonPrefixV6(currentInput);
+
+            // Print format wrapper for array visualization
+            String inputDisplay = "[" + String.join(", ", currentInput) + "]";
+
+            // Validation check
+            if (actual.equals(expected)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (" + inputDisplay + " -> \"" + actual + "\")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + inputDisplay + " | Expected: \""
+                        + expected + "\", but got: \"" + actual + "\"");
+            }
+        }
     }
 }

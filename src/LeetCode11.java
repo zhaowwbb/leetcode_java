@@ -74,28 +74,36 @@ public class LeetCode11 {
         return maxArea;
     }
 
-    public void test(int[] height, int expectedResult) {
-        int result = 0;
-        result = maxArea(height);
-        System.out.printf("[V1] height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult,
-                result);
-        result = maxAreaV2(height);
-        System.out.printf("[V2] height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult,
-                result);
-        result = maxAreaV3(height);
-        System.out.printf("[V3] height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult,
-                result);
-        result = maxAreaV4(height);
-        System.out.printf("[V4] height=[%s], expected:[%d], actual:[%d]%n", Arrays.toString(height), expectedResult,
-                result);
-        System.out.println("##########################");
-    }
-
     public static void main(String[] args) {
-        LeetCode11 util = new LeetCode11();
-        int[] height = new int[] { 1, 8, 6, 2, 5, 4, 8, 3, 7 };
-        util.test(height, 49);
-        height = new int[] { 1, 1 };
-        util.test(height, 1);
+        LeetCode11 solver = new LeetCode11();
+
+        // Batching multiple test cases into a single dataset
+        int[][] testInputs = {
+                { 1, 8, 6, 2, 5, 4, 8, 3, 7 }, // Expected: 49
+                { 1, 1 }, // Expected: 1
+                { 4, 3, 2, 1, 4 }, // Expected: 16
+                { 1, 2, 1 } // Expected: 2
+        };
+
+        int[] expectedOutputs = { 49, 1, 16, 2 };
+
+        System.out.println("--- Running LeetCode Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentCase = testInputs[i];
+            int expected = expectedOutputs[i];
+
+            // The single function call location
+            int actual = solver.maxAreaV4(currentCase);
+
+            // Verification logic
+            if (actual == expected) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Output: " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Expected " + expected + ", but got " + actual);
+            }
+        }
     }
 }

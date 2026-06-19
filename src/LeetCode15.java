@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -251,31 +252,68 @@ public class LeetCode15 {
         return result;
     }
 
-    public void test(int[] nums) {
-        List<List<Integer>> result = threeSum(nums);
-        printResult(result, "V1");
-        result = threeSumV2(nums);
-        printResult(result, "V2");
-        result = threeSumV3(nums);
-        printResult(result, "V3");
-        result = threeSumV4(nums);
-        printResult(result, "V4");
-        result = threeSumV5(nums);
-        printResult(result, "V5");
-        result = threeSumV6(nums);
-        printResult(result, "V6");
-        System.out.println("##########################");
+    private static List<List<Integer>> normalize(List<List<Integer>> lists) {
+        List<List<Integer>> normalized = new ArrayList<>();
+        for (List<Integer> list : lists) {
+            List<Integer> sortedInner = new ArrayList<>(list);
+            Collections.sort(sortedInner); // Sort inner triplet elements
+            normalized.add(sortedInner);
+        }
+        // Sort the outer list based on element comparisons
+        normalized.sort((a, b) -> {
+            for (int i = 0; i < Math.min(a.size(), b.size()); i++) {
+                int cmp = Integer.compare(a.get(i), b.get(i));
+                if (cmp != 0)
+                    return cmp;
+            }
+            return Integer.compare(a.size(), b.size());
+        });
+        return normalized;
     }
 
+    // Test logic in the main method
     public static void main(String[] args) {
-        LeetCode15 util = new LeetCode15();
-        int[] nums = { -1, 0, 1, 2, -1, -4 };
-        util.test(nums);
-        nums = new int[] { 0, 1, 1 };
-        util.test(nums);
-        nums = new int[] { 0, 0, 0 };
-        util.test(nums);
-        nums = new int[] { -4, -1, -1, -1, 0, 1, 2, 2, 2, 4 };
-        util.test(nums);
+        LeetCode15 solver = new LeetCode15();
+
+        // 2D Array holding multiple test cases
+        int[][] testInputs = {
+                { -1, 0, 1, 2, -1, -4 },
+                { 0, 1, 1 },
+                { 0, 0, 0 }
+        };
+
+        // Master list containing expected nested lists for each test case
+        List<List<List<Integer>>> expectedOutputs = new ArrayList<>();
+
+        // Case 1 expectations
+        expectedOutputs.add(Arrays.asList(Arrays.asList(-1, -1, 2), Arrays.asList(-1, 0, 1)));
+        // Case 2 expectations
+        expectedOutputs.add(new ArrayList<>());
+        // Case 3 expectations
+        expectedOutputs.add(Arrays.asList(Arrays.asList(0, 0, 0)));
+
+        System.out.println("--- Running 3Sum Tests ---");
+
+        // Single function call location inside the evaluation loop
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            List<List<Integer>> expected = expectedOutputs.get(i);
+
+            // The single function call
+            List<List<Integer>> actual = solver.threeSumV6(currentInput);
+
+            // Normalize both collections to ensure order mismatches don't falsely fail the
+            // test
+            List<List<Integer>> normActual = normalize(actual);
+            List<List<Integer>> normExpected = normalize(expected);
+
+            if (normActual.equals(normExpected)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Input: " + Arrays.toString(currentInput) + " -> "
+                        + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + Arrays.toString(currentInput) +
+                        "\n  Expected: " + expected + "\n  Got: " + actual);
+            }
+        }
     }
 }

@@ -187,7 +187,7 @@ public class LeetCode16 {
         int len = nums.length;
         for (int i = 0; i < len - 2; i++) {
             // while (i > 0 && i < len - 2 && nums[i] == nums[i - 1])
-            //     continue;
+            // continue;
             int left = i + 1;
             int right = len - 1;
             while (left < right) {
@@ -207,46 +207,39 @@ public class LeetCode16 {
         return closeSum;
     }
 
-    public void test(int[] nums, int target, int expectedResult) {
-        int result = threeSumClosest(nums, target);
-        System.out.printf("[V1], nums=[%s], expected:[%d], actual:[%d] %n", Arrays.toString(nums), expectedResult,
-                result);
-
-        result = threeSumClosestV2(nums, target);
-        System.out.printf("[V2], nums=[%s], expected:[%d], actual:[%d] %n", Arrays.toString(nums), expectedResult,
-                result);
-
-        result = threeSumClosestV3(nums, target);
-        System.out.printf("[V3], nums=[%s], expected:[%d], actual:[%d] %n", Arrays.toString(nums), expectedResult,
-                result);
-
-        result = threeSumClosestV4(nums, target);
-        System.out.printf("[V4], nums=[%s], expected:[%d], actual:[%d] %n", Arrays.toString(nums), expectedResult,
-                result);
-
-        result = threeSumClosestV5(nums, target);
-        System.out.printf("[V5], nums=[%s], expected:[%d], actual:[%d] %n", Arrays.toString(nums), expectedResult,
-                result);
-
-        result = threeSumClosestV6(nums, target);
-        System.out.printf("[V6], nums=[%s], expected:[%d], actual:[%d] %n", Arrays.toString(nums), expectedResult,
-                result);
-
-        result = threeSumClosestV7(nums, target);
-        System.out.printf("[V7], nums=[%s], expected:[%d], actual:[%d] %n", Arrays.toString(nums), expectedResult,
-                result);
-        System.out.println("############################");
-
-    }
-
     public static void main(String[] args) {
-        LeetCode16 util = new LeetCode16();
-        int[] nums = { -1, 2, 1, -4 };
-        util.test(nums, 1, 2);
-        nums = new int[] { 0, 0, 0 };
-        util.test(nums, 1, 0);
-        nums = new int[] { 1,1,1,1 };
-        util.test(nums, 1, 3);
+        LeetCode16 solver = new LeetCode16();
 
+        // Multi-case datasets
+        int[][] testInputs = {
+                { -1, 2, 1, -4 },
+                { 0, 0, 0 },
+                { 1, 1, 1, 0 },
+                { -100, -98, -2, -1 },
+        };
+        int[] testTargets = { 1, 1, 100, -101 };
+        int[] expectedOutputs = { 2, 0, 3, -101 };
+
+        System.out.println("--- Running 3Sum Closest Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            int currentTarget = testTargets[i];
+            int expected = expectedOutputs[i];
+
+            // The single function call
+            int actual = solver.threeSumClosestV7(currentInput, currentTarget);
+
+            // Validation check
+            if (actual == expected) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Input: " + Arrays.toString(currentInput) +
+                        ", Target: " + currentTarget + " -> " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + Arrays.toString(currentInput) +
+                        ", Target: " + currentTarget + " | Expected: " + expected + ", but got: " + actual);
+            }
+        }
     }
 }

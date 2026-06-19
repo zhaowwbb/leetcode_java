@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 // import java.util.Map;
 // import java.util.HashMap;
+import java.util.Collections;
 
 public class LeetCode17 {
 
@@ -85,19 +86,6 @@ public class LeetCode17 {
         list.addAll(tmpList);
     }
 
-    private void printResult(List<String> result, String version) {
-        System.out.println("[" + version + "] result.size()=" + result.size());
-        System.out.print("[");
-        for (int i = 0; i < result.size(); i++) {
-            System.out.print(result.get(i));
-            if (i != result.size() - 1) {
-                System.out.print(",");
-            }
-        }
-        System.out.print("]");
-        System.out.println("");
-    }
-
     public List<String> letterCombinationsV3(String digits) {
         List<String> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
@@ -169,48 +157,57 @@ public class LeetCode17 {
         return list;
     }
 
-    public void backtraceV6(StringBuilder sb, List<String> list, String digits, int pos){
-        if(pos == digits.length()){
+    public void backtraceV6(StringBuilder sb, List<String> list, String digits, int pos) {
+        if (pos == digits.length()) {
             list.add(sb.toString());
             return;
         }
         char c = digits.charAt(pos);
         int index = c - '0';
         char[] charList = letterMap[index];
-        for(int i = 0; i < charList.length; i++){
+        for (int i = 0; i < charList.length; i++) {
             sb.append(charList[i]);
             backtraceV6(sb, list, digits, pos + 1);
             sb.deleteCharAt(sb.length() - 1);
         }
     }
 
-    public void test(String digits) {
-        System.out.println("digits=" + digits);
-        List<String> result = letterCombinations(digits);
-        printResult(result, "V1");
-
-        // result = letterCombinationsV2(digits);
-        // printResult(result, "V2");
-
-        // result = letterCombinationsV3(digits);
-        // printResult(result, "V3");
-
-        result = letterCombinationsV4(digits);
-        printResult(result, "V4");
-
-        result = letterCombinationsV5(digits);
-        printResult(result, "V5");
-
-        result = letterCombinationsV6(digits);
-        printResult(result, "V6");        
-        System.out.println("#########################");
-    }
-
     public static void main(String[] args) {
-        LeetCode17 util = new LeetCode17();
-        String digits = "23";
-        util.test(digits);
-        digits = "2";
-        util.test(digits);
+        LeetCode17 solver = new LeetCode17();
+
+        // Multi-case datasets
+        String[] testInputs = { "23", "2" };
+
+        List<List<String>> expectedOutputs = new ArrayList<>();
+        expectedOutputs.add(Arrays.asList("ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"));
+        // expectedOutputs.add(new ArrayList<>());
+        expectedOutputs.add(Arrays.asList("a", "b", "c"));
+
+        System.out.println("--- Running Letter Combinations Tests ---");
+
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            String currentInput = testInputs[i];
+            List<String> expected = expectedOutputs.get(i);
+
+            // The single function call
+            List<String> actual = solver.letterCombinationsV6(currentInput);
+
+            // Sort copies of both lists to make the test order-insensitive
+            List<String> sortedActual = new ArrayList<>(actual);
+            List<String> sortedExpected = new ArrayList<>(expected);
+            Collections.sort(sortedActual);
+            Collections.sort(sortedExpected);
+
+            // Validation check
+            if (sortedActual.equals(sortedExpected)) {
+                System.out.println(
+                        "Test Case " + (i + 1) + ": PASSED (Input: \"" + currentInput + "\" -> " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: \"" + currentInput + "\"\n" +
+                        "  Expected: " + expected + "\n  Got:      " + actual);
+            }
+        }
     }
 }

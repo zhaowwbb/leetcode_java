@@ -172,9 +172,29 @@ public class LeetCode12 {
     }
 
     public static void main(String[] args) {
-        LeetCode12 util = new LeetCode12();
-        util.test(3749, "MMMDCCXLIX");
-        util.test(58, "LVIII");
-        util.test(1994, "MCMXCIV");
+        LeetCode12 solver = new LeetCode12();
+
+        // Multi-case datasets
+        int[] testInputs = { 3, 58, 1994, 3999, 40 };
+        String[] expectedOutputs = { "III", "LVIII", "MCMXCIV", "MMMCMXCIX", "XL" };
+
+        System.out.println("--- Running Integer to Roman Tests ---");
+
+        // Single function call execution within the loop
+        for (int i = 0; i < testInputs.length; i++) {
+            int currentInput = testInputs[i];
+            String expected = expectedOutputs[i];
+
+            // Single location where the function is executed
+            String actual = solver.intToRomanV5(currentInput);
+
+            // Validation check
+            if (actual.equals(expected)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (" + currentInput + " -> \"" + actual + "\")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + currentInput + " | Expected: \""
+                        + expected + "\", but got: \"" + actual + "\"");
+            }
+        }
     }
 }

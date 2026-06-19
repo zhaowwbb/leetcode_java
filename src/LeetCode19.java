@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -123,46 +125,76 @@ public class LeetCode19 {
         return dummy.next;
     }
 
+    private static ListNode buildList(int[] arr) {
+        if (arr == null || arr.length == 0)
+            return null;
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        for (int val : arr) {
+            current.next = new ListNode(val);
+            current = current.next;
+        }
+        return dummy.next;
+    }
+
+    // Helper method to convert a linked list to an ArrayList for easy comparison
+    private static List<Integer> listToArrayList(ListNode head) {
+        List<Integer> result = new ArrayList<>();
+        ListNode current = head;
+        while (current != null) {
+            result.add(current.val);
+            current = current.next;
+        }
+        return result;
+    }
+
+    // Test logic in the main method
     public static void main(String[] args) {
         LeetCode19 solver = new LeetCode19();
 
-        System.out
-                .println("Running Consolidated Single-Call Test Suite...\n------------------------------------------");
+        // Multi-case datasets
+        int[][] testLists = {
+                { 1, 2, 3, 4, 5 },
+                { 1 },
+                { 1, 2 }
+        };
+        int[] testN = { 2, 1, 1 };
 
-        /*
-         * We assemble a composite list designed to evaluate multiple conditions.
-         * Target: Remove the 5th element from the end (n = 5).
-         * 
-         * Index from end: 10 9 8 7 6 5 4 3 2 1
-         * Input List: [10, 20, 0, 1, 2, 3, 4, 5, 0, 99]
-         * ^
-         * (Target Node)
-         * 
-         * By removing the 5th node from the end ('3'):
-         * - It tests intermediate deletion (3 is between 2 and 4).
-         * - It preserves the head boundary integrity (10 and 20 are left untouched).
-         * - It preserves the trailing segments ([4, 5, 0, 99] remain intact).
-         */
-        ListNode compositeHead = Util.createLinkedList(new int[] { 10, 20, 0, 1, 2, 3, 4, 5, 0, 99 });
-        int n = 5;
+        // Expected outputs as standard arrays
+        int[][] expectedOutputs = {
+                { 1, 2, 3, 5 },
+                {},
+                { 1 }
+        };
 
-        // The EXACTLY ONE allowed call to the solver
-        ListNode resultHead = solver.removeNthFromEndV6(compositeHead, n);
+        System.out.println("--- Running Remove Nth Node From End Tests ---");
 
-        List<Integer> actualOutput = Util.linkedListToArrayList(resultHead);
-        List<Integer> expectedOutput = List.of(10, 20, 0, 1, 2, 4, 5, 0, 99); // '3' is removed
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testLists.length; i++) {
+            // Build the dynamic structure fresh for each pass
+            ListNode head = buildList(testLists[i]);
+            int n = testN[i];
 
-        // Verification
-        if (Objects.equals(expectedOutput, actualOutput)) {
-            System.out.println("[PASS] Multi-scenario criteria met in a single algorithmic execution step.");
-            System.out.println("       Resulting Stream: " + actualOutput);
-        } else {
-            System.err.println("[FAIL] Composite structure check failed.");
-            System.err.println("       Expected: " + expectedOutput);
-            System.err.println("       Actual:   " + actualOutput);
+            // Convert expected array to List structure for comparison
+            List<Integer> expectedList = new ArrayList<>();
+            for (int val : expectedOutputs[i])
+                expectedList.add(val);
+
+            // The single function call
+            ListNode resultHead = solver.removeNthFromEndV6(head, n);
+
+            // Convert actual linked list result to an ArrayList for verification
+            List<Integer> actualList = listToArrayList(resultHead);
+
+            // Validation check
+            if (actualList.equals(expectedList)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Input: " + Arrays.toString(testLists[i]) +
+                        ", n = " + n + " -> " + actualList + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + Arrays.toString(testLists[i]) +
+                        ", n = " + n + " | Expected: " + expectedList + ", but got: " + actualList);
+            }
         }
-
-        System.out.println("------------------------------------------\nExecution Complete.");
-
     }
 }

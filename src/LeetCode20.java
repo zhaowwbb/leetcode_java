@@ -163,28 +163,38 @@ public class LeetCode20 {
         return stack.size() == 0;
     }
 
-    public void test(String s, boolean expectedResult) {
-        boolean result = isValid(s);
-        System.out.printf("[V1] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
-        result = isValidV2(s);
-        System.out.printf("[V2] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
-        result = isValidV3(s);
-        System.out.printf("[V3] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
-        result = isValidV4(s);
-        System.out.printf("[V4] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
-        result = isValidV5(s);
-        System.out.printf("[V5] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
-        result = isValidV6(s);
-        System.out.printf("[V6] s=[%s], expected:[%b], actual:[%b] %n", s, expectedResult, result);
-        System.out.println("--------------------------------------------------");
-    }
-
     public static void main(String[] args) {
-        LeetCode20 util = new LeetCode20();
-        util.test("()", true);
-        util.test("()[]{}", true);
-        util.test("(]", false);
-        util.test("([])", true);
-        util.test("([)]", false);
+        LeetCode20 solver = new LeetCode20();
+
+        // Multi-case datasets
+        String[] testInputs = {
+                "()",
+                "()[]{}",
+                "(]",
+                "([)]",
+                "{[]}",
+                "["
+        };
+
+        boolean[] expectedOutputs = { true, true, false, false, true, false };
+
+        System.out.println("--- Running Valid Parentheses Tests ---");
+
+        // Sequential validation using a single function call point
+        for (int i = 0; i < testInputs.length; i++) {
+            String currentInput = testInputs[i];
+            boolean expected = expectedOutputs[i];
+
+            // The single function call
+            boolean actual = solver.isValidV6(currentInput);
+
+            // Validation check
+            if (actual == expected) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (\"" + currentInput + "\" -> " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: \"" + currentInput + "\" | Expected: "
+                        + expected + ", but got: " + actual);
+            }
+        }
     }
 }

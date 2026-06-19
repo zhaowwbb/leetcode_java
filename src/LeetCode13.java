@@ -121,48 +121,53 @@ public class LeetCode13 {
         return num;
     }
 
-    int[] VALUES = {1000, 500, 100, 50, 10, 5, 1};
-    char[] SYMBOLS = {'M','D','C','L','X','V','I'};
+    int[] VALUES = { 1000, 500, 100, 50, 10, 5, 1 };
+    char[] SYMBOLS = { 'M', 'D', 'C', 'L', 'X', 'V', 'I' };
+
     public int romanToIntV5(String s) {
         int num = 0;
         Map<Character, Integer> map = new HashMap<>();
-        for(int i = 0; i < VALUES.length; i++){
+        for (int i = 0; i < VALUES.length; i++) {
             map.put(SYMBOLS[i], VALUES[i]);
         }
-        for(int i = 0; i < s.length(); i++){
+        for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             int currentValue = map.get(c);
 
-            if(i < s.length() - 1 && currentValue < map.get(s.charAt(i + 1))){
+            if (i < s.length() - 1 && currentValue < map.get(s.charAt(i + 1))) {
                 num -= currentValue;
-            }else{
-                num += currentValue; 
+            } else {
+                num += currentValue;
             }
         }
         return num;
     }
 
-    public void test(String s, int expectedResult) {
-        int result = 0;
-        result = romanToInt(s);
-        System.out.printf("[V1] s=[%s], expected:[%d], actual:[%d] %n", s, expectedResult, result);
-        result = romanToIntV2(s);
-        System.out.printf("[V2] s=[%s], expected:[%d], actual:[%d] %n", s, expectedResult, result);
-        result = romanToIntV3(s);
-        System.out.printf("[V3] s=[%s], expected:[%d], actual:[%d] %n", s, expectedResult, result);
-        result = romanToIntV4(s);
-        System.out.printf("[V4] s=[%s], expected:[%d], actual:[%d] %n", s, expectedResult, result);
-        result = romanToIntV5(s);
-        System.out.printf("[V5] s=[%s], expected:[%d], actual:[%d] %n", s, expectedResult, result);
-
-        System.out.println("##########################");
-    }
-
     public static void main(String[] args) {
-        LeetCode13 util = new LeetCode13();
-        util.test("III", 3);
-        util.test("LVIII", 58);
-        util.test("MCMXCIV", 1994);
+        LeetCode13 solver = new LeetCode13();
 
+        // Multi-case datasets
+        String[] testInputs = { "III", "LVIII", "MCMXCIV", "XL", "DCXXI" };
+        int[] expectedOutputs = { 3, 58, 1994, 40, 621 };
+
+        System.out.println("--- Running Roman to Integer Tests ---");
+
+        // Sequential validation using a single function call point
+        for (int i = 0; i < testInputs.length; i++) {
+            String currentInput = testInputs[i];
+            int expected = expectedOutputs[i];
+
+            // The single function call
+            // int actual = solver.romanToInt(currentInput);
+            int actual = solver.romanToIntV5(currentInput);
+
+            // Validation check
+            if (actual == expected) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (\"" + currentInput + "\" -> " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: \"" + currentInput + "\" | Expected: "
+                        + expected + ", but got: " + actual);
+            }
+        }
     }
 }

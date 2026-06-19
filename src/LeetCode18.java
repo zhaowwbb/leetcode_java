@@ -1,11 +1,12 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 import java.util.HashSet;
 
 public class LeetCode18 {
-public List<List<Integer>> fourSum(int[] nums, int target) {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
         List<List<Integer>> result = new ArrayList<>();
         if (nums == null || nums.length < 4) {
             return result;
@@ -18,12 +19,14 @@ public List<List<Integer>> fourSum(int[] nums, int target) {
         // 2. First pointer
         for (int i = 0; i < n - 3; i++) {
             // Skip duplicates for the first position
-            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
 
             // 3. Second pointer
             for (int j = i + 1; j < n - 2; j++) {
                 // Skip duplicates for the second position
-                if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
 
                 // 4. Two-pointer setup for the remaining two numbers
                 int left = j + 1;
@@ -37,9 +40,11 @@ public List<List<Integer>> fourSum(int[] nums, int target) {
                         result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
 
                         // Skip duplicates for the third position
-                        while (left < right && nums[left] == nums[left + 1]) left++;
+                        while (left < right && nums[left] == nums[left + 1])
+                            left++;
                         // Skip duplicates for the fourth position
-                        while (left < right && nums[right] == nums[right - 1]) right--;
+                        while (left < right && nums[right] == nums[right - 1])
+                            right--;
 
                         left++;
                         right--;
@@ -317,92 +322,74 @@ public List<List<Integer>> fourSum(int[] nums, int target) {
         return result;
     }
 
-    public void test(int[] nums, int target, int expected) {
-        System.out.println("nums" + Arrays.toString(nums) + ", target= " + target + ", expected=" + expected);
-        List<List<Integer>> result = fourSum(nums, target);
-        printResult(result, "V1");
-
-        result = fourSumV2(nums, target);
-        printResult(result, "V2");
-
-        result = fourSumV3(nums, target);
-        printResult(result, "V3");
-
-        result = fourSumV4(nums, target);
-        printResult(result, "V4");
-
-        result = fourSumV5(nums, target);
-        printResult(result, "V5");
-
-        result = fourSumV6(nums, target);
-        printResult(result, "V6");
-
-        System.out.println("############################");
+    // Helper method to normalize lists for order-independent comparison
+    private static List<List<Integer>> normalize(List<List<Integer>> lists) {
+        List<List<Integer>> normalized = new ArrayList<>();
+        for (List<Integer> list : lists) {
+            List<Integer> sortedInner = new ArrayList<>(list);
+            Collections.sort(sortedInner); // Sort inner quadruplet elements
+            normalized.add(sortedInner);
+        }
+        // Sort the outer list based on element comparisons
+        normalized.sort((a, b) -> {
+            for (int i = 0; i < Math.min(a.size(), b.size()); i++) {
+                int cmp = Integer.compare(a.get(i), b.get(i));
+                if (cmp != 0)
+                    return cmp;
+            }
+            return Integer.compare(a.size(), b.size());
+        });
+        return normalized;
     }
 
+    // Test logic in the main method
     public static void main(String[] args) {
-        // LeetCode18 util = new LeetCode18();
-        // int[] nums = { 1, 0, -1, 0, -2, 2 };
-        // util.test(nums, 0, 3);
-        // // System.out.println("##############################");
-        // nums = new int[] { 2, 2, 2, 2, 2 };
-        // util.test(nums, 8, 1);
-        // nums = new int[] { -2, -1, -1, 1, 1, 2, 2 };
-        // util.test(nums, 0, 2);
-        // nums = new int[] { 1000000000, 1000000000, 1000000000, 1000000000 };
-        // util.test(nums, -294967296, 0);
-
         LeetCode18 solver = new LeetCode18();
-        System.out
-                .println("Running Comprehensive Single-Call 4Sum Test...\n------------------------------------------");
 
-        /*
-         * We want to test two separate test inputs simultaneously:
-         * Segment 1 (From Example 1): [1, 0, -1, 0, -2, 2] -> target = 0
-         * Segment 2 (From Example 2): [2, 2, 2, 2, 2] -> target = 8
-         * 
-         * To execute both profiles in ONE function call, we concatenate them
-         * and insert large separator elements: -1_000_000_000 and 1_000_000_000.
-         * We choose a target of 0.
-         * 
-         * To make the second segment look for a target of 0 instead of 8, we offset
-         * its values by -2. Therefore, [2,2,2,2,2] (target 8) transforms into
-         * [0,0,0,0,0] (target 0).
-         * 
-         * Combined Input Array layout:
-         * [ 1, 0, -1, 0, -2, 2, -1000000000, 1000000000, 0, 0, 0, 0, 0 ]
-         * └──── Segment 1 ────┘ └───── Sentinels ─────┘ └── Segment 2 ──┘
-         */
+        // Multi-case datasets
+        int[][] testInputs = {
+                { 1, 0, -1, 0, -2, 2 },
+                { 2, 2, 2, 2, 2 }
+        };
+        int[] testTargets = { 0, 8 };
 
-        // int[] compositeInput = { 1, 0, -1, 0, -2, 2, -1000000000, 1000000000, 0, 0, 0, 0, 0 };
+        // Master list containing expected nested lists for each test case
+        List<List<List<Integer>>> expectedOutputs = new ArrayList<>();
 
-        int[] compositeInput = { 1, 0, -1, 0, -2, 2};
-        int target = 0;
+        // Case 1 expectations (target = 0)
+        expectedOutputs.add(Arrays.asList(
+                Arrays.asList(-2, -1, 1, 2),
+                Arrays.asList(-2, 0, 0, 2),
+                Arrays.asList(-1, 0, 0, 1)));
 
-        // THE EXACTLY ONE ALLOWED CALL TO THE ALGORITHM
-        List<List<Integer>> actualResult = solver.fourSumV6(compositeInput, target);
-        // List<List<Integer>> actualResult = solver.fourSum(compositeInput, target);
+        // Case 2 expectations (target = 8)
+        expectedOutputs.add(Arrays.asList(
+                Arrays.asList(2, 2, 2, 2)));
 
-        // Expected Quadruplets:
-        // From Segment 1: [-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]
-        List<List<Integer>> expectedResult = List.of(
-                List.of(-2, -1, 1, 2),
-                List.of(-2, 0, 0, 2),
-                List.of(-1, 0, 0, 1));
+        System.out.println("--- Running 4Sum Tests ---");
 
-        // Verification (order-insensitive checking since collections contain sorted
-        // sublists)
-        boolean match = actualResult.size() == expectedResult.size() && actualResult.containsAll(expectedResult);
+        // Loop through all test cases, executing the function call exactly once per
+        // iteration
+        for (int i = 0; i < testInputs.length; i++) {
+            int[] currentInput = testInputs[i];
+            int currentTarget = testTargets[i];
+            List<List<Integer>> expected = expectedOutputs.get(i);
 
-        if (match) {
-            System.out.println("[PASS] Multi-segment verification succeeded with a single execution path.");
-            System.out.println("       Discovered Unique Quadruplets: " + actualResult);
-        } else {
-            System.err.println("[FAIL] Quadruplet verification mismatch!");
-            System.err.println("       Expected: " + expectedResult);
-            System.err.println("       Actual:   " + actualResult);
+            // The single function call
+            List<List<Integer>> actual = solver.fourSumV6(currentInput, currentTarget);
+
+            // Normalize both collections to ensure order mismatches don't falsely fail the
+            // test
+            List<List<Integer>> normActual = normalize(actual);
+            List<List<Integer>> normExpected = normalize(expected);
+
+            if (normActual.equals(normExpected)) {
+                System.out.println("Test Case " + (i + 1) + ": PASSED (Input: " + Arrays.toString(currentInput) +
+                        ", Target: " + currentTarget + " -> " + actual + ")");
+            } else {
+                System.err.println("Test Case " + (i + 1) + ": FAILED! Input: " + Arrays.toString(currentInput) +
+                        ", Target: " + currentTarget + "\n  Expected: " + expected + "\n  Got: " + actual);
+            }
         }
-
-        System.out.println("------------------------------------------\nExecution Complete.");
     }
 }
