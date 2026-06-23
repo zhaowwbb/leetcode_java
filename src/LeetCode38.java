@@ -35,7 +35,7 @@ public class LeetCode38 {
         return process(sb.toString(), n, index + 1);
     }
 
-// Cache to avoid re-computing sequences for multiple test cases.
+    // Cache to avoid re-computing sequences for multiple test cases.
     // Constraints state 1 <= n <= 30.
     private static final String[] memo = new String[31];
 
@@ -59,22 +59,22 @@ public class LeetCode38 {
     private String getNextSequence(String s) {
         StringBuilder sb = new StringBuilder();
         int length = s.length();
-        
+
         int i = 0;
         while (i < length) {
             char current_char = s.charAt(i);
             int count = 0;
-            
+
             // Count consecutive identical characters
             while (i < length && s.charAt(i) == current_char) {
                 count++;
                 i++;
             }
-            
+
             // Append frequency followed by the character itself
             sb.append(count).append(current_char);
         }
-        
+
         return sb.toString();
     }
 
@@ -84,14 +84,15 @@ public class LeetCode38 {
         map.put("1", "11");
         // map.put("2", "11");
         String str = "1";
-        if(n == 1)return str;
-        
+        if (n == 1)
+            return str;
+
         String outputStr = str;
-        // int len 
-        for(int index = 2; index <= n; index++){
+        // int len
+        for (int index = 2; index <= n; index++) {
             // System.out.println("index=" + index + ", input=" + str);
-            if(map.containsKey(str)){
-                //already processed
+            if (map.containsKey(str)) {
+                // already processed
                 str = map.get(str);
                 // System.out.println("Found in cache, index=" + index + ", result=" + str);
                 outputStr = str;
@@ -99,10 +100,10 @@ public class LeetCode38 {
             }
             StringBuilder output = new StringBuilder();
             int i = 0;
-            while(i < str.length()){
+            while (i < str.length()) {
                 char currentChar = str.charAt(i);
                 int count = 0;
-                while(i < str.length() && str.charAt(i) == currentChar){
+                while (i < str.length() && str.charAt(i) == currentChar) {
                     count++;
                     i++;
                 }
@@ -119,16 +120,17 @@ public class LeetCode38 {
     }
 
     public String countAndSayV3(int n) {
-        if(n == 1)return "1";
+        if (n == 1)
+            return "1";
         String input = "1";
         String output = "";
-        for(int index = 2; index <=n ;index++){
+        for (int index = 2; index <= n; index++) {
             int i = 0;
             StringBuilder sb = new StringBuilder();
-            while(i < input.length()){
+            while (i < input.length()) {
                 char cur = input.charAt(i);
                 int count = 0;
-                while(i < input.length() && input.charAt(i) == cur){
+                while (i < input.length() && input.charAt(i) == cur) {
                     count++;
                     i++;
                 }
